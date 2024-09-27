@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nadar : miroir de son temps</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f3e9d2;
+            color: #2b2b2b;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            text-align: center
+
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff9e6;
+            padding: 40px;
+            border: 1px solid #d3c9a5;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+                .responsive-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #FF0000; 
+            box-sizing: border-box; 
+        }
+        h1 {
+            font-size: 36px;
+            text-align: center;
+            color: #8b0000;
+            margin-bottom: 10px;
+            font-variant: small-caps;
+        }
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 24px;
+            color: #4a4a4a;
+            border-bottom: 1px solid #8b0000;
+            padding-bottom: 10px;
+        }
+        h3 {
+            font-size: 20px;
+            color: #6a6a6a;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        li::before {
+            content: "• ";
+            color: #8b0000;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .art-deco-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+                  }
+        .luxurious {
+            background-color: #2c3e50;
+            color: #f1c40f;
+            border: 2px solid #f1c40f;
+            border-radius: 0;
+        }
+        .luxurious:hover {
+            background-color: #f1c40f;
+            color: #2c3e50;
+        }
+
+         .art-deco-expandable {
+            width: 100%;
+            margin: 20px auto;
+            box-sizing: border-box;
+        }
+        .art-deco-expandable .toggle {
+            background-color: #808080; /* Grey */
+            color: #FFF;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 2px solid #800000; /* Bordeaux red */
+            width: 100%;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            transition: 0.4s;
+            position: relative;
+            font-family: Cambria, Georgia, serif;
+        }
+        .art-deco-expandable .toggle:after {
+            content: '\002B';
+            color: #FFF;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+        .art-deco-expandable .toggle.active:after {
+            content: "\2212";
+        }
+        .art-deco-expandable .content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: #800000; /* Bordeaux red */
+            color: #FFF;
+            border-left: 2px solid #800000;
+            border-right: 2px solid #800000;
+            border-bottom: 2px solid #800000;
+        }
+        .art-deco-expandable .inner-content {
+            padding: 20px;
+            font-family: Cambria, Georgia, serif;
+            line-height: 1.6;
+        }
+            
+    </style>
+</head>
+<body>
+   
+<div class="container">
+        <h1>Nadar : miroir de son temps</h1>
+        <p class="subtitle">par Neil</p>
+
+        <img src="https://github.com/Croissanthology/croissanthology.github.io/blob/main/images/nadar!.jpg?raw=true" alt="Nadar!" class="responsive-image">    </div>
+    </body>
+        
+        <h2>Nadar, l'artiste</h2>
+        <h3>La photographie</h3>
+        <ul>
+            <li>Pionnier du portrait photographique</li>
+            <li>Maître de l'éclairage et de la composition</li>
+        </ul>
+        <h3>Les caricatures</h3>
+        <ul>
+            <li>Débuts comme caricaturiste pour la presse</li>
+            <li>Dessins d'humour!</li>
+            <li>Transition vers la photographie</li>
+        </ul>
+        <h3>L'impressionnisme</h3>
+        <ul>
+            <li>Soutien aux artistes impressionnistes</li>
+            <li>Organisation de la première exposition impressionniste</li>
+        </ul>
+ 
+        <div class="art-deco-expandable">
+            <button class="toggle">Lire plus</button>
+            <div class="content">
+                <div class="inner-content">
+                    <p>Informations à venir</p>
+                    <p>.</p>
+
+            </div>
+        </div>
+            
+                
+        <h2>Nadar, l'inventeur</h2>
+        <h3>Innovations photographiques</h3>
+        <ul>
+            <li>Photographie aérienne! (Paris de haut!)</li>
+            <li>Éclairage artificiel en photographie (Paris de bas!) </li>
+        </ul>
+        <h3>Aérostation</h3>
+        <ul>
+            <li>Construction du ballon "Le Géant"</li>
+            <li>Plus tard, construction d'une soixantaine de ballons pour la poste de l'armée française durant la guerre lors du siège de Paris</li>
+            <li>Jules Vernes!</li>
+            <li>La locomotion plus lourde que l'air!</li>
+        </ul>
+        
+       <div class="art-deco-expandable">
+        <button class="toggle">Lire plus</button>
+        <div class="content">
+            <div class="inner-content">
+                <p>Informations à venir</p>
+                <p>.</p>
+
+            </div>
+        </div>
+            
+        <h2>Nadar, le politique</h2>
+        <h3>Engagements</h3>
+        <ul>
+            <li>Participation à la Révolution de 1848</li>
+            <li>Soutien à la Commune de Paris</li>
+            <li>Légion polonaise</li>
+            <li>Espion pour la France</li>
+            <li>Constructeur de ballons!</li>
+
+
+        </ul>
+        <h3>Critique sociale</h3>
+        <ul>
+            <li>Les caricatures, un art politique par nature (satire)</li>
+            <li>Documentation des transformations de Paris; Haussmann démoli tout, mais pas avant que Nadar puisse tout photographier</li>
+        </ul>
+
+          <div class="art-deco-expandable">
+        <button class="toggle">Lire plus</button>
+        <div class="content">
+            <div class="inner-content">
+                <p>Informations à venir</p>
+                <p>.</p>
+
+            </div>
+        </div>
+
+       <h2>Bibliographie (lu les résumés de:)</h2>
+        <ul>
+            <li>Quand j'étais photographe, publié Ernest Flammarion en 1899</li>
+            <li>Le droit au vol, J. Hetzel 1865 </li>
+            <li>Nadar écrivain, éditions d'en face 2015 </li>
+        
+ <div class="button-container">
+     <br> 
+     <a href="https://docs.google.com/presentation/d/1NeMQ8LltZAqX-qlq0IIk-ym7Eq6KiypFbX-iFdgwk8I/edit?usp=sharing" class="art-deco-button luxurious">La présentation!</a>
+        
+
+    </div>
+
+                <script>
+        document.querySelector('.toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    </script>
+</body>
+</html>
