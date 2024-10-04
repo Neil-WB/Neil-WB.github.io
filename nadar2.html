@@ -13,10 +13,10 @@
             margin: 0;
             padding: 20px;
             max-width: 800px;
-            text-align: center
 
         }
         .container {
+            text-align: center
             max-width: 800px;
             margin: 0 auto;
             background-color: #fff9e6;
@@ -238,15 +238,17 @@
 
     </div>
 
-                <script>
-        document.querySelector('.toggle').addEventListener('click', function() {
-            this.classList.toggle('active');
-            var content = this.nextElementSibling;
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
+    <script>
+        document.querySelectorAll('.toggle').forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
         });
     </script>
 </body>
