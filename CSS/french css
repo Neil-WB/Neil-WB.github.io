@@ -1,0 +1,52 @@
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f3e5d8;
+            color: #2c1e0f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff9e6;
+            padding: 20px;
+            border: 5px solid #8b0000;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-family: 'Times New Roman', serif;
+            color: #8b0000;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .tricolor {
+            display: flex;
+            height: 30px;
+            margin-bottom: 20px;
+        }
+        .tricolor div {
+            flex: 1;
+        }
+        .blue { background-color: #002654; }
+        .white { background-color: #ffffff; }
+        .red { background-color: #ed2939; }
+        p {
+            text-indent: 20px;
+            margin-bottom: 15px;
+        }
+        .revolution-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            display: block;
+            border: 3px solid #8b0000;
+        }
+        .signature {
+            font-style: italic;
+            text-align: right;
+            margin-top: 30px;
+        }
