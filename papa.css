@@ -1,0 +1,629 @@
+ 
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap');
+        
+.sidenote {
+            float: left;
+            clear: left;
+            margin-left: -33%;
+            width: 30%;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 0.3rem;
+            position: relative;
+        }
+        @media (max-width: 1000px) {
+            .sidenote {
+                float: none; 
+                margin: 1em 0;
+                width: 100%;
+            }
+        }
+        
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poiret One', cursive;
+    text-transform: uppercase;
+    color: #ffffff;
+    letter-spacing: 2px;
+    margin: 1.5em 0 0.5em;
+    position: relative;
+    padding-bottom: 0.5em;
+}
+
+h1::after, h2::after, h3::after, h4::after, h5::after, h6::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ffffff;
+}
+
+h1 { font-size: 2.5em; }
+h2 { font-size: 2em; }
+h3 { font-size: 1.75em; }
+h4 { font-size: 1.5em; }
+h5 { font-size: 1.25em; }
+h6 { font-size: 1em; }
+
+@media (max-width: 768px) {
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.75em; }
+    h3 { font-size: 1.5em; }
+    h4 { font-size: 1.25em; }
+    h5, h6 { font-size: 1em; }
+}
+
+
+:root {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --accent-color: #4A9C6D;
+    --link-color: #cccccc;
+    --main-width: min(800px, 90vw);
+    --title-height: 100px;
+}
+
+
+
+body {
+    font-family: 'Source Serif Pro', serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+   
+
+
+        .content-wrapper {
+            width: var(--main-width);
+            max-width: 100%;
+        }
+
+        .title-container {
+            position: relative;
+            width: 100%;
+            height: var(--title-height);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .title {
+            font-size: clamp(1.5em, 5vw, 2.5em);
+            transition: opacity 0.3s ease;
+            text-align: center;
+            margin: 0;
+            z-index: 2;
+        }
+
+        .title-white { color: white; }
+        .title-green { color: #4A9C6D; }
+
+             .shine-effect-double {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+            z-index: 1;
+        }
+        .shine-effect-double::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.4s ease 0.2s;
+        }
+        .title-container:hover .shine-effect-double,
+        .title-container:hover .shine-effect-double::after {
+            transform: translateX(100%);
+        }
+
+        .image-replacement {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .image-replacement img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .title-container:hover .image-replacement {
+            opacity: 1;
+        }
+
+        .dotted-box {
+            border: 1px dotted #808080;
+            padding: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    position: relative;
+}
+
+a::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px dotted #FFFFFF;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #FFFFFF;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease;
+}
+
+a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+
+a[href^="https://www.lesswrong.com"]::after,
+a[href^="https://lesswrong.com"]::after {
+    background-color: #4A9C6D;
+}
+
+
+a[href^="https://www.twitter.com"]::after,
+a[href^="https://twitter.com"]::after,
+a[href^="https://www.x.com"]::after,
+a[href^="https://x.com"]::after {
+    background-color: #1DA1F2;
+}
+        .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .mobile-header-title {
+            font-family: 'Source Serif Pro', serif;
+            font-size: 16px;
+            text-align: center;
+            padding: 8px 0;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .progress-bar {
+            height: 2px;
+            background-color: #ffffff;
+            width: 0;
+            transition: width 0.2s ease-out;
+            box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-header {
+                display: none;
+            }
+     .footnote-ref {
+            display: inline;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            color: #4A9C6D;
+            cursor: pointer;
+            position: relative;
+        }
+        .footnote-number {
+            position: absolute;
+            top: -10px;
+            left: -1px;
+            background-color: #333333;
+            padding: 0 5px;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            color: #4A9C6D;
+        }
+        .footnotes {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 230px;
+        }
+        .footnote {
+            font-size: 0.9em;
+            color: #CCCCCC;
+            position: absolute;
+            width: 230px;
+            background-color: #333333; /* Changed to match body background */
+            border: 1px solid #FFFFFF; /* Changed to white */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .footnote::before {
+            content: attr(data-number);
+            position: absolute;
+            top: -10px;
+            left: -1px;
+            background-color: #333333;
+            color: #4A9C6D;
+            padding: 0 5px;
+            font-weight: bold;
+        }
+font-family: 'Source Serif Pro', serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .image-container {
+            background-color: #1a1a1a;
+            border: 1px solid white;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            max-width: 100%;
+        }
+        .image-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .image-caption {
+            font-family: Arial, sans-serif;
+            font-size: 0.9em;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 10px 5px 5px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+/* New media query for desktop screens */
+@media screen and (min-width: 768px) {
+    .image-container {
+        max-width: 70%; /* Adjust this value to your preference */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .image-container {
+        max-width: 50%; /* Even smaller on very large screens */
+    }
+}
+
+}
+
+/* If you still have .image-container inside .dotted-box, ensure it's responsive */
+.dotted-box .image-container {
+    max-width: 100%;
+}
+
+.dotted-box .image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* FORGOTTEN DROPCAP ADVENTURE
+
+@font-face {
+    font-family: 'Onamura';
+    src: url('../croissanthology.github.io/fonts/onamura.woff') format('woff'),
+         url('../croissanthology.github.io/fonts/onamura.woff2') format('woff2');
+         url('../croissanthology.github.io/fonts/onamura.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* Drop Cap styles */
+.dropcap {
+    float: left;
+    font-family: 'Poiret One', cursive;
+    font-size: 5em;
+    line-height: 0.8;
+    padding-top: 0.1em;
+    padding-right: 0.1em;
+    padding-left: 0;
+    color: #4A9C6D; /* Croissanthology logo green */
+}
+
+.dropcap::before {
+    content: '';
+    display: inline-block;
+    width: 0.1em;
+    height: 0.1em;
+}
+
+/* Ensure paragraphs with drop caps have no margin and justified text */
+ p.has-dropcap {
+    margin: 0;
+    text-align: justify;
+}
+
+/* Optional: Style for the rest of the first line */
+p.has-dropcap::first-line {
+    font-variant: small-caps;
+    letter-spacing: 0.05em; */ 
+} 
+
+
+/* New selector for index.html */
+body.index .dropcap {
+    background-image: url('https://github.com/Croissanthology/croissanthology.github.io/blob/main/images/croissanthologyattempt2.png?raw=true');
+    shape-outside: url('https://github.com/Croissanthology/croissanthology.github.io/blob/main/images/croissanthologyattempt2.png?raw=true');
+}
+
+/* QUOTE BOX */
+
+        .quote-box {
+            max-width: 600px;
+            padding: 40px;
+            background-color: #2a2a2a;
+            position: relative;
+            border: 2px solid #FFD700;
+            overflow: hidden;
+        }
+        .quote-box::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 200px;
+            height: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='80' fill='none' stroke='%23FFD700' stroke-width='2'/%3E%3Cpath fill='none' stroke='%23FFD700' stroke-width='2' d='M20,100 Q60,60 100,100 T180,100'/%3E%3Ccircle cx='100' cy='100' r='20' fill='%23FFD700'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.3;
+        }
+        .quote-box::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='none' stroke='%23FFD700' stroke-width='2' d='M10,50 Q30,0 50,50 T90,50'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: rotate(45deg);
+            opacity: 0.3;
+        }
+        .quote-text {
+            font-style: italic;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .quote-author {
+            text-align: right;
+            font-weight: bold;
+            color: #FFD700;
+            position: relative;
+            z-index: 1;
+        }
+
+
+        .quote-box {
+            max-width: 600px;
+            padding: 40px;
+            background-color: #2a2a2a;
+            position: relative;
+            border: 2px solid #FFD700;
+            overflow: hidden;
+        }
+        .quote-box::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 200px;
+            height: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='80' fill='none' stroke='%23FFD700' stroke-width='2'/%3E%3Cpath fill='none' stroke='%23FFD700' stroke-width='2' d='M20,100 Q60,60 100,100 T180,100'/%3E%3Ccircle cx='100' cy='100' r='20' fill='%23FFD700'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.3;
+        }
+        .quote-box::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='none' stroke='%23FFD700' stroke-width='2' d='M10,50 Q30,0 50,50 T90,50'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: rotate(45deg);
+            opacity: 0.3;
+        }
+        .quote-text {
+            font-style: italic;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .quote-author {
+            text-align: right;
+            font-weight: bold;
+            color: #FFD700;
+            position: relative;
+            z-index: 1;
+        }
+
+/* QUOTE BOX DONE */
+
+/* in the name of the scrolling header!*/ 
+
+const styles = `
+@media (min-width: 769px) {
+    .side-title {
+        position: fixed;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        font-family: 'Arial', sans-serif;
+        font-size: 24px;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 20px 10px;
+        border-radius: 10px;
+        z-index: 1000;
+        transition: transform 0.1s ease-out;
+    }
+
+    .side-title h2 {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 80vh;
+    }
+
+    .side-progress-bar {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: #4CAF50;
+        transition: height 0.1s ease-out;
+    }
+}
+
+
+const styleSheet = document.createElement("style");
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
+
+/* table of contents */
+.auto-toc {
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.toc-nav ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.toc-item {
+  margin-bottom: 10px;
+}
+
+.toc-item a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.toc-item a:hover {
+  color: #007bff;
+}
+
+.toc-h2 { margin-left: 0; }
+.toc-h3 { margin-left: 20px; }
+.toc-h4 { margin-left: 40px; }
+.toc-h5 { margin-left: 60px; }
+.toc-h6 { margin-left: 80px; }
+
+.essay-lists-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 2em 0;
+}
+
+.essay-list {
+  flex: 1;
+  min-width: 300px;
+  margin-bottom: 1em;
+}
+
+.essay-list h2 {
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.essay-list ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.essay-list li {
+  margin-bottom: 0.5em;
+}
+
+@media (max-width: 768px) {
+  .essay-lists-container {
+    flex-direction: column;
+  }
+  
+  .essay-list {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .essay-lists-container {
+    width: 90%;
+  }
+}
