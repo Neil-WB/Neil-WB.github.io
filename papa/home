@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Croissanthology</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <script src="javascript/javaventuraayayay.js" defer></script>
+</head>
+
+<body class="index">
+       <div class="mobile-header">
+        <h1 class="mobile-header-title">Croissanthology</h1>
+        <div class="progress-bar"></div>
+    </div>
+  
+    <div class="content-wrapper">
+        <div class="title-container">
+            <h1 class="title">
+                <span class="title-white">Happy Birthday</span><span class="title-green"> Papa!</span>
+            </h1>
+            <div class="shine-effect"></div>
+            <div class="image-replacement">
+                <img src="https://raw.githubusercontent.com/Neil-WB/papa/refs/heads/main/images/corgihellyeah.webp" alt="spirit animal">
+          </div>     
+        </div> 
+            
+        <div class="dotted-box">
+            <p><span class="dropcap">D</span>avid Warren, loved and loving father. Born in Palo Alto, California, David's birth coincided with the only known intervention in the Californian sky of 999 bald eagles in perfect formation swooping over the peaks of the Bay. It is said that David's first cry as a baby synchronized with the glorious squawk of the entire flock at once. When David looked up at his parents, they had to avert their gaze due to the sheer strength of his eye contact. David insisted he drive himself back home, and knew the way. </p>  
+<p>
+In retrospect, there were already omens and portents. The solar panels John Warren had installed on the roof quadrupled their output whenever David smiled at them. Curiosity the cat bowed reverently whenever he stepped into the room. When David stabbed his sister in the face, many things could be said, but nothing against his accuracy or mastery of the blade. 
+</p> 
+<p> When John Warren wheeled back on his steps after forgetting his newborn baby at a construction site, he came back and beheld 2318, fully built. To this day, rumor is some worker gave newborn David a screwdriver. David's towering heights made everyone feel like a little schmuck at school. Mark Credey used a seismograph to avoid getting crushed. </p>
+            <p></a> I'm open to singular trades: <a href="#trade">↓</a>. To learn about things you're allowed to do but don't know it, <a href="#allowed">↓.</a> For free advice, try croissanthology [at] gmail.com. To increase the amount of resources under my command, send money to <a href="https://croissanthology.com/under-construction.html">my Patreon</a>. (All money I receive is used to these ends:<a href="#ends">↓</a>). To buy Paul Graham crack(ers) online, <a href="https://paulgrahamcrackers.com">go here</a>.</p>
+        </div>
+
+    </div>
+
+     <div class="essay-lists-container">
+          <div class="essay-list">
+            <h2>Newest</h2>
+                <ul> Hello there
+      <!-- List items for newest essays -->
+                </ul> Testing
+          </div>
+  
+          <div class="essay-list">
+            <h2>Popular</h2>
+                <ul> Well certainly not yet
+      <!-- List items for popular essays -->
+                </ul>
+         </div>
+  
+              <div class="essay-list">
+            <h2>Essay list again</h2>
+            <ul>
+      <!-- List items for notable essays -->
+            </ul>
+      </div>
+</div>
+
+         <h2 id="allowed"> Things You're Allowed To Do</h2>
+
+        <ul>
+            <li>Screen everything off, ignore your entire to-do list except for one item
+                <ul>
+                    <li>This can be a costly tactic, but often it's crucial</li>
+                    <li>Your todo list is <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto distributed</a> in Actual Importance, and treating every item the same is a damaging illusion</li>
+                </ul>
+            </li>
+            <li>Apply for an <a href="https://mercatus.tfaforms.net/5099527">effective ventures grant</a></li>
+            <li>Hire a research assistant (via internet)
+                <ul>
+                    <li>Watch the assistant work to gain <a href="https://www.lesswrong.com/posts/SXJGSPeQWbACveJhs/the-best-tacit-knowledge-videos-on-every-subject">tacit knowledge</a> so you're better at research next time</li>
+                </ul>
+            </li>
+            <li>Get hired as a research assistant (via internet)
+                <ul>
+                    <li>Much more people are looking than you think</li>
+                    <li>Just email people you admire</li>
+                </ul>
+            </li>
+            <li>Make a website
+                <ul>
+                    <li>Ask Claude: "hey, can you help me make a cool-looking website with github pages?"</li>
+                    <li>Domain names don't cost much and are easy to set up</li>
+                </ul>
+            </li>
+            <li>Dump your random thoughts on Twitter</li>
+            <li><a href="https://marginalrevolution.com/marginalrevolution/2018/10/high-return-activity-raising-others-aspirations.html">Raise other people's aspirations on purpose</a>
+                <ul>
+                    <li>Sending them this list might raise their aspirations :D</li>
+                </ul>
+            </li>
+            <li>Walk away from political debates
+                <ul>
+                    <li>Walk away when someone is <a href="https://xkcd.com/386/">wrong on the internet</a></li>
+                    <li>Ignore politics altogether; most of it is just show, and <a href="https://www.lesswrong.com/posts/kWMkDoy3izRTobZFe/repeal-the-foreign-dredge-act-of-1906">Serious Issues</a> are not discussed</li>
+                </ul>
+            </li>
+            <li>Pick up trash on the ground when you see it</li>
+            <li>Use an LLM for everything
+                <ul>
+                    <li>It's genuinely better than you in many respects</li>
+                    <li>You can get all the prompts you need with a <a href="https://www.claude.ai">claude.ai</a> subscription</li>
+                    <li>It just Wouldn't Be Serious not use an LLM in 2024</li>
+                </ul>
+            </li>
+            <li><a href="https://dynomight.net/copies/">"Buy more copies"</a>
+                <ul>
+                    <li>Buy from many different brands and then blind test yourself
+                        <ul>
+                            <li>Cereal</li>
+                            <li><a href="https://gwern.net/socks#:~:text=lot%20of%20Diet-,Coke,-%3A%20two%20liters%20a">Soda</a></li>
+                        </ul>
+                    </li>
+                    <li>Things are cheaper in bulk</li>
+                    <li>Why waste time on shopping trips?</li>
+                </ul>
+            </li>
+            <li>Buy more than you think you need
+                <ul>
+                    <li>If something is good, why not increase it by an order of magnitude?</li>
+                </ul>
+            </li>
+            <li><a href="https://guzey.com/personal/what-should-you-do-with-your-life/#:~:text=to%20summer%20schools.-,Cold%20emails%20and%20twitter,-Emailing%20people%20you">Send a cold email</a></li>
+            <li>Ask your university library to buy a book for their shelves
+                <ul>
+                    <li>Free way of having outsized <a href="https://en.wikipedia.org/wiki/Memetics">memetic power</a></li>
+                </ul>
+            </li>
+            <li>Memorize a poem</li>
+            <li>Clean your room
+                <ul>
+                    <li>Or only just a little part of it</li>
+                </ul>
+            </li>
+            <li>When you're thinking about someone with fondness, tell them
+                <ul>
+                    <li>I've messaged people I knew years ago after randomly thinking about them</li>
+                    <li>This stuff is like crack cocaine for humans, but healthier</li>
+                    <li><a href="https://en.wikipedia.org/wiki/Pronoia_(psychology)">See also</a></li>
+                </ul>
+            </li>
+            <li>Keep in regular contact with people by setting up a regular email scheduler with google scripts
+                <ul>
+                    <li>My parents receive daily emails from my program: I just have to refill it from time to time, and then every email is queued</li>
+                    <li>Just ask Claude how to do it</li>
+                </ul>
+            </li>
+            <li>Ask someone out
+                <ul>
+                    <li>Ask someone out that you've met for 30 seconds</li>
+                    <li>They'll probably say no, but now it's easier next time</li>
+                </ul>
+            </li>
+            <li>Spend money on things
+                <ul>
+                    <li>That is what money is for.</li>
+                </ul>
+            </li>
+            <li><a href="https://www.neelnanda.io/blog/43-making-friends">Intentionally make close friends</a></li>
+            <li><a href="https://www.forfeit.app">Put money on the line</a>
+                <ul>
+                    <li><a href="https://www.lesswrong.com/posts/DRrAMiekmqwDjnzS5/my-experience-using-financial-commitments-to-overcome">See</a></li>
+                </ul>
+            </li>
+            <li><a href="https://www.paulgrahamcrackers.com">Sell something random online</a></li>
+            <li>Use google calendar for everything
+                <ul>
+                    <li>Delegate work to future selves</li>
+                    <li>Remind future selves to email friends</li>
+                    <li>Schedule emails to yourself about your current problems, so that your future self will see how far you've come</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+       
+            <br>
+    <div class="image-container">
+        <img src="https://github.com/Croissanthology/croissanthology.github.io/blob/main/images/earth%20Carl%20sagan.png?raw=true" alt="Earth Carl Sagan">
+        <p class="image-caption">Ayyy lmao</p>
+    </div>
+
+    <h2 id="trade">Quest item shop</h2>
+
+    <h2 id="ends">What I use your money for</h2>
+
+
+    </div>
+
+        <script src="javascript/javaventuraayayay.js" defer></script>
+
+</body>
+</html>
