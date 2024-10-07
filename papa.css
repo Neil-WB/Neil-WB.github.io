@@ -219,39 +219,7 @@ a[href^="https://www.x.com"]::after,
 a[href^="https://x.com"]::after {
     background-color: #1DA1F2;
 }
-        .mobile-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #000000;
-            color: #ffffff;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-            z-index: 1000;
-        }
 
-        .mobile-header-title {
-            font-family: 'Source Serif Pro', serif;
-            font-size: 16px;
-            text-align: center;
-            padding: 8px 0;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .progress-bar {
-            height: 2px;
-            background-color: #ffffff;
-            width: 0;
-            transition: width 0.2s ease-out;
-            box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
-        }
-
-        @media (min-width: 768px) {
-            .mobile-header {
-                display: none;
-            }
      .footnote-ref {
             display: inline;
             font-family: 'Times New Roman', serif;
