@@ -155,29 +155,20 @@
             card.className = 'card';
             card.innerHTML = `<div class="content">${cards[currentCard].text}</div>`;
             
-            // Background image transition
+             // Background image transition
             const gameContainer = document.querySelector('.game-container');
             setTimeout(() => {
                 if (cards[currentCard].bgImage) {
-                    // Fade in new background
-                    gameContainer.style.transition = 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                    gameContainer.style.transform = 'rotate(0deg)';
+                    gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
                     gameContainer.style.backgroundImage = `url('${cards[currentCard].bgImage}')`;
                     gameContainer.style.backgroundSize = 'cover';
                     gameContainer.style.backgroundPosition = 'center';
-                    gameContainer.style.opacity = '1';
                 } else {
-                    // Fade out background if no image
-                    gameContainer.style.transition = 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                    gameContainer.style.transform = 'rotate(-3deg)';
-                    gameContainer.style.opacity = '0.3';
-                    // Clear background after fade
-                    setTimeout(() => {
-                        gameContainer.style.backgroundImage = 'none';
-                    }, 400);
+                    gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    gameContainer.style.backgroundImage = 'none';
                 }
-            }, 100); // Start slightly before card appears
-            
+            }, 100);
+                        
             // Keep only 5 cards max
             if (table.children.length >= 5) {
                 table.removeChild(table.children[0]);
