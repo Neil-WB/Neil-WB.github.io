@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>neil.cards</title>
+    
+    <!-- retro terminal font - feel free to change -->
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
     <style>
+        /* BASE STYLES */
         body { 
             margin: 0;
             font-family: 'VT323', monospace;
@@ -14,62 +18,29 @@
             color: #fff;
             overflow: hidden;
         }
+
+        /* CONTAINER AND EFFECTS */
         .game-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: url('path-to-your-grungy-background.jpg') center/cover;
+            /* ADD YOUR BACKGROUND IMAGE HERE */
+            background: #000;
         }
+        
+        /* dark edges effect */
         .vignette {
             position: absolute;
             inset: 0;
             background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
             pointer-events: none;
         }
-        .table {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            perspective: 1000px;
-        }
-        .card {
-            width: 300px;
-            height: 400px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 15px;
-            padding: 20px;
-            position: absolute;
-            transform-style: preserve-3d;
-            transition: all 0.5s ease-out;
-            box-shadow: 0 0 20px rgba(0,255,255,0.1);
-        }
-        .prompt {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .content {
-            font-size: 20px;
-            text-align: center;
-            line-height: 1.6;
-        }
-        .card:hover {
-            box-shadow: 0 0 30px rgba(0,255,255,0.2);
-        }
+
+        /* retro screen effects */
         .crt-lines {
             position: fixed;
             inset: 0;
-            background: linear-gradient(
-                transparent 50%, 
-                rgba(0, 0, 0, 0.1) 50%
-            );
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.1) 50%);
             background-size: 100% 4px;
             pointer-events: none;
         }
@@ -81,10 +52,74 @@
             pointer-events: none;
             animation: flicker 0.15s infinite;
         }
+
+        /* CARD POSITIONING */
+        .table {
+            position: absolute;
+            bottom: -30%; /* hides bottom portion of cards */
+            left: 50%;
+            transform: translateX(-50%);
+            perspective: 1500px;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* CARD STYLING */
+        .card {
+            /* Large cards that scale with viewport */
+            width: min(90vw, 600px);
+            height: min(70vh, 800px);
+            
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform-style: preserve-3d;
+            transform-origin: bottom center;
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 20px rgba(0,255,255,0.1);
+        }
+
+        /* TITLE/PROMPT STYLING */
+        .prompt {
+            position: fixed;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: min(24px, 5vw);
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 100;
+        }
+
+        /* CARD CONTENT */
+        .content {
+            font-size: min(24px, 5vw);
+            text-align: center;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        /* ANIMATIONS */
         @keyframes flicker {
             0% { opacity: 0.1; }
             50% { opacity: 0; }
             100% { opacity: 0.1; }
+        }
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 768px) {
+            .card {
+                width: 85vw;
+                height: 60vh;
+            }
+            .table {
+                bottom: -20%;
+            }
         }
     </style>
 </head>
@@ -98,19 +133,79 @@
     </div>
 
     <script>
+        // ==============================================
+        // CARD CONTENT - ADD YOUR CARDS HERE
+        // ==============================================
         const cards = [
-            "do it now. it's just you and your future self",
-            "send cold emails. make them 2 sentences.",
-            "looking for: research assistant to hire",
-            "what can i do with claude.ai?",
-            "bouncing off the world is data-rich",
-            "work on projects > extracurricular activities",
-            "looking for people who do odd things oddly well",
+            {
+                text: "neil warren-bancquart",
+                style: "color: #fff; font-size: 2em;" // optional custom styling
+            },
+            {
+                text: "do it now. it's just you and your future self",
+                style: "color: #0ff;"
+            },
+            {
+                text: "send cold emails. make them 2 sentences.",
+                style: "color: #fff;"
+            },
+            // Add more cards here! Format:
+            // { text: "your text", style: "optional css" }
         ];
 
+        // ==============================================
+        // CARD DEALING MECHANICS
+        // ==============================================
         let currentCard = -1;
         const table = document.querySelector('.table');
+        const maxCards = 5; // how many cards visible at once
+        const fanSpread = 30; // degrees of fan spread
 
+        function drawCard() {
+            currentCard = (currentCard + 1) % cards.length;
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            // Add content with optional custom styling
+            card.innerHTML = `
+                <div class="content" style="${cards[currentCard].style || ''}">
+                    ${cards[currentCard].text}
+                </div>
+            `;
+            
+            // Position in fan formation
+            const totalCards = table.children.length;
+            const fanAngle = ((totalCards % maxCards) - (maxCards/2)) * (fanSpread/maxCards);
+            const xOffset = fanAngle * 10; // shift cards horizontally based on angle
+            
+            // Initial position (flipped up)
+            card.style.transform = `
+                translateX(-50%) 
+                translateX(${xOffset}px) 
+                rotateX(180deg) 
+                rotateZ(${fanAngle}deg)
+            `;
+            
+            table.appendChild(card);
+            
+            // Animate to final position
+            setTimeout(() => {
+                card.style.transform = `
+                    translateX(-50%) 
+                    translateX(${xOffset}px) 
+                    rotateZ(${fanAngle}deg)
+                `;
+            }, 50);
+            
+            // Remove old cards
+            if (table.children.length > maxCards) {
+                table.removeChild(table.children[0]);
+            }
+        }
+
+        // ==============================================
+        // CONTROLS
+        // ==============================================
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
@@ -118,28 +213,11 @@
             }
         });
 
-        function drawCard() {
-            currentCard = (currentCard + 1) % cards.length;
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `<div class="content">${cards[currentCard]}</div>`;
-            
-            // Position card
-            const randomRotation = (Math.random() - 0.5) * 10;
-            card.style.transform = `rotateY(180deg) rotateZ(${randomRotation}deg)`;
-            
-            table.appendChild(card);
-            
-            // Animate in
-            setTimeout(() => {
-                card.style.transform = `rotateZ(${randomRotation}deg)`;
-            }, 50);
-            
-            // Remove old cards
-            if (table.children.length > 5) {
-                table.removeChild(table.children[0]);
-            }
-        }
+        // Mobile support
+        document.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            drawCard();
+        });
     </script>
 </body>
 </html>
