@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- [previous head content stays the same until card and table styling] -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>neil.cards</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/webp" href="images/moustache%20card.webp">
     <style>
-        /* [previous styles stay the same until card and table] */
         body { 
             margin: 0;
             font-family: 'VT323', monospace;
@@ -17,91 +14,148 @@
             color: #fff;
             overflow: hidden;
         }
-
         .game-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: #000;
+            background: url('path-to-your-grungy-background.jpg') center/cover;
         }
-
         .vignette {
             position: absolute;
             inset: 0;
             background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
             pointer-events: none;
         }
-
         .table {
             position: absolute;
-            bottom: -30%; /* pushes cards up from bottom */
+            bottom: -100px; /* shifted down to make cards feel closer */
             left: 50%;
             transform: translateX(-50%);
-            perspective: 1000px;
-            width: 100vw;
-            height: 50vh; /* contains cards in lower half */
+            perspective: 2000px;
+            width: 90vw;
+            height: 70vh;
         }
-
         .card {
-            width: min(60vw, 400px); /* narrower width */
-            height: min(80vh, 600px); /* taller height for proper card ratio */
+            width: 500px; /* much bigger card */
+            height: 700px;
             background: #1a1a1a;
             border: 2px solid #333;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 25px;
+            padding: 40px;
             position: absolute;
-            left: 50%;
+            left: calc(50% - 250px); /* center based on new width */
+            bottom: 0;
             transform-style: preserve-3d;
-            transition: all 0.5s ease-out;
-            box-shadow: 0 0 20px rgba(0,255,255,0.1);
+            transform-origin: bottom center;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); /* bouncy easing */
+            box-shadow: 0 0 30px rgba(0,255,255,0.1);
         }
-
-        .card:hover {
-            box-shadow: 0 0 30px rgba(0,255,255,0.2);
-        }
-
         .prompt {
-            position: fixed;
-            top: 20%;
+            position: absolute;
+            top: 10%;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
+            font-size: 32px;
             text-shadow: 0 0 10px rgba(0,255,255,0.5);
             text-transform: uppercase;
             letter-spacing: 2px;
-            transition: opacity 0.3s ease-out;
         }
-
-        /* [rest of styles remain the same] */
-
-        @media (max-width: 768px) {
-            .card {
-                width: 70vw;
-                height: 85vh;
-                bottom: -40%; /* adjust for mobile */
-            }
-            .table {
-                bottom: -40%;
-            }
+        .content {
+            font-size: 32px;
+            text-align: center;
+            line-height: 1.6;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .card:hover {
+            box-shadow: 0 0 50px rgba(0,255,255,0.2);
+        }
+        .crt-lines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                transparent 50%, 
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.02);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
         }
     </style>
 </head>
-<!-- [rest of the HTML and script remain the same] -->
 <body>
     <div class="game-container">
         <div class="vignette"></div>
         <div class="prompt">press [space] to draw</div>
-        <div class="name">neil</div>
         <div class="table"></div>
         <div class="crt-lines"></div>
         <div class="crt-flicker"></div>
     </div>
 
     <script>
-        // [previous script remains the same]
-        const fanSpread = 40; // increased spread for wider fan
+        const cards = [
+            "do it now. it's just you and your future self",
+            "send cold emails. make them 2 sentences.",
+            "looking for: research assistant to hire",
+            "what can i do with claude.ai?",
+            "bouncing off the world is data-rich",
+            "work on projects > extracurricular activities",
+            "looking for people who do odd things oddly well",
+        ];
 
-        // [rest of the script remains the same]
+        let currentCard = -1;
+        const table = document.querySelector('.table');
+        let totalCards = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                drawCard();
+            }
+        });
+
+        function drawCard() {
+            currentCard = (currentCard + 1) % cards.length;
+            totalCards++;
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `<div class="content">${cards[currentCard]}</div>`;
+            
+            // Fan out effect based on total cards drawn
+            const fanAngle = Math.min(totalCards * 5, 30); // max 30 degree spread
+            const randomJitter = (Math.random() - 0.5) * 2; // small random variation
+            const rotationAngle = -fanAngle/2 + (fanAngle/(Math.min(totalCards, 7)-1)) * (totalCards-1) + randomJitter;
+            
+            // Initial position (coming from below)
+            card.style.transform = `translateY(100%) rotateX(45deg)`;
+            
+            table.appendChild(card);
+            
+            // Animate to final position
+            setTimeout(() => {
+                card.style.transform = `rotateZ(${rotationAngle}deg)`;
+            }, 50);
+            
+            // Remove old cards
+            if (table.children.length > 7) { // keep more cards visible
+                table.removeChild(table.children[0]);
+                totalCards--;
+            }
+        }
     </script>
 </body>
 </html>
