@@ -135,7 +135,7 @@
             },
             {
                 text: `check out the website of my good friend NATHAN of the NGUYEN dynasty: <a href="http://nathanfish.fr" style="color: #FF8A3C; text-decoration: underline;">nathanfish.fr</a>. ask him about his MOLA MOLA fish`,
-                background: 'images/moebius ocean.jpg'
+                background: './nathan-bg.jpg'
             }
         ];
 
@@ -156,6 +156,8 @@
             }
         });
 
+        let activeTimeout = null;  // Add this line near your other variables
+
         function drawCard() {
             currentCard = (currentCard + 1) % cards.length;
             totalCards++;
@@ -173,24 +175,6 @@
             if (cards[currentCard].background) {
                 activeTimeout = setTimeout(() => {
                     bgImage.style.backgroundImage = `url(${cards[currentCard].background})`;
-                    bgImage.style.opacity = '1';
-                }, 500);
-            }
-            
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `<div class="content">${cards[currentCard]}</div>`;
-            
-            // Background handling
-            if (activeTimeout) clearTimeout(activeTimeout);
-            const bgImage = document.querySelector('.bg-image');
-            bgImage.style.opacity = '0';
-            
-            // Check if this card should have a background
-            const shouldShowNathanBg = cards[currentCard].includes('NATHAN');
-            if (shouldShowNathanBg) {
-                activeTimeout = setTimeout(() => {
-                    bgImage.style.backgroundImage = `url(${cardBackgrounds.NATHAN})`;
                     bgImage.style.opacity = '1';
                 }, 500);
             }
