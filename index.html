@@ -1,86 +1,114 @@
-import React, { useState, useEffect } from 'react';
-import { shuffle, throttle } from 'lodash';
-
-const initialCards = [
-  { text: "neil warren-bancquart", style: "bg-white" },
-  { text: "do it now. it's just you and your future self", style: "bg-black text-white" },
-  { text: "looking for: research assistant to hire for a few hours", style: "bg-blue-50" },
-  { text: "send cold emails. make them 2 sentences.", style: "bg-red-50" },
-  { text: "work on projects > extracurricular activities", style: "bg-purple-50" },
-  { text: "no one will stop you, except you", style: "bg-green-50" },
-  { text: "bouncing off the world is data-rich", style: "bg-yellow-50" },
-  { text: "what can i do with claude.ai?", style: "bg-indigo-50" },
-  { text: "looking for people who do odd things oddly well", style: "bg-pink-50" },
-  { text: "email: neil m warren [at] gmail.com", style: "bg-orange-50" }
-];
-
-const Card = () => {
-  const [shuffledCards, setShuffledCards] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(1);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  useEffect(() => {
-    setShuffledCards(shuffle([...initialCards]));
-
-    const handleScroll = throttle((e) => {
-      e.preventDefault();
-      if (isAnimating) return;
-
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > lastScrollY) {
-        // Scrolling down
-        if (visibleCount < shuffledCards.length) {
-          setIsAnimating(true);
-          setTimeout(() => {
-            setVisibleCount(prev => prev + 1);
-            setIsAnimating(false);
-          }, 500); // Half second delay between cards
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neil Warren-Bancquart</title>
+    <style>
+        body { 
+            margin: 0; 
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-      } else if (currentScrollY < lastScrollY) {
-        // Scrolling up
-        if (visibleCount > 1) {
-          setIsAnimating(true);
-          setTimeout(() => {
-            setVisibleCount(prev => prev - 1);
-            setIsAnimating(false);
-          }, 500);
+        .card {
+            width: 400px;
+            height: 600px;
+            position: absolute;
+            transition: all 0.3s ease-out;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
         }
-      }
-      
-      setLastScrollY(currentScrollY);
-    }, 500); // Increased throttle to match animation
+        .card-content {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+            color: white;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+        .instruction {
+            position: fixed;
+            bottom: 1rem;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="card-container"></div>
+    <div class="instruction">Press spacebar to continue</div>
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, shuffledCards.length, visibleCount, isAnimating]);
+    <script>
+        const cards = [
+            { 
+                text: "neil warren-bancquart",
+                bgImage: "path/to/your/image1.jpg"
+            },
+            { 
+                text: "do it now. it's just you and your future self",
+                bgImage: "path/to/your/image2.jpg"
+            },
+            // add more cards here
+        ];
 
-  return (
-    <div className="h-screen flex flex-col items-center justify-center">
-      <div className="relative w-64 h-96">
-        {shuffledCards.slice(0, visibleCount).map((card, index) => (
-          <div
-            key={index}
-            className={`absolute w-full h-full ${card.style} rounded-xl shadow-lg p-6
-            transform transition-all duration-500 ease-in-out`}
-            style={{ 
-              transform: `rotate(${(index % 2 === 0 ? 1 : -1) * 3}deg) translateY(${index * 0.5}px)`,
-              zIndex: index,
-              opacity: index === visibleCount - 1 ? 1 : 0.8,
-            }}
-          >
-            <p className="text-lg font-medium">{card.text}</p>
-          </div>
-        ))}
-      </div>
-      
-      {/* Invisible scroll area */}
-      <div className="fixed inset-0 overflow-y-scroll opacity-0">
-        <div className="h-[200vh]"></div>
-      </div>
-    </div>
-  );
-};
+        let shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+        let visibleCount = 1;
+        let isResetting = false;
 
-export default Card;
+        function renderCards() {
+            const container = document.getElementById('card-container');
+            container.innerHTML = '';
+            
+            for(let i = 0; i < visibleCount; i++) {
+                const card = shuffledCards[i];
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.style.transform = `rotate(${(i % 2 === 0 ? 1 : -1) * 3}deg) translateY(${i * 0.5}px)`;
+                div.style.zIndex = i;
+                div.style.backgroundImage = `url(${card.bgImage})`;
+                
+                const content = document.createElement('div');
+                content.className = 'card-content';
+                content.textContent = card.text;
+                
+                div.appendChild(content);
+                container.appendChild(div);
+            }
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                
+                if (visibleCount === shuffledCards.length && !isResetting) {
+                    isResetting = true;
+                    const timer = setInterval(() => {
+                        visibleCount--;
+                        renderCards();
+                        if (visibleCount <= 1) {
+                            clearInterval(timer);
+                            shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+                            isResetting = false;
+                        }
+                    }, 200);
+                } else if (!isResetting) {
+                    visibleCount = Math.min(visibleCount + 1, shuffledCards.length);
+                    renderCards();
+                }
+            }
+        });
+
+        renderCards();
+    </script>
+</body>
+</html>
