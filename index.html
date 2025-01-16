@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>neil.cards</title>
-    
-    <!-- fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=VT323&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body { 
             margin: 0;
@@ -17,83 +14,108 @@
             color: #fff;
             overflow: hidden;
         }
-
         .game-container {
             position: relative;
             width: 100vw;
             height: 100vh;
             background: #000;
         }
-        
         .vignette {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.9));
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
             pointer-events: none;
         }
-
-        .crt-lines {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(transparent 50%, rgba(0,0,0,0.1) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
         .table {
             position: absolute;
-            bottom: -30%;
+            bottom: -20%;
             left: 50%;
             transform: translateX(-50%);
-            perspective: 1500px;
+            perspective: 1000px;
             width: 100vw;
             height: 100vh;
         }
-
         .card {
-            width: min(90vw, 600px);
-            height: min(70vh, 800px);
+            width: min(80vw, 800px); /* bigger! */
+            height: min(70vh, 1000px);
             background: #1a1a1a;
-            border: 1px solid #333;
+            border: 2px solid #333;
             border-radius: 15px;
             padding: 20px;
             position: absolute;
             left: 50%;
-            bottom: 0;
             transform-style: preserve-3d;
-            transform-origin: bottom center;
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.5s ease-out;
+            box-shadow: 0 0 20px rgba(0,255,255,0.1);
         }
-
+        .card:hover {
+            box-shadow: 0 0 30px rgba(0,255,255,0.2);
+        }
         .prompt {
             position: fixed;
-            top: 5%;
+            top: 20%;
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Special Elite', cursive;
-            font-size: min(24px, 5vw);
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
             text-transform: uppercase;
-            letter-spacing: 3px;
-            z-index: 100;
-            opacity: 0.7;
+            letter-spacing: 2px;
+            transition: opacity 0.3s ease-out;
         }
-
+        .prompt.fade-out {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.9);
+        }
+        .name {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) scale(1.1);
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0;
+            transition: all 0.5s ease-out;
+        }
+        .name.fade-in {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
         .content {
             font-size: min(24px, 5vw);
             text-align: center;
             line-height: 1.6;
             padding: 2rem;
         }
+        .crt-lines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                transparent 50%, 
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.02);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
+        }
 
         @media (max-width: 768px) {
             .card {
                 width: 85vw;
-                height: 60vh;
-            }
-            .table {
-                bottom: -20%;
+                height: 70vh;
             }
         }
     </style>
@@ -102,8 +124,10 @@
     <div class="game-container">
         <div class="vignette"></div>
         <div class="prompt">press [space] to draw</div>
+        <div class="name">neil</div>
         <div class="table"></div>
         <div class="crt-lines"></div>
+        <div class="crt-flicker"></div>
     </div>
 
     <script>
@@ -119,21 +143,32 @@
         ];
 
         let currentCard = -1;
+        let hasDrawnFirstCard = false;
         const table = document.querySelector('.table');
+        const prompt = document.querySelector('.prompt');
+        const name = document.querySelector('.name');
         const maxCards = 5;
         const fanSpread = 30;
 
         function drawCard() {
+            if (!hasDrawnFirstCard) {
+                prompt.classList.add('fade-out');
+                setTimeout(() => {
+                    name.classList.add('fade-in');
+                }, 300);
+                hasDrawnFirstCard = true;
+            }
+
             currentCard = (currentCard + 1) % cards.length;
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `<div class="content">${cards[currentCard]}</div>`;
             
+            // Start from below
             const totalCards = table.children.length;
             const fanAngle = ((totalCards % maxCards) - (maxCards/2)) * (fanSpread/maxCards);
             const xOffset = fanAngle * 10;
             
-            // Start from below and behind
             card.style.transform = `
                 translateX(-50%) 
                 translateX(${xOffset}px) 
@@ -143,7 +178,7 @@
             
             table.appendChild(card);
             
-            // Animate up into position
+            // Animate to position
             requestAnimationFrame(() => {
                 card.style.transform = `
                     translateX(-50%) 
