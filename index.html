@@ -151,8 +151,8 @@
             totalCards++;
             
             const card = document.createElement('div');
-            card.className = 'card';
-            
+card.className = 'card';
+
             // Create background div with gradient overlay
             const bgDiv = document.createElement('div');
             bgDiv.style.position = 'absolute';
@@ -161,10 +161,12 @@
             bgDiv.style.transition = 'opacity 0.5s ease';
             bgDiv.style.borderRadius = '25px';
             
+            // Create content div
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'content';
+            contentDiv.innerHTML = cards[currentCard].text;
+            
             if (cards[currentCard].bgImage) {
-                bgDiv.style.backgroundImage = `url(${cards[currentCard].bgImage})`;
-                bgDiv.style.backgroundSize = 'cover';
-                bgDiv.style.backgroundPosition = 'center';
                 bgDiv.style.background = `
                     linear-gradient(to bottom, 
                         rgba(0,0,0,0.9) 0%, 
@@ -172,11 +174,13 @@
                     ),
                     url(${cards[currentCard].bgImage})
                 `;
+                bgDiv.style.backgroundSize = 'cover';
+                bgDiv.style.backgroundPosition = 'center';
                 setTimeout(() => bgDiv.style.opacity = '1', 500);
             }
             
             card.appendChild(bgDiv);
-            card.innerHTML += `<div class="content">${cards[currentCard].text}</div>`;
+            card.appendChild(contentDiv);
             
             // Keep only 5 cards max
             if (table.children.length >= 5) {
