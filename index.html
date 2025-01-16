@@ -158,25 +158,13 @@
             // Background image transition
             if (cards[currentCard].bgImage) {
                 setTimeout(() => {
-                    const container = document.querySelector('.game-container');
-                    container.style.backgroundImage = `
-                        linear-gradient(
-                            to bottom,
-                            rgba(0, 0, 0, 0.95) 0%,
-                            rgba(0, 0, 0, 0.8) 30%,
-                            rgba(0, 0, 0, 0.4) 100%
-                        ),
-                        url('${cards[currentCard].bgImage}')
-                    `;
-                    container.style.backgroundSize = 'cover';
-                    container.style.backgroundPosition = 'center';
+                    document.querySelector('.game-container').style.backgroundImage = `url('${cards[currentCard].bgImage}')`;
+                    document.querySelector('.game-container').style.backgroundSize = 'cover';
+                    document.querySelector('.game-container').style.backgroundPosition = 'center';
                 }, 500);
             } else {
-                // Fade out background if no image
-                setTimeout(() => {
-                    const container = document.querySelector('.game-container');
-                    container.style.backgroundImage = 'linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7))';
-                }, 500);
+                // Immediately clear background if no image
+                document.querySelector('.game-container').style.backgroundImage = 'none';
             }
             
             // Keep only 5 cards max
