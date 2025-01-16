@@ -155,10 +155,10 @@
             card.className = 'card';
             card.innerHTML = `<div class="content">${cards[currentCard].text}</div>`;
             
-            // Background image transition
+                    // Background image transition
             if (cards[currentCard].bgImage) {
                 setTimeout(() => {
-                    document.querySelector('.game-container').style.backgroundImage = `url(${cards[currentCard].bgImage})`;
+                    document.querySelector('.game-container').style.backgroundImage = `url('${cards[currentCard].bgImage}')`;
                     document.querySelector('.game-container').style.backgroundSize = 'cover';
                     document.querySelector('.game-container').style.backgroundPosition = 'center';
                 }, 500);
