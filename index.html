@@ -18,7 +18,8 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: url('path-to-your-grungy-background.jpg') center/cover;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
+            transition: all 0.5s ease;
         }
         .vignette {
             position: absolute;
@@ -122,10 +123,11 @@
         const cards = [
             {
                 text: `ASK <span style="color: #FF8A3C">CLAUDE</span> before you ask me a question. make a personal website and if you don't know how, ASK <span style="color: #FF8A3C">CLAUDE</span>. if you need any life advice, ASK <span style="color: #FF8A3C">CLAUDE</span> or neil m warren [at] gmail`,
+               
             },
             {
                 text: `check out the website of my good friend NATHAN of the NGUYEN dynasty: <a href="http://nathanfish.fr" style="color: #FF8A3C; text-decoration: underline;">nathanfish.fr</a>. ask him about his MOLA MOLA fish`,
-                bgImage: 'alsoimages/moebius%ocean.jpg'  // optional
+                bgImage: 'alsoimages/moebius ocean.jpg'  // optional
             }
         ];
 
@@ -151,36 +153,21 @@
             totalCards++;
             
             const card = document.createElement('div');
-card.className = 'card';
-
-            // Create background div with gradient overlay
-            const bgDiv = document.createElement('div');
-            bgDiv.style.position = 'absolute';
-            bgDiv.style.inset = '0';
-            bgDiv.style.opacity = '0';
-            bgDiv.style.transition = 'opacity 0.5s ease';
-            bgDiv.style.borderRadius = '25px';
+            card.className = 'card';
+            card.innerHTML = `<div class="content">${cards[currentCard].text}</div>`;
             
-            // Create content div
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'content';
-            contentDiv.innerHTML = cards[currentCard].text;
-            
+            // Background image transition
             if (cards[currentCard].bgImage) {
-                bgDiv.style.background = `
-                    linear-gradient(to bottom, 
-                        rgba(0,0,0,0.9) 0%, 
-                        rgba(0,0,0,0.6) 100%
-                    ),
-                    url(${cards[currentCard].bgImage})
-                `;
-                bgDiv.style.backgroundSize = 'cover';
-                bgDiv.style.backgroundPosition = 'center';
-                setTimeout(() => bgDiv.style.opacity = '1', 500);
+                setTimeout(() => {
+                    document.querySelector('.game-container').style.backgroundImage = `url(${cards[currentCard].bgImage})`;
+                    document.querySelector('.game-container').style.backgroundSize = 'cover';
+                    document.querySelector('.game-container').style.backgroundPosition = 'center';
+                }, 500);
             }
             
-            card.appendChild(bgDiv);
-            card.appendChild(contentDiv);
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `<div class="content">${cards[currentCard]}</div>`;
             
             // Keep only 5 cards max
             if (table.children.length >= 5) {
