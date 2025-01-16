@@ -3,112 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neil Warren-Bancquart</title>
+    <title>neil.cards</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body { 
-            margin: 0; 
-            font-family: system-ui, -apple-system, sans-serif;
-            background: #1a1a1a;
+            margin: 0;
+            font-family: 'VT323', monospace;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card {
-            width: 400px;
-            height: 600px;
-            position: absolute;
-            transition: all 0.3s ease-out;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            background-size: cover;
-            background-position: center;
+            background: #000;
+            color: #fff;
             overflow: hidden;
         }
-        .card-content {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6));
-            color: white;
-            font-size: 1.25rem;
-            text-align: center;
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('path-to-your-grungy-background.jpg') center/cover;
         }
-        .instruction {
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
+            pointer-events: none;
+        }
+        .table {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            perspective: 1000px;
+        }
+        .card {
+            width: 300px;
+            height: 400px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease-out;
+            box-shadow: 0 0 20px rgba(0,255,255,0.1);
+        }
+        .prompt {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .content {
+            font-size: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .card:hover {
+            box-shadow: 0 0 30px rgba(0,255,255,0.2);
+        }
+        .crt-lines {
             position: fixed;
-            bottom: 1rem;
-            color: #9ca3af;
-            font-size: 0.875rem;
+            inset: 0;
+            background: linear-gradient(
+                transparent 50%, 
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.02);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
         }
     </style>
 </head>
 <body>
-    <div id="card-container"></div>
-    <div class="instruction">Press spacebar to continue</div>
+    <div class="game-container">
+        <div class="vignette"></div>
+        <div class="prompt">press [space] to draw</div>
+        <div class="table"></div>
+        <div class="crt-lines"></div>
+        <div class="crt-flicker"></div>
+    </div>
 
     <script>
         const cards = [
-            { 
-                text: "neil warren-bancquart",
-                bgImage: "path/to/your/image1.jpg"
-            },
-            { 
-                text: "do it now. it's just you and your future self",
-                bgImage: "path/to/your/image2.jpg"
-            },
-            // add more cards here
+            "do it now. it's just you and your future self",
+            "send cold emails. make them 2 sentences.",
+            "looking for: research assistant to hire",
+            "what can i do with claude.ai?",
+            "bouncing off the world is data-rich",
+            "work on projects > extracurricular activities",
+            "looking for people who do odd things oddly well",
         ];
 
-        let shuffledCards = [...cards].sort(() => Math.random() - 0.5);
-        let visibleCount = 1;
-        let isResetting = false;
+        let currentCard = -1;
+        const table = document.querySelector('.table');
 
-        function renderCards() {
-            const container = document.getElementById('card-container');
-            container.innerHTML = '';
-            
-            for(let i = 0; i < visibleCount; i++) {
-                const card = shuffledCards[i];
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.style.transform = `rotate(${(i % 2 === 0 ? 1 : -1) * 3}deg) translateY(${i * 0.5}px)`;
-                div.style.zIndex = i;
-                div.style.backgroundImage = `url(${card.bgImage})`;
-                
-                const content = document.createElement('div');
-                content.className = 'card-content';
-                content.textContent = card.text;
-                
-                div.appendChild(content);
-                container.appendChild(div);
-            }
-        }
-
-        document.addEventListener('keydown', (event) => {
-            if (event.code === 'Space') {
-                event.preventDefault();
-                
-                if (visibleCount === shuffledCards.length && !isResetting) {
-                    isResetting = true;
-                    const timer = setInterval(() => {
-                        visibleCount--;
-                        renderCards();
-                        if (visibleCount <= 1) {
-                            clearInterval(timer);
-                            shuffledCards = [...cards].sort(() => Math.random() - 0.5);
-                            isResetting = false;
-                        }
-                    }, 200);
-                } else if (!isResetting) {
-                    visibleCount = Math.min(visibleCount + 1, shuffledCards.length);
-                    renderCards();
-                }
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                drawCard();
             }
         });
 
-        renderCards();
+        function drawCard() {
+            currentCard = (currentCard + 1) % cards.length;
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `<div class="content">${cards[currentCard]}</div>`;
+            
+            // Position card
+            const randomRotation = (Math.random() - 0.5) * 10;
+            card.style.transform = `rotateY(180deg) rotateZ(${randomRotation}deg)`;
+            
+            table.appendChild(card);
+            
+            // Animate in
+            setTimeout(() => {
+                card.style.transform = `rotateZ(${randomRotation}deg)`;
+            }, 50);
+            
+            // Remove old cards
+            if (table.children.length > 5) {
+                table.removeChild(table.children[0]);
+            }
+        }
     </script>
 </body>
 </html>
