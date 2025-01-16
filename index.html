@@ -156,16 +156,27 @@
             card.innerHTML = `<div class="content">${cards[currentCard].text}</div>`;
             
             // Background image transition
-            if (cards[currentCard].bgImage) {
-                setTimeout(() => {
-                    document.querySelector('.game-container').style.backgroundImage = `url('${cards[currentCard].bgImage}')`;
-                    document.querySelector('.game-container').style.backgroundSize = 'cover';
-                    document.querySelector('.game-container').style.backgroundPosition = 'center';
-                }, 500);
-            } else {
-                // Immediately clear background if no image
-                document.querySelector('.game-container').style.backgroundImage = 'none';
-            }
+            const gameContainer = document.querySelector('.game-container');
+            setTimeout(() => {
+                if (cards[currentCard].bgImage) {
+                    // Fade in new background
+                    gameContainer.style.transition = 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    gameContainer.style.transform = 'rotate(0deg)';
+                    gameContainer.style.backgroundImage = `url('${cards[currentCard].bgImage}')`;
+                    gameContainer.style.backgroundSize = 'cover';
+                    gameContainer.style.backgroundPosition = 'center';
+                    gameContainer.style.opacity = '1';
+                } else {
+                    // Fade out background if no image
+                    gameContainer.style.transition = 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    gameContainer.style.transform = 'rotate(-3deg)';
+                    gameContainer.style.opacity = '0.3';
+                    // Clear background after fade
+                    setTimeout(() => {
+                        gameContainer.style.backgroundImage = 'none';
+                    }, 400);
+                }
+            }, 100); // Start slightly before card appears
             
             // Keep only 5 cards max
             if (table.children.length >= 5) {
