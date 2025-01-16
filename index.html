@@ -18,7 +18,17 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: url('path-to-your-grungy-background.jpg') center/cover;
+            transition: background 0.5s ease;
+        }
+        .bg-image {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background-size: cover;
+            background-position: center;
+            mask-image: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
         }
         .vignette {
             position: absolute;
@@ -120,9 +130,13 @@
 
     <script>
         const cards = [
-            `ASK <span style="color: #FF8A3C">CLAUDE</span> before you ask me a question. make a personal website and if you don't know how, ASK <span style="color: #FF8A3C">CLAUDE</span>. if you need any life advice, ASK <span style="color: #FF8A3C">CLAUDE</span> or neil m warren [at] gmail`,
-            
-            `check out the website of my good friend NATHAN of the NGUYEN dynasty: <a href="http://nathanfish.fr" style="color: #FF8A3C; text-decoration: underline;">nathanfish.fr</a>. ask him about his MOLA MOLA fish`
+            {
+                text: `ASK <span style="color: #FF8A3C">CLAUDE</span> before you ask me a question. make a personal website and if you don't know how, ASK <span style="color: #FF8A3C">CLAUDE</span>. if you need any life advice, ASK <span style="color: #FF8A3C">CLAUDE</span> or neil m warren [at] gmail`
+            },
+            {
+                text: `check out the website of my good friend NATHAN of the NGUYEN dynasty: <a href="http://nathanfish.fr" style="color: #FF8A3C; text-decoration: underline;">nathanfish.fr</a>. ask him about his MOLA MOLA fish`,
+                background: 'images/moebius ocean.jpg'
+            }
         ];
 
         let currentCard = -1;
@@ -148,7 +162,38 @@
             
             const card = document.createElement('div');
             card.className = 'card';
+            card.innerHTML = `<div class="content">${cards[currentCard].text}</div>`;
+            
+            // Background handling
+            if (activeTimeout) clearTimeout(activeTimeout);
+            const bgImage = document.querySelector('.bg-image');
+            bgImage.style.opacity = '0';
+            
+            // Check if this card has a background
+            if (cards[currentCard].background) {
+                activeTimeout = setTimeout(() => {
+                    bgImage.style.backgroundImage = `url(${cards[currentCard].background})`;
+                    bgImage.style.opacity = '1';
+                }, 500);
+            }
+            
+            const card = document.createElement('div');
+            card.className = 'card';
             card.innerHTML = `<div class="content">${cards[currentCard]}</div>`;
+            
+            // Background handling
+            if (activeTimeout) clearTimeout(activeTimeout);
+            const bgImage = document.querySelector('.bg-image');
+            bgImage.style.opacity = '0';
+            
+            // Check if this card should have a background
+            const shouldShowNathanBg = cards[currentCard].includes('NATHAN');
+            if (shouldShowNathanBg) {
+                activeTimeout = setTimeout(() => {
+                    bgImage.style.backgroundImage = `url(${cardBackgrounds.NATHAN})`;
+                    bgImage.style.opacity = '1';
+                }, 500);
+            }
             
             // Keep only 5 cards max
             if (table.children.length >= 5) {
