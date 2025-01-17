@@ -10,26 +10,27 @@
         /* Add these inside your existing style tag */
 @media (max-width: 768px) {
     .card {
-        width: 85vw;
-        height: 70vh;
-        left: 50%;
-        transform: translateX(-50%);
+        width: calc(100vw - 40px);
+        height: calc(100vh - 200px);
+        left: 20px;
+        bottom: 20px;
+        transform: none;
         padding: 20px;
+        font-size: clamp(16px, 4vw, 24px);
+    }
+    .table {
+        bottom: 0;
+        height: calc(100vh - 100px);
+        width: 100vw;
+    }
+    .prompt, .name {
+        top: 5vh;
+        font-size: 24px;
     }
     .content {
         font-size: 24px;
     }
-    .prompt {
-        font-size: 24px;
-    }
-    .name {
-        font-size: 24px;
-    }
-    .table {
-        bottom: 50px;
-    }
 }
-
         
         body { 
             margin: 0;
