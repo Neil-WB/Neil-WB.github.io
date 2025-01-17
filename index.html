@@ -6,6 +6,31 @@
     <title>neil.cards</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
+
+        /* Add these inside your existing style tag */
+@media (max-width: 768px) {
+    .card {
+        width: 85vw;
+        height: 70vh;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 20px;
+    }
+    .content {
+        font-size: 24px;
+    }
+    .prompt {
+        font-size: 24px;
+    }
+    .name {
+        font-size: 24px;
+    }
+    .table {
+        bottom: 50px;
+    }
+}
+
+        
         body { 
             margin: 0;
             font-family: 'VT323', monospace;
@@ -144,6 +169,23 @@ const cards = [
         let hasDrawnFirstCard = false;
         const table = document.querySelector('.table');
         let totalCards = 0;
+
+        // Add touch/click support
+document.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!hasDrawnFirstCard) {
+        document.querySelector('.prompt').style.opacity = '0';
+        document.querySelector('.name').style.opacity = '1';
+        hasDrawnFirstCard = true;
+    }
+    drawCard();
+});
+
+// Update card limit
+if (table.children.length >= 2) {  // changed from 5 to 2
+    table.removeChild(table.children[0]);
+    totalCards = 2;  // changed from 5 to 2
+}
 
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
