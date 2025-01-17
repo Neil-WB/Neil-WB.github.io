@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>neil.cards</title>
+    <title>neil</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
 
@@ -171,8 +171,13 @@ const cards = [
         const table = document.querySelector('.table');
         let totalCards = 0;
 
-        // Add touch/click support
+// Replace your current click listener with this
 document.addEventListener('click', (e) => {
+    // Don't trigger card draw if clicking a link
+    if (e.target.tagName === 'A') {
+        return; // let the link click happen normally
+    }
+    
     e.preventDefault();
     if (!hasDrawnFirstCard) {
         document.querySelector('.prompt').style.opacity = '0';
@@ -181,7 +186,7 @@ document.addEventListener('click', (e) => {
     }
     drawCard();
 });
-
+        
 // Update card limit
 if (table.children.length >= 2) {  // changed from 5 to 2
     table.removeChild(table.children[0]);
