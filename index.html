@@ -139,11 +139,14 @@
     <div class="game-container">
         <div class="vignette"></div>
         <div class="prompt">press [space] to draw</div>
+        
         <div class="name">neil</div>
         <div class="table"></div>
         <div class="crt-lines"></div>
         <div class="crt-flicker"></div>
     </div>
+
+
 
     <script>
         
@@ -226,6 +229,13 @@ if (table.children.length >= 2) {  // changed from 5 to 2
                     gameContainer.style.backgroundImage = 'none';
                 }
             }, 100);
+
+            .game-container {
+    /* ... existing styles ... */
+    background-image: url('alsoimages/IMG-20250116-WA0073.jpg');
+    background-size: cover;
+    background-position: center;
+}
                         
             // Keep only 5 cards max
             if (table.children.length >= 5) {
