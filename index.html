@@ -339,39 +339,29 @@
             }
         }
 function drawCard() {
-    if (state.isTransitioning) return;
-    state.isTransitioning = true;
-
     if (!state.hasDrawnFirstCard) {
+        // Instant swap
         els.prompt.style.opacity = '0';
         els.name.style.opacity = '1';
         state.hasDrawnFirstCard = true;
-    }
-
-    // fade out current card if it exists
-    const currentCards = els.table.querySelectorAll('.card');
-    if (currentCards.length) {
-        currentCards[currentCards.length - 1].style.opacity = '0';
-    }
-
-    // wait a bit before new card
-    setTimeout(() => {
+        
+        // Wait juuust a tiny moment before starting card animation
+        requestAnimationFrame(() => {
+            state.currentCard = (state.currentCard + 1) % cards.length;
+            const card = createCard(cards[state.currentCard]);
+            updateBackground(cards[state.currentCard].bgImage);
+            maintainCardLimit();
+            animateCards();
+        });
+    } else {
         state.currentCard = (state.currentCard + 1) % cards.length;
         const card = createCard(cards[state.currentCard]);
-        
-        // update background with fade
         updateBackground(cards[state.currentCard].bgImage);
-        
         maintainCardLimit();
         animateCards();
-        
-        // fade in new card
-        setTimeout(() => {
-            card.style.opacity = '1';
-            state.isTransitioning = false;
-        }, 100);
-    }, 400);
+    }
 }
+
 
 // Split out the card creation logic
 function createAndAnimateNewCard() {
