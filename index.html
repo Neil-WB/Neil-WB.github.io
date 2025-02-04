@@ -133,28 +133,35 @@
             100% { opacity: 0.1; }
         }
 
-        .terminal-menu {
-    position: fixed;
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.95);
-    border: 1px solid #333;
-    padding: 20px;
+.menu-card {
+    width: 500px;
+    height: 700px;
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 25px;
+    padding: 40px;
+    position: absolute;
+    left: calc(50% - 250px);
+    bottom: -800px; /* start below view */
+    transform-style: preserve-3d;
+    transform-origin: bottom center;
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 0 30px rgba(0,255,255,0.1);
     z-index: 1000;
-    transition: top 0.3s;
 }
 
-.terminal-menu.active {
-    top: 80px;
+.menu-card.active {
+    bottom: 100px;
 }
 
 .menu-item {
     opacity: 0;
     color: #FF8A3C;
-    margin: 15px 0;
+    margin: 30px 0;
     cursor: pointer;
     transition: all 0.2s;
+    font-size: 32px;
+    text-align: center;
 }
 
 .menu-item:hover {
@@ -210,12 +217,12 @@
             img.src = card.bgImage;
         });
 
-        // Initialize first background
-        document.addEventListener('DOMContentLoaded', () => {
-            gameContainer.style.backgroundImage = `url('${cards[0].bgImage}')`;
-            gameContainer.style.opacity = '0';
-            setTimeout(() => gameContainer.style.opacity = '1', 100);
-        });
+ // Initialize first background
+document.addEventListener('DOMContentLoaded', () => {
+    gameContainer.style.backgroundImage = 'none';
+    gameContainer.style.opacity = '0';
+    setTimeout(() => gameContainer.style.opacity = '1', 100);
+});
 
         // Card drawing logic
         function drawCard() {
@@ -293,21 +300,28 @@
 const nameElement = document.querySelector('.name');
 let menu = null;
 
+// Menu handling
+const nameElement = document.querySelector('.name');
+let menuCard = null;
+
 nameElement.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (!menu) {
-        menu = document.createElement('div');
-        menu.className = 'terminal-menu';
-        menu.innerHTML = `
+    if (!menuCard) {
+        // Reset background to black
+        gameContainer.style.backgroundImage = 'none';
+        
+        menuCard = document.createElement('div');
+        menuCard.className = 'menu-card';
+        menuCard.innerHTML = `
             <div class="menu-item">about/</div>
             <div class="menu-item">projects/</div>
             <div class="menu-item">thoughts.md</div>
         `;
-        document.body.appendChild(menu);
-        setTimeout(() => menu.classList.add('active'), 50);
+        document.body.appendChild(menuCard);
+        setTimeout(() => menuCard.classList.add('active'), 50);
         
         // Fade in items
-        const items = menu.querySelectorAll('.menu-item');
+        const items = menuCard.querySelectorAll('.menu-item');
         items.forEach((item, i) => {
             setTimeout(() => item.style.opacity = '1', 150 * (i + 1));
         });
@@ -315,13 +329,14 @@ nameElement.addEventListener('click', (e) => {
 });
 
 document.addEventListener('click', (e) => {
-    if (menu && !menu.contains(e.target)) {
-        menu.classList.remove('active');
+    if (menuCard && !menuCard.contains(e.target) && e.target !== nameElement) {
+        menuCard.classList.remove('active');
         setTimeout(() => {
-            menu.remove();
-            menu = null;
-        }, 300);
+            menuCard.remove();
+            menuCard = null;
+        }, 600);
     }
+});
 });
     </script>
 </body>
