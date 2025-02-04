@@ -54,11 +54,13 @@
             white-space: nowrap;
         }
 
-        .subprompt {
-            display: block;
-            font-size: 24px;
-            opacity: 0.7;
-        }
+        
+.subprompt {
+    /* ... other properties ... */
+    text-align: left;
+    margin-left: 0;  /* ensures alignment with parent */
+    margin-top: 8px;
+}
 
         .name-container {
             position: absolute;
@@ -77,7 +79,7 @@
             text-shadow: 0 0 10px rgba(255,255,255,0.5);
             letter-spacing: 2px;
             opacity: 0;
-            transition: text-shadow 0.3s ease;
+            transition: text-shadow 0.5s ease;
         }
 
         .name:hover {
@@ -246,7 +248,7 @@
 <body>
     <div class="game-container">
         <div class="vignette"></div>
-        <div class="prompt">press [space] to draw<br><span class="subprompt">press [enter] for menu</span></div>
+        <div class="prompt">press [space] to draw<br><span class="subprompt">[enter] for menu</span></div>
         <div class="name-container">
             <div class="name">neil</div>
         </div>
