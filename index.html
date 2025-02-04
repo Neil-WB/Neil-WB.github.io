@@ -132,7 +132,36 @@
             50% { opacity: 0; }
             100% { opacity: 0.1; }
         }
+
+        .terminal-menu {
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid #333;
+    padding: 20px;
+    z-index: 1000;
+    transition: top 0.3s;
+}
+
+.terminal-menu.active {
+    top: 80px;
+}
+
+.menu-item {
+    opacity: 0;
+    color: #FF8A3C;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.menu-item:hover {
+    text-shadow: 0 0 8px rgba(255,138,60,0.8);
+}
     </style>
+    
 </head>
 <body>
     <div class="game-container">
@@ -259,6 +288,41 @@
                 drawCard();
             }
         });
+
+        // Menu handling
+const nameElement = document.querySelector('.name');
+let menu = null;
+
+nameElement.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!menu) {
+        menu = document.createElement('div');
+        menu.className = 'terminal-menu';
+        menu.innerHTML = `
+            <div class="menu-item">about/</div>
+            <div class="menu-item">projects/</div>
+            <div class="menu-item">thoughts.md</div>
+        `;
+        document.body.appendChild(menu);
+        setTimeout(() => menu.classList.add('active'), 50);
+        
+        // Fade in items
+        const items = menu.querySelectorAll('.menu-item');
+        items.forEach((item, i) => {
+            setTimeout(() => item.style.opacity = '1', 150 * (i + 1));
+        });
+    }
+});
+
+document.addEventListener('click', (e) => {
+    if (menu && !menu.contains(e.target)) {
+        menu.classList.remove('active');
+        setTimeout(() => {
+            menu.remove();
+            menu = null;
+        }, 300);
+    }
+});
     </script>
 </body>
 </html>
