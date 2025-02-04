@@ -7,154 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
 
-        /* Add these inside your existing style tag */
-@media (max-width: 768px) {
-    .card {
-        width: calc(100vw - 40px);
-        height: calc(100vh - 200px);
-        left: 20px;
-        bottom: 20px;
-        transform: none;
-        padding: 20px;
-        font-size: clamp(16px, 4vw, 24px);
-    }
-    .table {
-        bottom: 0;
-        height: calc(100vh - 100px);
-        width: 100vw;
-    }
-    .prompt, .name {
-        top: 5vh;
-        font-size: 24px;
-    }
-    .content {
-        font-size: 24px;
-    }
-}
-        
-        body { 
-            margin: 0;
-            font-family: 'VT323', monospace;
-            min-height: 100vh;
-            background: #000;
-            color: #fff;
-            overflow: hidden;
-        }
-        .game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
-            transition: all 0.5s ease;
-        }
-        .vignette {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
-            pointer-events: none;
-        }
-        .table {
-            position: absolute;
-            bottom: -100px; /* shifted down to make cards feel closer */
-            left: 50%;
-            transform: translateX(-50%);
-            perspective: 2000px;
-            width: 90vw;
-            height: 70vh;
-        }
-        .card {
-            width: 500px; /* much bigger card */
-            height: 700px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 25px;
-            padding: 40px;
-            position: absolute;
-            left: calc(50% - 250px); /* center based on new width */
-            bottom: 0;
-            transform-style: preserve-3d;
-            transform-origin: bottom center;
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); /* smoother slide */
-            box-shadow: 0 0 30px rgba(0,255,255,0.1);
-        }
-        .prompt {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 32px;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: opacity 0.5s ease;
-        }
-        .name {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 32px;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
-            letter-spacing: 2px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .content {
-            font-size: 32px;
-            text-align: center;
-            line-height: 1.6;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .card:hover {
-            box-shadow: 0 0 50px rgba(0,255,255,0.2);
-        }
-        .crt-lines {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(
-                transparent 50%, 
-                rgba(0, 0, 0, 0.1) 50%
-            );
-            background-size: 100% 4px;
-            pointer-events: none;
-        }
-        .crt-flicker {
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,0.02);
-            opacity: 0;
-            pointer-events: none;
-            animation: flicker 0.15s infinite;
-        }
-        @keyframes flicker {
-            0% { opacity: 0.1; }
-            50% { opacity: 0; }
-            100% { opacity: 0.1; }
-        }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <div class="vignette"></div>
-        <div class="prompt">press [space] to draw</div>
-        
-        <div class="name">neil</div>
-        <div class="table"></div>
-        <div class="crt-lines"></div>
-        <div class="crt-flicker"></div>
-    </div>
-
-
-
-    <script>
-        
+// Preload images
 const cards = [
-    {
-        text: `ASK <span style="color: #FF8A3C">CLAUDE</span> before you ask me a question. make a personal website and if you don't know how, ASK <span style="color: #FF8A3C">CLAUDE</span> or neil m warren [at] gmail`,
-        bgImage: 'alsoimages/blueboennets.jpg' 
-    },
     {
         text: `To learn about fountain pens, contact an <a href="https://gitxperimenter.github.io/" style="color: #FF8A3C; text-decoration: underline;">expert</a>.`,
         bgImage: 'alsoimages/frog procession.jpeg'
@@ -163,7 +17,7 @@ const cards = [
         text: `check out the website of my good friend NATHAN of the NGUYEN dynasty: <a href="http://nathanfish.fr" style="color: #FF8A3C; text-decoration: underline;">nathanfish.fr</a>. ask him about his MOLA MOLA fish`,
         bgImage: 'alsoimages/moebius ocean.jpg'
     },
-     {
+    {
         text: `would be remiss not to mention sudarsh 🦫 and the serendipitously acquired <a href="https://sudarsh.com" style="color: #FF8A3C; text-decoration: underline;">SUDARSH.COM</a>`,
         bgImage: 'alsoimages/solarpunk2.jpg'
     },
@@ -172,93 +26,101 @@ const cards = [
         bgImage: 'alsoimages/church again.jpg'
     }
 ];
-        
-        let currentCard = -1;
-        let hasDrawnFirstCard = false;
-        const table = document.querySelector('.table');
-        let totalCards = 0;
 
-// Replace your current click listener with this
-document.addEventListener('click', (e) => {
-    // Don't trigger card draw if clicking a link
-    if (e.target.tagName === 'A') {
-        return; // let the link click happen normally
-    }
-    
-    e.preventDefault();
+// Game state
+let currentCard = -1;
+let hasDrawnFirstCard = false;
+
+// Cache DOM elements
+const table = document.querySelector('.table');
+const prompt = document.querySelector('.prompt');
+const name = document.querySelector('.name');
+const gameContainer = document.querySelector('.game-container');
+
+// Preload images
+cards.forEach(card => {
+    const img = new Image();
+    img.src = card.bgImage;
+});
+
+// Initialize first background
+document.addEventListener('DOMContentLoaded', () => {
+    gameContainer.style.backgroundImage = `url('${cards[0].bgImage}')`;
+    gameContainer.style.opacity = '0';
+    setTimeout(() => gameContainer.style.opacity = '1', 100);
+});
+
+// Card drawing logic
+function drawCard() {
     if (!hasDrawnFirstCard) {
-        document.querySelector('.prompt').style.opacity = '0';
-        document.querySelector('.name').style.opacity = '1';
+        prompt.style.opacity = '0';
+        name.style.opacity = '1';
         hasDrawnFirstCard = true;
     }
-    drawCard();
-});
-        
-// Update card limit
-if (table.children.length >= 2) {  // changed from 5 to 2
-    table.removeChild(table.children[0]);
-    totalCards = 2;  // changed from 5 to 2
+
+    currentCard = (currentCard + 1) % cards.length;
+    
+    const card = createCard(cards[currentCard]);
+    updateBackground(cards[currentCard].bgImage);
+    maintainCardLimit();
+    animateCards();
 }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (!hasDrawnFirstCard) {
-                    document.querySelector('.prompt').style.opacity = '0';
-                    document.querySelector('.name').style.opacity = '1';
-                    hasDrawnFirstCard = true;
-                }
-                drawCard();
-            }
+function createCard(cardData) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="content">${cardData.text}</div>`;
+    
+    // Initial position for animation
+    card.style.transform = `translateY(120%) translateX(50%) rotateZ(${getRotationAngle(table.children.length) + 15}deg)`;
+    
+    table.appendChild(card);
+    return card;
+}
+
+function updateBackground(bgImage) {
+    setTimeout(() => {
+        gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        gameContainer.style.backgroundImage = bgImage ? `url('${bgImage}')` : 'none';
+        gameContainer.style.backgroundSize = 'cover';
+        gameContainer.style.backgroundPosition = 'center';
+    }, 100);
+}
+
+function maintainCardLimit() {
+    if (table.children.length > 5) {
+        table.removeChild(table.children[0]);
+    }
+}
+
+function getRotationAngle(position) {
+    const fanAngle = 24;
+    const anglePerCard = fanAngle / 4;
+    return -fanAngle/2 + (anglePerCard * position);
+}
+
+function animateCards() {
+    setTimeout(() => {
+        Array.from(table.children).forEach((card, index) => {
+            card.style.transform = `rotateZ(${getRotationAngle(index)}deg)`;
         });
+    }, 50);
+}
 
-        function drawCard() {
-            currentCard = (currentCard + 1) % cards.length;
-            totalCards++;
-            
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `<div class="content">${cards[currentCard].text}</div>`;
-            
-             // Background image transition
-            const gameContainer = document.querySelector('.game-container');
-            setTimeout(() => {
-                if (cards[currentCard].bgImage) {
-                    gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                    gameContainer.style.backgroundImage = `url('${cards[currentCard].bgImage}')`;
-                    gameContainer.style.backgroundSize = 'cover';
-                    gameContainer.style.backgroundPosition = 'center';
-                } else {
-                    gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                    gameContainer.style.backgroundImage = 'none';
-                }
-            }, 100);
-                        
-            // Keep only 5 cards max
-            if (table.children.length >= 5) {
-                table.removeChild(table.children[0]);
-                totalCards = 5; // Reset count to maintain fan spread
-            }
+// Event listeners
+document.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'A') {
+        e.preventDefault();
+        drawCard();
+    }
+});
 
-            // Calculate fan position (0 to 4)
-            const fanPosition = table.children.length;
-            const fanAngle = 24; // total spread angle
-            const anglePerCard = fanAngle / 4; // divide by max cards - 1
-            const rotationAngle = -fanAngle/2 + (anglePerCard * fanPosition);
-            
-            // Start from slightly below and to the right
-            card.style.transform = `translateY(120%) translateX(50%) rotateZ(${rotationAngle + 15}deg)`;
-            
-            table.appendChild(card);
-            
-            // Reposition all cards for smooth fan
-            setTimeout(() => {
-                Array.from(table.children).forEach((existingCard, index) => {
-                    const angle = -fanAngle/2 + (anglePerCard * index);
-                    existingCard.style.transform = `rotateZ(${angle}deg)`;
-                });
-            }, 50);
-        }
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        drawCard();
+    }
+});
     </script>
 </body>
 </html>
