@@ -336,22 +336,27 @@
             }
         }
 
-      function drawCard() {
+   function drawCard() {
     if (!state.hasDrawnFirstCard) {
-        // First fade out the prompt
+        // Instant swap
         els.prompt.style.opacity = '0';
+        els.name.style.opacity = '1';
+        state.hasDrawnFirstCard = true;
         
-        // Wait for prompt fade out, then fade in name and THEN do the card
-        setTimeout(() => {
-            els.name.style.opacity = '1';
-            // Wait a tiny bit more for name to appear
-            setTimeout(() => {
-                state.hasDrawnFirstCard = true;
-                createAndAnimateNewCard();
-            }, 300);
-        }, 500);
+        // Wait juuust a tiny moment before starting card animation
+        requestAnimationFrame(() => {
+            state.currentCard = (state.currentCard + 1) % cards.length;
+            const card = createCard(cards[state.currentCard]);
+            updateBackground(cards[state.currentCard].bgImage);
+            maintainCardLimit();
+            animateCards();
+        });
     } else {
-        createAndAnimateNewCard();
+        state.currentCard = (state.currentCard + 1) % cards.length;
+        const card = createCard(cards[state.currentCard]);
+        updateBackground(cards[state.currentCard].bgImage);
+        maintainCardLimit();
+        animateCards();
     }
 }
 
