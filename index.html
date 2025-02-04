@@ -389,26 +389,43 @@
             }, 50);
         }
 
-        // Mobile swipe detection
-        if (isMobile) {
-            document.addEventListener('touchstart', e => {
-                state.touchStart = e.touches[0].clientY;
-            }, { passive: true });
+       if ('ontouchstart' in window) {  // Better touch detection
+    let touchStartY = null;
+    let touchStartX = null;
+    
+    document.addEventListener('touchstart', e => {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+        console.log('Touch started:', touchStartY); // Debug
+    }, { passive: false });
 
-            document.addEventListener('touchend', e => {
-                if (!state.touchStart) return;
-                
-                const touchEnd = e.changedTouches[0].clientY;
-                const swipeDistance = state.touchStart - touchEnd;
-                
-                // Detect upward swipe
-                if (swipeDistance > 50 && !state.menuCard) {
-                    showMenu();
-                }
-                
-                state.touchStart = null;
-            }, { passive: true });
+    document.addEventListener('touchmove', e => {
+        e.preventDefault(); // Prevent scroll interference
+    }, { passive: false });
+
+    document.addEventListener('touchend', e => {
+        if (touchStartY === null) return;
+        
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchEndX = e.changedTouches[0].clientX;
+        
+        const diffY = touchStartY - touchEndY;
+        const diffX = Math.abs(touchStartX - touchEndX);
+        
+        console.log('Swipe distance Y:', diffY); // Debug
+        console.log('Swipe distance X:', diffX); // Debug
+        
+        // More lenient threshold (30px instead of 50px)
+        // Also check if vertical swipe is more prominent than horizontal
+        if (diffY > 30 && diffY > diffX && !state.menuCard) {
+            console.log('Swipe detected, showing menu'); // Debug
+            showMenu();
         }
+        
+        touchStartY = null;
+        touchStartX = null;
+    }, { passive: false });
+}
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
