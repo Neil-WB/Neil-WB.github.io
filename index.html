@@ -6,7 +6,6 @@
     <title>neil</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* Base styles */
         body { 
             margin: 0;
             font-family: 'VT323', monospace;
@@ -16,7 +15,6 @@
             overflow: hidden;
         }
 
-        /* Container and effects */
         .game-container {
             position: relative;
             width: 100vw;
@@ -32,38 +30,43 @@
             pointer-events: none;
         }
 
-        /* Header elements */
         .prompt {
             position: absolute;
             top: 10%;
             left: 50%;
             transform: translateX(-50%);
             font-size: 32px;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: opacity 0.5s ease;
-            animation: pulse 2s infinite;
+        }
+
+        .name-container {
+            position: absolute;
+            top: 8%;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
         }
 
         .name {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
             font-size: 32px;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
             letter-spacing: 2px;
             opacity: 0;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: text-shadow 0.3s ease;
         }
 
         .name:hover {
-            text-shadow: 0 0 15px rgba(255,138,60,0.8);
+            text-shadow: 0 0 15px rgba(255,255,255,0.8);
         }
 
-        /* Card styles */
         .table {
             position: absolute;
             bottom: -100px;
@@ -103,7 +106,6 @@
             transform: translateY(-50%);
         }
 
-        /* Menu styles */
         .menu-card {
             width: 500px;
             height: 700px;
@@ -141,10 +143,9 @@
         }
 
         .menu-item:hover {
-            text-shadow: 0 0 8px rgba(255,138,60,0.8);
+            text-shadow: 0 0 5px rgba(255,138,60,0.6);
         }
 
-        /* CRT effects */
         .crt-lines {
             position: fixed;
             inset: 0;
@@ -165,20 +166,12 @@
             animation: flicker 0.15s infinite;
         }
 
-        /* Animations */
         @keyframes flicker {
             0% { opacity: 0.1; }
             50% { opacity: 0; }
             100% { opacity: 0.1; }
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        /* Mobile responsiveness */
         @media (max-width: 768px) {
             .card, .menu-card {
                 width: calc(100vw - 40px);
@@ -208,7 +201,9 @@
     <div class="game-container">
         <div class="vignette"></div>
         <div class="prompt">press [space] to draw</div>
-        <div class="name">neil</div>
+        <div class="name-container">
+            <div class="name">neil</div>
+        </div>
         <div class="table"></div>
         <div class="crt-lines"></div>
         <div class="crt-flicker"></div>
@@ -234,14 +229,20 @@
             }
         ];
 
-        // Cache DOM elements and state
-        const table = document.querySelector('.table');
-        const prompt = document.querySelector('.prompt');
-        const name = document.querySelector('.name');
-        const gameContainer = document.querySelector('.game-container');
-        let currentCard = -1;
-        let hasDrawnFirstCard = false;
-        let menuCard = null;
+        const els = {
+            table: document.querySelector('.table'),
+            prompt: document.querySelector('.prompt'),
+            name: document.querySelector('.name'),
+            nameContainer: document.querySelector('.name-container'),
+            gameContainer: document.querySelector('.game-container')
+        };
+
+        let state = {
+            currentCard: -1,
+            hasDrawnFirstCard: false,
+            menuCard: null,
+            menuTimeout: null
+        };
 
         // Preload images
         cards.forEach(card => {
@@ -251,24 +252,48 @@
             }
         });
 
-        // Initialize black background
-        document.addEventListener('DOMContentLoaded', () => {
-            gameContainer.style.backgroundImage = 'none';
-            gameContainer.style.opacity = '0';
-            setTimeout(() => gameContainer.style.opacity = '1', 100);
-        });
+        function showMenu() {
+            if (!state.menuCard) {
+                els.gameContainer.style.backgroundImage = 'none';
+                
+                state.menuCard = document.createElement('div');
+                state.menuCard.className = 'menu-card';
+                state.menuCard.innerHTML = `
+                    <div class="menu-item">about/</div>
+                    <div class="menu-item">projects/</div>
+                    <div class="menu-item">thoughts.md</div>
+                `;
+                document.body.appendChild(state.menuCard);
+                setTimeout(() => state.menuCard.classList.add('active'), 50);
+                
+                const items = state.menuCard.querySelectorAll('.menu-item');
+                items.forEach((item, i) => {
+                    setTimeout(() => item.style.opacity = '1', 150 * (i + 1));
+                });
+            }
+        }
+
+        function hideMenu() {
+            if (state.menuCard) {
+                state.menuCard.classList.remove('active');
+                setTimeout(() => {
+                    state.menuCard.remove();
+                    state.menuCard = null;
+                }, 600);
+            }
+        }
 
         function drawCard() {
-            if (!hasDrawnFirstCard) {
-                prompt.style.opacity = '0';
-                name.style.opacity = '1';
-                hasDrawnFirstCard = true;
+            if (!state.hasDrawnFirstCard) {
+                els.prompt.style.opacity = '0';
+                els.name.style.opacity = '1';
+                state.hasDrawnFirstCard = true;
             }
 
-            currentCard = (currentCard + 1) % cards.length;
+            state.currentCard = (state.currentCard + 1) % cards.length;
             
-            const card = createCard(cards[currentCard]);
-            updateBackground(cards[currentCard].bgImage);
+            const card = createCard(cards[state.currentCard]);
+            updateBackground(cards[state.currentCard].bgImage);
             maintainCardLimit();
             animateCards();
         }
@@ -277,23 +302,23 @@
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `<div class="content">${cardData.text}</div>`;
-            card.style.transform = `translateY(120%) translateX(50%) rotateZ(${getRotationAngle(table.children.length) + 15}deg)`;
-            table.appendChild(card);
+            card.style.transform = `translateY(120%) translateX(50%) rotateZ(${getRotationAngle(els.table.children.length) + 15}deg)`;
+            els.table.appendChild(card);
             return card;
         }
 
         function updateBackground(bgImage) {
             setTimeout(() => {
-                gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                gameContainer.style.backgroundImage = bgImage ? `url('${bgImage}')` : 'none';
-                gameContainer.style.backgroundSize = 'cover';
-                gameContainer.style.backgroundPosition = 'center';
+                els.gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                els.gameContainer.style.backgroundImage = bgImage ? `url('${bgImage}')` : 'none';
+                els.gameContainer.style.backgroundSize = 'cover';
+                els.gameContainer.style.backgroundPosition = 'center';
             }, 100);
         }
 
         function maintainCardLimit() {
-            if (table.children.length > 5) {
-                table.removeChild(table.children[0]);
+            if (els.table.children.length > 5) {
+                els.table.removeChild(els.table.children[0]);
             }
         }
 
@@ -305,53 +330,47 @@
 
         function animateCards() {
             setTimeout(() => {
-                Array.from(table.children).forEach((card, index) => {
+                Array.from(els.table.children).forEach((card, index) => {
                     card.style.transform = `rotateZ(${getRotationAngle(index)}deg)`;
                 });
             }, 50);
         }
 
-        // Menu handling
-        name.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (!menuCard) {
-                gameContainer.style.backgroundImage = 'none';
-                
-                menuCard = document.createElement('div');
-                menuCard.className = 'menu-card';
-                menuCard.innerHTML = `
-                    <div class="menu-item">about/</div>
-                    <div class="menu-item">projects/</div>
-                    <div class="menu-item">thoughts.md</div>
-                `;
-                document.body.appendChild(menuCard);
-                setTimeout(() => menuCard.classList.add('active'), 50);
-                
-                const items = menuCard.querySelectorAll('.menu-item');
-                items.forEach((item, i) => {
-                    setTimeout(() => item.style.opacity = '1', 150 * (i + 1));
-                });
-            }
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            els.gameContainer.style.backgroundImage = 'none';
+            els.gameContainer.style.opacity = '0';
+            setTimeout(() => els.gameContainer.style.opacity = '1', 100);
         });
 
         // Event listeners
+        els.nameContainer.addEventListener('mouseenter', () => {
+            state.menuTimeout = setTimeout(showMenu, 100);
+        });
+
+        els.nameContainer.addEventListener('mouseleave', () => {
+            clearTimeout(state.menuTimeout);
+        });
+
         document.addEventListener('click', (e) => {
-            if (menuCard && !menuCard.contains(e.target) && e.target !== name) {
-                menuCard.classList.remove('active');
-                setTimeout(() => {
-                    menuCard.remove();
-                    menuCard = null;
-                }, 600);
-            } else if (e.target.tagName !== 'A' && !menuCard) {
+            if (e.target.tagName !== 'A') {
                 e.preventDefault();
+                if (state.menuCard && !state.menuCard.contains(e.target) && !els.nameContainer.contains(e.target)) {
+                    hideMenu();
+                }
                 drawCard();
             }
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !menuCard) {
+            if (e.code === 'Space') {
                 e.preventDefault();
+                if (state.menuCard) hideMenu();
                 drawCard();
+            } else if (e.code === 'Enter' || e.code === 'Tab' || e.key.toLowerCase() === 'm') {
+                e.preventDefault();
+                if (state.menuCard) hideMenu();
+                else showMenu();
             }
         });
     </script>
