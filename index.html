@@ -63,14 +63,16 @@
     margin-left: 0;
     margin-top: 8px;
 }
-
-        .subprompt::before {
+.subprompt::before {
     content: '[enter] for menu';
 }
 
 @media (max-width: 768px) {
     .subprompt::before {
         content: '[swipe up] for menu';
+    }
+    .subprompt {
+        text-align: center;  /* this helps with mobile alignment */
     }
 }
         .name-container {
@@ -409,15 +411,13 @@ function createAndAnimateNewCard() {
                 });
             }, 50);
         }
-
-       if ('ontouchstart' in window) {  // Better touch detection
+if ('ontouchstart' in window) {  // Better touch detection
     let touchStartY = null;
     let touchStartX = null;
     
     document.addEventListener('touchstart', e => {
         touchStartY = e.touches[0].clientY;
         touchStartX = e.touches[0].clientX;
-        console.log('Touch started:', touchStartY); // Debug
     }, { passive: false });
 
     document.addEventListener('touchmove', e => {
@@ -430,17 +430,19 @@ function createAndAnimateNewCard() {
         const touchEndY = e.changedTouches[0].clientY;
         const touchEndX = e.changedTouches[0].clientX;
         
-        const diffY = touchStartY - touchEndY;
+        const diffY = touchStartY - touchEndY;  // positive = up swipe, negative = down swipe
         const diffX = Math.abs(touchStartX - touchEndX);
         
-        console.log('Swipe distance Y:', diffY); // Debug
-        console.log('Swipe distance X:', diffX); // Debug
-        
-        // More lenient threshold (30px instead of 50px)
-        // Also check if vertical swipe is more prominent than horizontal
-        if (diffY > 30 && diffY > diffX && !state.menuCard) {
-            console.log('Swipe detected, showing menu'); // Debug
-            showMenu();
+        // Check if vertical swipe is more prominent than horizontal
+        if (Math.abs(diffY) > diffX) {
+            if (diffY > 30 && !state.menuCard) {
+                // Swipe up - show menu
+                showMenu();
+            } else if (diffY < -30 && state.menuCard) {
+                // Swipe down - hide menu and draw card
+                hideMenu();
+                drawCard();
+            }
         }
         
         touchStartY = null;
