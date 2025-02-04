@@ -337,24 +337,32 @@
         }
 
   async function drawCard() {
-    if (state.isTransitioning) return; // prevent animation queue
+    if (state.isTransitioning) return;
     state.isTransitioning = true;
 
-    const FADE_DURATION = 600; // in ms
-    const currentCard = els.cardContainer.querySelector('.card:last-child');
+    const FADE_DURATION = 600;
     
-    // Step 1: Fade out current card
-    await fadeElement(currentCard, false);
+    if (!state.hasDrawnFirstCard) {
+        els.prompt.style.opacity = '0';
+        els.name.style.opacity = '1';
+        state.hasDrawnFirstCard = true;
+    }
+
+    // if there's a current card, fade it out
+    const currentCard = els.table.querySelector('.card:last-child');
+    if (currentCard) {
+        await fadeElement(currentCard, false);
+    }
     
-    // Step 2: Update state and create new card (invisible)
+    // create new card (invisible)
     state.currentCard = (state.currentCard + 1) % cards.length;
     const newCard = createCard(cards[state.currentCard]);
     newCard.style.opacity = '0';
     
-    // Step 3: Swap background with nice crossfade
+    // background transition
     await crossfadeBackground(cards[state.currentCard].bgImage);
     
-    // Step 4: Fade in new card
+    // fade in new card
     await fadeElement(newCard, true);
     
     maintainCardLimit();
@@ -372,14 +380,21 @@ function fadeElement(element, fadeIn) {
 function crossfadeBackground(newBgUrl) {
     return new Promise(resolve => {
         const temp = document.createElement('div');
-        temp.className = 'background-overlay';
+        temp.style.position = 'absolute';
+        temp.style.inset = '0';
         temp.style.backgroundImage = `url(${newBgUrl})`;
-        document.body.appendChild(temp);
+        temp.style.backgroundSize = 'cover';
+        temp.style.backgroundPosition = 'center';
+        temp.style.opacity = '0';
+        temp.style.transition = `opacity ${FADE_DURATION}ms ease-in-out`;
+        els.gameContainer.appendChild(temp);
         
         requestAnimationFrame(() => {
             temp.style.opacity = '1';
             setTimeout(() => {
-                els.background.style.backgroundImage = `url(${newBgUrl})`;
+                els.gameContainer.style.backgroundImage = `url(${newBgUrl})`;
+                els.gameContainer.style.backgroundSize = 'cover';
+                els.gameContainer.style.backgroundPosition = 'center';
                 temp.remove();
                 resolve();
             }, FADE_DURATION);
