@@ -64,6 +64,15 @@
     margin-top: 8px;
 }
 
+        .subprompt::before {
+    content: '[enter] for menu';
+}
+
+@media (max-width: 768px) {
+    .subprompt::before {
+        content: '[swipe up] for menu';
+    }
+}
         .name-container {
             position: absolute;
             top: 8%;
@@ -250,7 +259,7 @@
 <body>
     <div class="game-container">
         <div class="vignette"></div>
-        <div class="prompt">press [space] to draw<br><span class="subprompt">[enter] for menu</span></div>
+        <span class="subprompt"></span>        
         <div class="name-container">
             <div class="name">neil</div>
         </div>
