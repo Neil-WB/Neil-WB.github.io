@@ -302,6 +302,9 @@
                 const img = new Image();
                 img.src = card.bgImage;
             }
+            // Preload menu background
+const menuImg = new Image();
+menuImg.src = 'alsoimages/boat.jpg';
         });
 
         function showMenu() {
@@ -336,27 +339,24 @@
             }
         }
 
-   function drawCard() {
+function drawCard() {
     if (!state.hasDrawnFirstCard) {
-        // Instant swap
+        // Fade out prompt
+        els.prompt.style.transition = 'opacity 0.3s ease';
         els.prompt.style.opacity = '0';
-        els.name.style.opacity = '1';
+        
+        // Fade in name with slight delay
+        setTimeout(() => {
+            els.name.style.transition = 'opacity 0.4s ease';
+            els.name.style.opacity = '1';
+        }, 200);
+        
         state.hasDrawnFirstCard = true;
         
-        // Wait juuust a tiny moment before starting card animation
-        requestAnimationFrame(() => {
-            state.currentCard = (state.currentCard + 1) % cards.length;
-            const card = createCard(cards[state.currentCard]);
-            updateBackground(cards[state.currentCard].bgImage);
-            maintainCardLimit();
-            animateCards();
-        });
+        // Start card animation after name fade-in
+        setTimeout(createAndAnimateNewCard, 300);
     } else {
-        state.currentCard = (state.currentCard + 1) % cards.length;
-        const card = createCard(cards[state.currentCard]);
-        updateBackground(cards[state.currentCard].bgImage);
-        maintainCardLimit();
-        animateCards();
+        createAndAnimateNewCard();
     }
 }
 
