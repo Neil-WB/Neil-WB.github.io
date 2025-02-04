@@ -112,6 +112,9 @@
             transform-origin: bottom center;
             transition: all var(--card-transition);
             box-shadow: 0 0 30px rgba(0,255,255,0.1);
+            opacity: 1;
+            transition: opacity 0.4s ease;
+}
         }
 
         .content {
@@ -335,71 +338,39 @@
                 }, isMobile ? 200 : 600);
             }
         }
-
-  async function drawCard() {
+function drawCard() {
     if (state.isTransitioning) return;
     state.isTransitioning = true;
 
-    const FADE_DURATION = 600;
-    
     if (!state.hasDrawnFirstCard) {
         els.prompt.style.opacity = '0';
         els.name.style.opacity = '1';
         state.hasDrawnFirstCard = true;
     }
 
-    // if there's a current card, fade it out
-    const currentCard = els.table.querySelector('.card:last-child');
-    if (currentCard) {
-        await fadeElement(currentCard, false);
+    // fade out current card if it exists
+    const currentCards = els.table.querySelectorAll('.card');
+    if (currentCards.length) {
+        currentCards[currentCards.length - 1].style.opacity = '0';
     }
-    
-    // create new card (invisible)
-    state.currentCard = (state.currentCard + 1) % cards.length;
-    const newCard = createCard(cards[state.currentCard]);
-    newCard.style.opacity = '0';
-    
-    // background transition
-    await crossfadeBackground(cards[state.currentCard].bgImage);
-    
-    // fade in new card
-    await fadeElement(newCard, true);
-    
-    maintainCardLimit();
-    state.isTransitioning = false;
-}
 
-function fadeElement(element, fadeIn) {
-    return new Promise(resolve => {
-        element.style.transition = `opacity ${FADE_DURATION}ms ease-in-out`;
-        element.style.opacity = fadeIn ? '1' : '0';
-        setTimeout(resolve, FADE_DURATION);
-    });
-}
-
-function crossfadeBackground(newBgUrl) {
-    return new Promise(resolve => {
-        const temp = document.createElement('div');
-        temp.style.position = 'absolute';
-        temp.style.inset = '0';
-        temp.style.backgroundImage = `url(${newBgUrl})`;
-        temp.style.backgroundSize = 'cover';
-        temp.style.backgroundPosition = 'center';
-        temp.style.opacity = '0';
-        temp.style.transition = `opacity ${FADE_DURATION}ms ease-in-out`;
-        els.gameContainer.appendChild(temp);
+    // wait a bit before new card
+    setTimeout(() => {
+        state.currentCard = (state.currentCard + 1) % cards.length;
+        const card = createCard(cards[state.currentCard]);
         
-        requestAnimationFrame(() => {
-            temp.style.opacity = '1';
-            setTimeout(() => {
-                els.gameContainer.style.backgroundImage = `url(${newBgUrl})`;
-                els.gameContainer.style.backgroundSize = 'cover';
-                els.gameContainer.style.backgroundPosition = 'center';
-                temp.remove();
-                resolve();
-            }, FADE_DURATION);
-        });
-    });
+        // update background with fade
+        updateBackground(cards[state.currentCard].bgImage);
+        
+        maintainCardLimit();
+        animateCards();
+        
+        // fade in new card
+        setTimeout(() => {
+            card.style.opacity = '1';
+            state.isTransitioning = false;
+        }, 100);
+    }, 400);
 }
 
 // Split out the card creation logic
