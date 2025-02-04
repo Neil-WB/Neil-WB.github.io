@@ -6,9 +6,181 @@
     <title>neil</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* Add these inside your existing style tag */
+        /* Base styles */
+        body { 
+            margin: 0;
+            font-family: 'VT323', monospace;
+            min-height: 100vh;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Container and effects */
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
+            transition: all 0.5s ease;
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
+            pointer-events: none;
+        }
+
+        /* Header elements */
+        .prompt {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: opacity 0.5s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .name {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            letter-spacing: 2px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .name:hover {
+            text-shadow: 0 0 15px rgba(255,138,60,0.8);
+        }
+
+        /* Card styles */
+        .table {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            perspective: 2000px;
+            width: 90vw;
+            height: 70vh;
+        }
+
+        .card {
+            width: 500px;
+            height: 700px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 25px;
+            padding: 40px;
+            position: absolute;
+            left: calc(50% - 250px);
+            bottom: 0;
+            transform-style: preserve-3d;
+            transform-origin: bottom center;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 30px rgba(0,255,255,0.1);
+        }
+
+        .card:hover {
+            box-shadow: 0 0 50px rgba(0,255,255,0.2);
+        }
+
+        .content {
+            font-size: 32px;
+            text-align: center;
+            line-height: 1.6;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Menu styles */
+        .menu-card {
+            width: 500px;
+            height: 700px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 25px;
+            padding: 40px;
+            position: absolute;
+            left: calc(50% - 250px);
+            bottom: -800px;
+            transform-style: preserve-3d;
+            transform-origin: bottom center;
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 30px rgba(0,255,255,0.1);
+            z-index: 1000;
+        }
+
+        .menu-card.active {
+            bottom: 100px;
+        }
+
+        .menu-item {
+            opacity: 0;
+            color: #FF8A3C;
+            margin: 30px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 32px;
+            text-align: center;
+        }
+
+        .menu-item:before {
+            content: '> ';
+            opacity: 0.5;
+        }
+
+        .menu-item:hover {
+            text-shadow: 0 0 8px rgba(255,138,60,0.8);
+        }
+
+        /* CRT effects */
+        .crt-lines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                transparent 50%, 
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.02);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        /* Animations */
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Mobile responsiveness */
         @media (max-width: 768px) {
-            .card {
+            .card, .menu-card {
                 width: calc(100vw - 40px);
                 height: calc(100vh - 200px);
                 left: 20px;
@@ -30,145 +202,7 @@
                 font-size: 24px;
             }
         }
-        
-        body { 
-            margin: 0;
-            font-family: 'VT323', monospace;
-            min-height: 100vh;
-            background: #000;
-            color: #fff;
-            overflow: hidden;
-        }
-        .game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
-            transition: all 0.5s ease;
-        }
-        .vignette {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
-            pointer-events: none;
-        }
-        .table {
-            position: absolute;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            perspective: 2000px;
-            width: 90vw;
-            height: 70vh;
-        }
-        .card {
-            width: 500px;
-            height: 700px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 25px;
-            padding: 40px;
-            position: absolute;
-            left: calc(50% - 250px);
-            bottom: 0;
-            transform-style: preserve-3d;
-            transform-origin: bottom center;
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: 0 0 30px rgba(0,255,255,0.1);
-        }
-        .prompt {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 32px;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: opacity 0.5s ease;
-        }
-        .name {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 32px;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
-            letter-spacing: 2px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .content {
-            font-size: 32px;
-            text-align: center;
-            line-height: 1.6;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .card:hover {
-            box-shadow: 0 0 50px rgba(0,255,255,0.2);
-        }
-        .crt-lines {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(
-                transparent 50%, 
-                rgba(0, 0, 0, 0.1) 50%
-            );
-            background-size: 100% 4px;
-            pointer-events: none;
-        }
-        .crt-flicker {
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,0.02);
-            opacity: 0;
-            pointer-events: none;
-            animation: flicker 0.15s infinite;
-        }
-        @keyframes flicker {
-            0% { opacity: 0.1; }
-            50% { opacity: 0; }
-            100% { opacity: 0.1; }
-        }
-
-.menu-card {
-    width: 500px;
-    height: 700px;
-    background: #1a1a1a;
-    border: 2px solid #333;
-    border-radius: 25px;
-    padding: 40px;
-    position: absolute;
-    left: calc(50% - 250px);
-    bottom: -800px; /* start below view */
-    transform-style: preserve-3d;
-    transform-origin: bottom center;
-    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    box-shadow: 0 0 30px rgba(0,255,255,0.1);
-    z-index: 1000;
-}
-
-.menu-card.active {
-    bottom: 100px;
-}
-
-.menu-item {
-    opacity: 0;
-    color: #FF8A3C;
-    margin: 30px 0;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 32px;
-    text-align: center;
-}
-
-.menu-item:hover {
-    text-shadow: 0 0 8px rgba(255,138,60,0.8);
-}
     </style>
-    
 </head>
 <body>
     <div class="game-container">
@@ -181,7 +215,6 @@
     </div>
 
     <script>
-        // Preload images
         const cards = [
             {
                 text: `To learn about fountain pens, contact an <a href="https://gitxperimenter.github.io/" style="color: #FF8A3C; text-decoration: underline;">expert</a>.`,
@@ -201,30 +234,30 @@
             }
         ];
 
-        // Game state
-        let currentCard = -1;
-        let hasDrawnFirstCard = false;
-
-        // Cache DOM elements
+        // Cache DOM elements and state
         const table = document.querySelector('.table');
         const prompt = document.querySelector('.prompt');
         const name = document.querySelector('.name');
         const gameContainer = document.querySelector('.game-container');
+        let currentCard = -1;
+        let hasDrawnFirstCard = false;
+        let menuCard = null;
 
         // Preload images
         cards.forEach(card => {
-            const img = new Image();
-            img.src = card.bgImage;
+            if (card.bgImage) {
+                const img = new Image();
+                img.src = card.bgImage;
+            }
         });
 
- // Initialize first background
-document.addEventListener('DOMContentLoaded', () => {
-    gameContainer.style.backgroundImage = 'none';
-    gameContainer.style.opacity = '0';
-    setTimeout(() => gameContainer.style.opacity = '1', 100);
-});
+        // Initialize black background
+        document.addEventListener('DOMContentLoaded', () => {
+            gameContainer.style.backgroundImage = 'none';
+            gameContainer.style.opacity = '0';
+            setTimeout(() => gameContainer.style.opacity = '1', 100);
+        });
 
-        // Card drawing logic
         function drawCard() {
             if (!hasDrawnFirstCard) {
                 prompt.style.opacity = '0';
@@ -244,10 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `<div class="content">${cardData.text}</div>`;
-            
-            // Initial position for animation
             card.style.transform = `translateY(120%) translateX(50%) rotateZ(${getRotationAngle(table.children.length) + 15}deg)`;
-            
             table.appendChild(card);
             return card;
         }
@@ -281,63 +311,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 50);
         }
 
+        // Menu handling
+        name.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!menuCard) {
+                gameContainer.style.backgroundImage = 'none';
+                
+                menuCard = document.createElement('div');
+                menuCard.className = 'menu-card';
+                menuCard.innerHTML = `
+                    <div class="menu-item">about/</div>
+                    <div class="menu-item">projects/</div>
+                    <div class="menu-item">thoughts.md</div>
+                `;
+                document.body.appendChild(menuCard);
+                setTimeout(() => menuCard.classList.add('active'), 50);
+                
+                const items = menuCard.querySelectorAll('.menu-item');
+                items.forEach((item, i) => {
+                    setTimeout(() => item.style.opacity = '1', 150 * (i + 1));
+                });
+            }
+        });
+
         // Event listeners
         document.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'A') {
+            if (menuCard && !menuCard.contains(e.target) && e.target !== name) {
+                menuCard.classList.remove('active');
+                setTimeout(() => {
+                    menuCard.remove();
+                    menuCard = null;
+                }, 600);
+            } else if (e.target.tagName !== 'A' && !menuCard) {
                 e.preventDefault();
                 drawCard();
             }
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
+            if (e.code === 'Space' && !menuCard) {
                 e.preventDefault();
                 drawCard();
             }
         });
-
-        // Menu handling
-const nameElement = document.querySelector('.name');
-let menu = null;
-
-// Menu handling
-const nameElement = document.querySelector('.name');
-let menuCard = null;
-
-nameElement.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!menuCard) {
-        // Reset background to black
-        gameContainer.style.backgroundImage = 'none';
-        
-        menuCard = document.createElement('div');
-        menuCard.className = 'menu-card';
-        menuCard.innerHTML = `
-            <div class="menu-item">about/</div>
-            <div class="menu-item">projects/</div>
-            <div class="menu-item">thoughts.md</div>
-        `;
-        document.body.appendChild(menuCard);
-        setTimeout(() => menuCard.classList.add('active'), 50);
-        
-        // Fade in items
-        const items = menuCard.querySelectorAll('.menu-item');
-        items.forEach((item, i) => {
-            setTimeout(() => item.style.opacity = '1', 150 * (i + 1));
-        });
-    }
-});
-
-document.addEventListener('click', (e) => {
-    if (menuCard && !menuCard.contains(e.target) && e.target !== nameElement) {
-        menuCard.classList.remove('active');
-        setTimeout(() => {
-            menuCard.remove();
-            menuCard = null;
-        }, 600);
-    }
-});
-});
     </script>
 </body>
 </html>
