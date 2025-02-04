@@ -259,8 +259,7 @@
 <body>
     <div class="game-container">
         <div class="vignette"></div>
-        <span class="subprompt"></span>        
-        <div class="name-container">
+        <div class="prompt">press [space] to draw<br><span class="subprompt"></span></div>        <div class="name-container">
             <div class="name">neil</div>
         </div>
         <div class="table"></div>
@@ -301,16 +300,16 @@
             touchStart: null
         };
 
-        // Preload images
-        cards.forEach(card => {
-            if (card.bgImage) {
-                const img = new Image();
-                img.src = card.bgImage;
-            }
-            // Preload menu background
+      cards.forEach(card => {
+    if (card.bgImage) {
+        const img = new Image();
+        img.src = card.bgImage;
+    }
+});
+
+// Preload menu background
 const menuImg = new Image();
 menuImg.src = 'alsoimages/boat.jpg';
-        });
 
         function showMenu() {
             if (!state.menuCard) {
