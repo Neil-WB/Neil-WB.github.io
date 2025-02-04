@@ -2,25 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>neil</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
+        /* Base styles */
+        :root {
+            --card-transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            --mobile-transition: 0.2s ease;
+        }
+
         body { 
             margin: 0;
             font-family: 'VT323', monospace;
-            min-height: 100vh;
+            min-height: 100dvh;
             background: #000;
             color: #fff;
             overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         .game-container {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 100dvw;
+            height: 100dvh;
             background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
-            transition: all 0.5s ease;
+            transition: all var(--card-transition);
+            overflow: hidden;
         }
 
         .vignette {
@@ -40,6 +50,14 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: opacity 0.5s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .subprompt {
+            display: block;
+            font-size: 24px;
+            opacity: 0.7;
         }
 
         .name-container {
@@ -51,7 +69,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
             z-index: 1000;
         }
 
@@ -89,12 +106,8 @@
             bottom: 0;
             transform-style: preserve-3d;
             transform-origin: bottom center;
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all var(--card-transition);
             box-shadow: 0 0 30px rgba(0,255,255,0.1);
-        }
-
-        .card:hover {
-            box-shadow: 0 0 50px rgba(0,255,255,0.2);
         }
 
         .content {
@@ -104,6 +117,10 @@
             position: relative;
             top: 50%;
             transform: translateY(-50%);
+        }
+
+        .card:hover {
+            box-shadow: 0 0 50px rgba(0,255,255,0.2);
         }
 
         .menu-card {
@@ -118,7 +135,7 @@
             bottom: -800px;
             transform-style: preserve-3d;
             transform-origin: bottom center;
-            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all var(--card-transition);
             box-shadow: 0 0 30px rgba(0,255,255,0.1);
             z-index: 1000;
         }
@@ -172,47 +189,64 @@
             100% { opacity: 0.1; }
         }
 
-       @media (max-width: 768px) {
-    .card, .menu-card {
-        width: 90vw; /* instead of calc */
-        height: 70vh; /* shorter to fit screen better */
-        left: 5vw; /* center it */
-        bottom: 10vh;
-        padding: 20px;
-        font-size: clamp(16px, 4vw, 24px);
-    }
-    
-    .table {
-        bottom: 0;
-        height: 90vh; /* taller to fill screen */
-        width: 100vw;
-    }
-    
-    .prompt, .name {
-        top: 5vh;
-        font-size: 24px;
-    }
-    
-    .content {
-        font-size: 24px;
-    }
+        @media (max-width: 768px) {
+            .game-container {
+                height: 100dvh;
+                width: 100dvw;
+            }
 
-    .prompt .subprompt {
-        font-size: 18px;
-    }
-}
+            .card, .menu-card {
+                width: 85vw;
+                height: 75vh;
+                left: 7.5vw;
+                padding: 20px;
+                transition: all var(--mobile-transition);
+            }
 
-        .subprompt {
-    font-size: 19px;
-    opacity: 0.6;
-}
+            .menu-card.active {
+                bottom: 12.5vh;
+            }
+
+            .table {
+                bottom: 0;
+                height: 85vh;
+                width: 100vw;
+            }
+
+            .prompt {
+                font-size: 24px;
+                width: 90%;
+                white-space: normal;
+            }
+
+            .subprompt {
+                font-size: 18px;
+                margin-top: 8px;
+            }
+
+            .subprompt::before {
+                content: 'swipe up for menu';
+            }
+
+            .content {
+                font-size: 24px;
+            }
+
+            .menu-item {
+                font-size: 28px;
+                margin: 40px 0;
+            }
+
+            * {
+                touch-action: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
         <div class="vignette"></div>
-<div class="prompt">press [space] to draw<br><span class="subprompt">[enter] for menu</span></div>
-
+        <div class="prompt">press [space] to draw<br><span class="subprompt">press [enter] for menu</span></div>
         <div class="name-container">
             <div class="name">neil</div>
         </div>
@@ -241,6 +275,8 @@
             }
         ];
 
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
         const els = {
             table: document.querySelector('.table'),
             prompt: document.querySelector('.prompt'),
@@ -249,11 +285,11 @@
             gameContainer: document.querySelector('.game-container')
         };
 
-        let state = {
+        const state = {
             currentCard: -1,
             hasDrawnFirstCard: false,
             menuCard: null,
-            menuTimeout: null
+            touchStart: null
         };
 
         // Preload images
@@ -264,11 +300,11 @@
             }
         });
 
-       function showMenu() {
-    if (!state.menuCard) {
-        els.gameContainer.style.backgroundImage = 'url("alsoimages/boat.jpg")';
-        els.gameContainer.style.backgroundSize = 'cover';
-      
+        function showMenu() {
+            if (!state.menuCard) {
+                els.gameContainer.style.backgroundImage = 'url("alsoimages/boat.jpg")';
+                els.gameContainer.style.backgroundSize = 'cover';
+                
                 state.menuCard = document.createElement('div');
                 state.menuCard.className = 'menu-card';
                 state.menuCard.innerHTML = `
@@ -292,7 +328,7 @@
                 setTimeout(() => {
                     state.menuCard.remove();
                     state.menuCard = null;
-                }, 600);
+                }, isMobile ? 200 : 600);
             }
         }
 
@@ -322,7 +358,7 @@
 
         function updateBackground(bgImage) {
             setTimeout(() => {
-                els.gameContainer.style.transition = 'background-image 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                els.gameContainer.style.transition = `background-image ${isMobile ? 0.2 : 0.4}s cubic-bezier(0.2, 0.8, 0.2, 1)`;
                 els.gameContainer.style.backgroundImage = bgImage ? `url('${bgImage}')` : 'none';
                 els.gameContainer.style.backgroundSize = 'cover';
                 els.gameContainer.style.backgroundPosition = 'center';
@@ -349,6 +385,27 @@
             }, 50);
         }
 
+        // Mobile swipe detection
+        if (isMobile) {
+            document.addEventListener('touchstart', e => {
+                state.touchStart = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', e => {
+                if (!state.touchStart) return;
+                
+                const touchEnd = e.changedTouches[0].clientY;
+                const swipeDistance = state.touchStart - touchEnd;
+                
+                // Detect upward swipe
+                if (swipeDistance > 50 && !state.menuCard) {
+                    showMenu();
+                }
+                
+                state.touchStart = null;
+            }, { passive: true });
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             els.gameContainer.style.backgroundImage = 'none';
@@ -356,29 +413,29 @@
             setTimeout(() => els.gameContainer.style.opacity = '1', 100);
         });
 
-     
-
+        // Event listeners
         document.addEventListener('click', (e) => {
             if (e.target.tagName !== 'A') {
                 e.preventDefault();
-                if (state.menuCard && !state.menuCard.contains(e.target) && !els.nameContainer.contains(e.target)) {
+                if (state.menuCard && !state.menuCard.contains(e.target)) {
                     hideMenu();
                 }
-                drawCard();
+                if (!e.target.closest('.menu-card')) {
+                    drawCard();
+                }
             }
         });
 
         document.addEventListener('keydown', (e) => {
-    
-    if (e.code === 'Space' || (e.code === 'Enter' && state.menuCard)) {
-        e.preventDefault();
-        if (state.menuCard) hideMenu();
-        drawCard();
-    } else if (e.code === 'Enter' || e.code === 'Tab' || e.key.toLowerCase() === 'm') {
-        e.preventDefault();
-        if (!state.menuCard) showMenu();
-    }
-});
+            if (e.code === 'Space' || (e.code === 'Enter' && state.menuCard)) {
+                e.preventDefault();
+                if (state.menuCard) hideMenu();
+                drawCard();
+            } else if (e.code === 'Enter' || e.code === 'Tab' || e.key.toLowerCase() === 'm') {
+                e.preventDefault();
+                if (!state.menuCard) showMenu();
+            }
+        });
     </script>
 </body>
 </html>
