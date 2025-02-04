@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>neil</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -172,29 +172,35 @@
             100% { opacity: 0.1; }
         }
 
-        @media (max-width: 768px) {
-            .card, .menu-card {
-                width: calc(100vw - 40px);
-                height: calc(100vh - 200px);
-                left: 20px;
-                bottom: 20px;
-                transform: none;
-                padding: 20px;
-                font-size: clamp(16px, 4vw, 24px);
-            }
-            .table {
-                bottom: 0;
-                height: calc(100vh - 100px);
-                width: 100vw;
-            }
-            .prompt, .name {
-                top: 5vh;
-                font-size: 24px;
-            }
-            .content {
-                font-size: 24px;
-            }
-        }
+       @media (max-width: 768px) {
+    .card, .menu-card {
+        width: 90vw; /* instead of calc */
+        height: 70vh; /* shorter to fit screen better */
+        left: 5vw; /* center it */
+        bottom: 10vh;
+        padding: 20px;
+        font-size: clamp(16px, 4vw, 24px);
+    }
+    
+    .table {
+        bottom: 0;
+        height: 90vh; /* taller to fill screen */
+        width: 100vw;
+    }
+    
+    .prompt, .name {
+        top: 5vh;
+        font-size: 24px;
+    }
+    
+    .content {
+        font-size: 24px;
+    }
+
+    .prompt .subprompt {
+        font-size: 18px;
+    }
+}
 
         .subprompt {
     font-size: 19px;
