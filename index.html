@@ -336,55 +336,28 @@
             }
         }
 
-  async function drawCard() {
-    if (state.isTransitioning) return; // prevent animation queue
-    state.isTransitioning = true;
-
-    const FADE_DURATION = 600; // in ms
-    const currentCard = els.cardContainer.querySelector('.card:last-child');
-    
-    // Step 1: Fade out current card
-    await fadeElement(currentCard, false);
-    
-    // Step 2: Update state and create new card (invisible)
-    state.currentCard = (state.currentCard + 1) % cards.length;
-    const newCard = createCard(cards[state.currentCard]);
-    newCard.style.opacity = '0';
-    
-    // Step 3: Swap background with nice crossfade
-    await crossfadeBackground(cards[state.currentCard].bgImage);
-    
-    // Step 4: Fade in new card
-    await fadeElement(newCard, true);
-    
-    maintainCardLimit();
-    state.isTransitioning = false;
-}
-
-function fadeElement(element, fadeIn) {
-    return new Promise(resolve => {
-        element.style.transition = `opacity ${FADE_DURATION}ms ease-in-out`;
-        element.style.opacity = fadeIn ? '1' : '0';
-        setTimeout(resolve, FADE_DURATION);
-    });
-}
-
-function crossfadeBackground(newBgUrl) {
-    return new Promise(resolve => {
-        const temp = document.createElement('div');
-        temp.className = 'background-overlay';
-        temp.style.backgroundImage = `url(${newBgUrl})`;
-        document.body.appendChild(temp);
+   function drawCard() {
+    if (!state.hasDrawnFirstCard) {
+        // Instant swap
+        els.prompt.style.opacity = '0';
+        els.name.style.opacity = '1';
+        state.hasDrawnFirstCard = true;
         
+        // Wait juuust a tiny moment before starting card animation
         requestAnimationFrame(() => {
-            temp.style.opacity = '1';
-            setTimeout(() => {
-                els.background.style.backgroundImage = `url(${newBgUrl})`;
-                temp.remove();
-                resolve();
-            }, FADE_DURATION);
+            state.currentCard = (state.currentCard + 1) % cards.length;
+            const card = createCard(cards[state.currentCard]);
+            updateBackground(cards[state.currentCard].bgImage);
+            maintainCardLimit();
+            animateCards();
         });
-    });
+    } else {
+        state.currentCard = (state.currentCard + 1) % cards.length;
+        const card = createCard(cards[state.currentCard]);
+        updateBackground(cards[state.currentCard].bgImage);
+        maintainCardLimit();
+        animateCards();
+    }
 }
 
 // Split out the card creation logic
