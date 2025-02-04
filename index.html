@@ -195,12 +195,18 @@
                 font-size: 24px;
             }
         }
+
+        .subprompt {
+    font-size: 24px;
+    opacity: 0.7;
+}
     </style>
 </head>
 <body>
     <div class="game-container">
         <div class="vignette"></div>
-        <div class="prompt">press [space] to draw</div>
+<div class="prompt">press [space] to draw<br><span class="subprompt">press [enter] for menu</span></div>
+
         <div class="name-container">
             <div class="name">neil</div>
         </div>
@@ -252,10 +258,11 @@
             }
         });
 
-        function showMenu() {
-            if (!state.menuCard) {
-                els.gameContainer.style.backgroundImage = 'none';
-                
+       function showMenu() {
+    if (!state.menuCard) {
+        els.gameContainer.style.backgroundImage = 'url("alsoimages/boat.jpg")';
+        els.gameContainer.style.backgroundSize = 'cover';
+      
                 state.menuCard = document.createElement('div');
                 state.menuCard.className = 'menu-card';
                 state.menuCard.innerHTML = `
@@ -343,14 +350,7 @@
             setTimeout(() => els.gameContainer.style.opacity = '1', 100);
         });
 
-        // Event listeners
-        els.nameContainer.addEventListener('mouseenter', () => {
-            state.menuTimeout = setTimeout(showMenu, 100);
-        });
-
-        els.nameContainer.addEventListener('mouseleave', () => {
-            clearTimeout(state.menuTimeout);
-        });
+     
 
         document.addEventListener('click', (e) => {
             if (e.target.tagName !== 'A') {
@@ -363,16 +363,16 @@
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (state.menuCard) hideMenu();
-                drawCard();
-            } else if (e.code === 'Enter' || e.code === 'Tab' || e.key.toLowerCase() === 'm') {
-                e.preventDefault();
-                if (state.menuCard) hideMenu();
-                else showMenu();
-            }
-        });
+    
+    if (e.code === 'Space' || (e.code === 'Enter' && state.menuCard)) {
+        e.preventDefault();
+        if (state.menuCard) hideMenu();
+        drawCard();
+    } else if (e.code === 'Enter' || e.code === 'Tab' || e.key.toLowerCase() === 'm') {
+        e.preventDefault();
+        if (!state.menuCard) showMenu();
+    }
+});
     </script>
 </body>
 </html>
