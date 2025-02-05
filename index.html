@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -109,78 +109,76 @@
             height: 70vh;
         }
 
-        .card {
-            
-        width: 360px;
-        height: 504px;
-  ```  padding: 25px;
 
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 25px;
-            padding: 25px;
-            position: absolute;
-            left: calc(50% - 180px);
-            bottom: 0;
-            transform-style: preserve-3d;
-            transform-origin: bottom center;
-            transition: all var(--card-transition);
-            box-shadow: 0 0 30px rgba(0,255,255,0.1);
-        }
+/* Define card dimensions */
+:root {
+   --card-width: 360px;
+   --card-height: 504px;
+   --card-padding: 25px;
+}
 
-        .content {
-            font-size: 32px;
-            text-align: center;
-            line-height: 1.6;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+/* Shared card properties */
+.card, .menu-card {
+   width: var(--card-width);
+   height: var(--card-height);
+   padding: var(--card-padding);
+   background: #1a1a1a;
+   border: 2px solid #333;
+   border-radius: 25px;
+   position: absolute;
+   left: calc(50% - var(--card-width) / 2);
+   transform-style: preserve-3d;
+   transform-origin: bottom center;
+   transition: all var(--card-transition);
+   box-shadow: 0 0 30px rgba(0,255,255,0.1);
+}
 
-        .card:hover {
-            box-shadow: 0 0 50px rgba(0,255,255,0.2);
-        }
+/* Card specific */
+.card {
+   bottom: 0;
+}
 
-        .menu-card {
-            width: 500px;
-            height: 700px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 25px;
-            padding: 40px;
-            position: absolute;
-            left: calc(50% - 250px);
-            bottom: -800px;
-            transform-style: preserve-3d;
-            transform-origin: bottom center;
-            transition: all var(--card-transition);
-            box-shadow: 0 0 30px rgba(0,255,255,0.1);
-            z-index: 1000;
-        }
+.card:hover {
+   box-shadow: 0 0 50px rgba(0,255,255,0.2);
+}
 
-        .menu-card.active {
-            bottom: 100px;
-        }
+.content {
+   font-size: 32px;
+   text-align: center;
+   line-height: 1.6;
+   position: relative;
+   top: 50%;
+   transform: translateY(-50%);
+}
 
-        .menu-item {
-            opacity: 0;
-            color: #FF8A3C;
-            margin: 30px 0;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 32px;
-            text-align: center;
-        }
+/* Menu card specific */
+.menu-card {
+   bottom: -800px;
+   z-index: 1000;
+}
 
-        .menu-item:before {
-            content: '> ';
-            opacity: 0.5;
-        }
+.menu-card.active {
+   bottom: 100px;
+}
 
-        .menu-item:hover {
-            text-shadow: 0 0 5px rgba(255,138,60,0.6);
-        }
+.menu-item {
+   opacity: 0;
+   color: #FF8A3C;
+   margin: 30px 0;
+   cursor: pointer;
+   transition: all 0.2s;
+   font-size: 32px;
+   text-align: center;
+}
 
+.menu-item:before {
+   content: '> ';
+   opacity: 0.5;
+}
+
+.menu-item:hover {
+   text-shadow: 0 0 5px rgba(255,138,60,0.6);
+}
         .crt-lines {
             position: fixed;
             inset: 0;
@@ -300,7 +298,7 @@
             },
 
              {
-                text: `timor mortis conturbat eum, philistine, don't ask him about his phd he's trying to be humble,<a href="https://gleech.org" style="color: #FF8A3C; text-decoration: underline;">GAVIN</a>`,
+                text: `timor mortis conturbat eum, phd sword-wielder, YouTube logistics, <a href="https://gleech.org" style="color: #FF8A3C; text-decoration: underline;">GAVIN</a>`,
                 bgImage: 'alsoimages/visualmodality.png'
             },
 
