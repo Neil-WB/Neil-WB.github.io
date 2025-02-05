@@ -210,17 +210,17 @@
                 width: 100dvw;
             }
 
-            .card, .menu-card {
-                width: 85vw;
-                height: 75vh;
-                left: 7.5vw;
-                padding: 20px;
-                transition: all var(--mobile-transition);
-            }
+           .card, .menu-card {
+    width: 400px;
+    height: 560px;  /* maintaining roughly the same aspect ratio */
+    left: calc(50% - 200px);  /* adjusting position to match new width */
+    padding: 30px;  /* slightly reduced padding */
+}
 
-            .menu-card.active {
-                bottom: 12.5vh;
-            }
+/* menu positioning adjustment */
+.menu-card.active {
+    bottom: 80px;  /* reduced from 100px to account for smaller height */
+}
 
             .table {
                 bottom: 0;
