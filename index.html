@@ -255,7 +255,20 @@
             * {
                 touch-action: none;
             }
-        }
+
+            /* Add this at the END of your style section */
+.game-container .card,
+.game-container .menu-card {
+    width: 360px !important;  /* even smaller than before */
+    height: 504px !important;
+    left: calc(50% - 180px) !important;
+    padding: 25px !important;
+}
+
+.game-container .menu-card.active {
+    bottom: 80px !important;
+}
+        
     </style>
 </head>
 <body>
