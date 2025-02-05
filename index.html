@@ -204,19 +204,20 @@
             100% { opacity: 0.1; }
         }
 
+        card, .menu-card {
+        width: 360px;
+        height: 504px;
+        left: calc(50% - 180px);
+        padding: 25px;
+    }
+
         @media (max-width: 768px) {
             .game-container {
                 height: 100dvh;
                 width: 100dvw;
             }
 
-           .card, .menu-card {
-    width: 400px;
-    height: 560px;  /* maintaining roughly the same aspect ratio */
-    left: calc(50% - 200px);  /* adjusting position to match new width */
-    padding: 30px;  /* slightly reduced padding */
-}
-
+         
 /* menu positioning adjustment */
 .menu-card.active {
     bottom: 80px;  /* reduced from 100px to account for smaller height */
@@ -256,14 +257,7 @@
                 touch-action: none;
             }
 
-            /* Add this at the END of your style section */
-.game-container .card,
-.game-container .menu-card {
-    width: 360px !important;  /* even smaller than before */
-    height: 504px !important;
-    left: calc(50% - 180px) !important;
-    padding: 25px !important;
-}
+
 
 .game-container .menu-card.active {
     bottom: 80px !important;
