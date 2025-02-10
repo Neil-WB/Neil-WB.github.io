@@ -1,84 +1,143 @@
-import React from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neil's microgrants</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'VT323', monospace;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
 
-const MicrograntsPage = () => {
-  return (
-    <div className="fixed inset-0 font-mono">
-      {/* main container with background */}
-      <div 
-        className="min-h-screen w-full bg-cover bg-center relative"
-        style={{
-          backgroundImage: 'url("alsoimages/icarus.jpg")',
-        }}
-      >
-        {/* vignette effect */}
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(circle, transparent 30%, rgba(0,0,0,0.7))'
-        }} />
-        
-        {/* subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-black/60" />
-        
-        {/* softer crt effects */}
-        <div className="fixed inset-0 pointer-events-none opacity-50" style={{
-          background: 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.05) 50%)',
-          backgroundSize: '100% 4px'
-        }} />
-        <div className="fixed inset-0 pointer-events-none animate-flicker bg-white/[0.01]" />
-        
-        {/* main content */}
-        <div className="relative z-10 max-w-3xl mx-auto p-8 text-white">
-          <div className="space-y-12">
-            <header className="space-y-2">
-              <div className="text-sm opacity-60">Feb 10, 2025</div>
-              <h1 className="text-4xl">neil's microgrants</h1>
-            </header>
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            background: url('alsoimages/icarus.jpg') center/cover;
+            position: relative;
+        }
 
-            <div className="space-y-8 text-lg leading-relaxed">
-              <p>Running a tiny grant operation based on no other criteria than my personal taste.</p>
-              
-              <p>Interested in doing what big grantmakers can't do, i.e. pay an inordinate amount of attention to filling in tiny cracks goliath's don't see because they're too zoomed out.</p>
-              
-              <p>
-                <a href="https://gwern.net/backstop" className="text-orange-400 hover:text-orange-300">
-                  Interested in funding individuals, not structured entities
-                </a>.
-              </p>
-              
-              <p>If you don't think money can be useful to you, you're probably wrong, and we can probably figure something out.</p>
-              
-              <p>Yeah, it's hard figuring out where money can be useful, tell me about it.</p>
-              
-              <div className="pt-4">
-                <a 
-                  href="mailto:neil[m]warren@gmail.com" 
-                  className="text-orange-400 hover:text-orange-300 text-xl"
-                >
-                  neil [m] warren @gmail.com
-                </a>
-              </div>
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.7));
+            pointer-events: none;
+        }
+
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+        }
+
+        .crt-lines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.05) 50%);
+            background-size: 100% 4px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.01);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .date {
+            opacity: 0.6;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .text {
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        p {
+            margin: 2rem 0;
+        }
+
+        a {
+            color: #FF8A3C;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #FF9F5B;
+        }
+
+        .email {
+            font-size: 1.25rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="vignette"></div>
+        <div class="gradient-overlay"></div>
+        <div class="crt-lines"></div>
+        <div class="crt-flicker"></div>
+        
+        <div class="content">
+            <div class="header">
+                <div class="date">Feb 10, 2025</div>
+                <h1>neil's microgrants</h1>
             </div>
-          </div>
+
+            <div class="text">
+                <p>Running a tiny grant operation based on no other criteria than my personal taste.</p>
+                
+                <p>Interested in doing what big grantmakers can't do, i.e. pay an inordinate amount of attention to filling in tiny cracks goliath's don't see because they're too zoomed out.</p>
+                
+                <p><a href="https://gwern.net/backstop">Interested in funding individuals, not structured entities</a>.</p>
+                
+                <p>If you don't think money can be useful to you, you're probably wrong, and we can probably figure something out.</p>
+                
+                <p>Yeah, it's hard figuring out where money can be useful, tell me about it.</p>
+                
+                <div class="email">
+                    <a href="mailto:neil[m]warren@gmail.com">neil [m] warren @gmail.com</a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  );
-};
-
-// Add the flicker animation
-const styles = `
-  @keyframes flicker {
-    0% { opacity: 0.1; }
-    50% { opacity: 0; }
-    100% { opacity: 0.1; }
-  }
-
-  .animate-flicker {
-    animation: flicker 0.15s infinite;
-  }
-`;
-
-const styleSheet = document.createElement("style");
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
-
-export default MicrograntsPage;
+</body>
+</html>
