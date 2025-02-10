@@ -1,0 +1,84 @@
+import React from 'react';
+
+const MicrograntsPage = () => {
+  return (
+    <div className="fixed inset-0 font-mono">
+      {/* main container with background */}
+      <div 
+        className="min-h-screen w-full bg-cover bg-center relative"
+        style={{
+          backgroundImage: 'url("alsoimages/icarus.jpg")',
+        }}
+      >
+        {/* vignette effect */}
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(circle, transparent 30%, rgba(0,0,0,0.7))'
+        }} />
+        
+        {/* subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-black/60" />
+        
+        {/* softer crt effects */}
+        <div className="fixed inset-0 pointer-events-none opacity-50" style={{
+          background: 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.05) 50%)',
+          backgroundSize: '100% 4px'
+        }} />
+        <div className="fixed inset-0 pointer-events-none animate-flicker bg-white/[0.01]" />
+        
+        {/* main content */}
+        <div className="relative z-10 max-w-3xl mx-auto p-8 text-white">
+          <div className="space-y-12">
+            <header className="space-y-2">
+              <div className="text-sm opacity-60">Feb 10, 2025</div>
+              <h1 className="text-4xl">neil's microgrants</h1>
+            </header>
+
+            <div className="space-y-8 text-lg leading-relaxed">
+              <p>Running a tiny grant operation based on no other criteria than my personal taste.</p>
+              
+              <p>Interested in doing what big grantmakers can't do, i.e. pay an inordinate amount of attention to filling in tiny cracks goliath's don't see because they're too zoomed out.</p>
+              
+              <p>
+                <a href="https://gwern.net/backstop" className="text-orange-400 hover:text-orange-300">
+                  Interested in funding individuals, not structured entities
+                </a>.
+              </p>
+              
+              <p>If you don't think money can be useful to you, you're probably wrong, and we can probably figure something out.</p>
+              
+              <p>Yeah, it's hard figuring out where money can be useful, tell me about it.</p>
+              
+              <div className="pt-4">
+                <a 
+                  href="mailto:neil[m]warren@gmail.com" 
+                  className="text-orange-400 hover:text-orange-300 text-xl"
+                >
+                  neil [m] warren @gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Add the flicker animation
+const styles = `
+  @keyframes flicker {
+    0% { opacity: 0.1; }
+    50% { opacity: 0; }
+    100% { opacity: 0.1; }
+  }
+
+  .animate-flicker {
+    animation: flicker 0.15s infinite;
+  }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
+export default MicrograntsPage;
