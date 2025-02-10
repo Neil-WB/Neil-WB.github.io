@@ -6,64 +6,57 @@
     <title>neil</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* Base styles */
-        :root {
-            --card-transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            --mobile-transition: 0.2s ease;
-          --card-width: 414px;
-          --card-height: 580px;
-          --card-padding: 29px;
-        }
+ /* Base styles */
+:root {
+    --card-transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    --mobile-transition: 0.2s ease;
+    --card-width: 414px;
+    --card-height: 580px;
+    --card-padding: 29px;
+}
 
-        body { 
-            margin: 0;
-            font-family: 'VT323', monospace;
-            min-height: 100dvh;
-            background: #000;
-            color: #fff;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-        }
+body { 
+    margin: 0;
+    font-family: 'VT323', monospace;
+    min-height: 100dvh;
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
 
-        .game-container {
-            position: relative;
-            width: 100dvw;
-            height: 100dvh;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
-            transition: all var(--card-transition);
-            overflow: hidden;
-        }
+.game-container {
+    position: relative;
+    width: 100dvw;
+    height: 100dvh;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
+    transition: all var(--card-transition);
+    overflow: hidden;
+}
 
-        .vignette {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
-            pointer-events: none;
-        }
+.vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8));
+    pointer-events: none;
+}
 
-        .prompt {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 32px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: opacity 0.5s ease;
-            text-align: center;
-            white-space: nowrap;
-        }
+.prompt {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 32px;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: opacity 0.5s ease;
+    text-align: center;
+    white-space: nowrap;
+}
 
-     .table { 
-          bottom: -150px;     /* desktop default */
-
-
- 
-
-        
 .subprompt {
     display: block;
     font-size: 24px;
@@ -72,215 +65,186 @@
     margin-left: 0;
     margin-top: 8px;
 }
+
 .subprompt::before {
     content: '[enter] for menu';
 }
 
-@media (max-width: 768px) {
-:root {
-   --card-width: 228px;    /* ~75% of 414px */
-   --card-height: 319px;   /* ~75% of 580px */
-   --card-padding: 17px;   /* ~75% of 29px */
+.name-container {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transform: translateY(-50%);
 }
- 
-    .subprompt::before {
-        content: '[swipe up] for menu';
-    }
-    .subprompt {
-        text-align: center;  /* this helps with mobile alignment */
-    }
-}
-        .name-container {
-            position: absolute;
-            top: 8%;
-            left: 0;
-            width: 100%;
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
 
-     .name {
-    font-size: 32px;
+.name {
+    font-size: 48px;
     letter-spacing: 2px;
     opacity: 0;
     text-shadow: 0 0 4px rgba(0,0,0,0.3);
     transition: opacity 0.4s ease;
 }
 
-        .name:hover {
-            text-shadow: 0 0 15px rgba(255,255,255,0.8);
-        }
+.name:hover {
+    text-shadow: 0 0 15px rgba(255,255,255,0.8);
+}
 
-        .table {
-            position: absolute;
-            bottom: -400px;
-            left: 50%;
-            transform: translateX(-50%);
-            perspective: 2000px;
-            width: 90vw;
-            height: 70vh;
-        }
-
-
-
+.table {
+    position: absolute;
+    bottom: -250px;
+    left: 50%;
+    transform: translateX(-50%);
+    perspective: 2000px;
+    width: 90vw;
+    height: 70vh;
+}
 
 /* Shared card properties */
 .card, .menu-card {
-   width: var(--card-width);
-   height: var(--card-height);
-   padding: var(--card-padding);
-   background: #1a1a1a;
-   border: 2px solid #333;
-   border-radius: 25px;
-   position: absolute;
-   left: calc(50% - var(--card-width) / 2);
-   transform-style: preserve-3d;
-   transform-origin: bottom center;
-   transition: all var(--card-transition);
-   box-shadow: 0 0 30px rgba(0,255,255,0.1);
+    width: var(--card-width);
+    height: var(--card-height);
+    padding: var(--card-padding);
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 25px;
+    position: absolute;
+    left: calc(50% - var(--card-width) / 2);
+    transform-style: preserve-3d;
+    transform-origin: bottom center;
+    transition: all var(--card-transition);
+    box-shadow: 0 0 30px rgba(0,255,255,0.1);
 }
 
 /* Card specific */
 .card {
-   bottom: 0;
+    bottom: 0;
 }
 
 .card:hover {
-   box-shadow: 0 0 50px rgba(0,255,255,0.2);
+    box-shadow: 0 0 50px rgba(0,255,255,0.2);
 }
 
 .content {
-   font-size: 32px;
-   text-align: center;
-   line-height: 1.6;
-   position: relative;
-   top: 50%;
-   transform: translateY(-50%);
+    font-size: 32px;
+    text-align: center;
+    line-height: 1.6;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 /* Menu card specific */
 .menu-card {
-   bottom: -800px;
-   z-index: 1000;
+    bottom: -800px;
+    z-index: 9999;
 }
 
 .menu-card.active {
-   bottom: 100px;
+    bottom: 150px;
 }
 
 .menu-item {
-   opacity: 0;
-   color: #FF8A3C;
-   margin: 30px 0;
-   cursor: pointer;
-   transition: all 0.2s;
-   font-size: 32px;
-   text-align: center;
+    opacity: 0;
+    color: #FF8A3C;
+    margin: 30px 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 32px;
+    text-align: center;
 }
 
 .menu-item:before {
-   content: '> ';
-   opacity: 0.5;
+    content: '> ';
+    opacity: 0.5;
 }
 
 .menu-item:hover {
-   text-shadow: 0 0 5px rgba(255,138,60,0.6);
-}
-        .crt-lines {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(
-                transparent 50%, 
-                rgba(0, 0, 0, 0.1) 50%
-            );
-            background-size: 100% 4px;
-            pointer-events: none;
-        }
-
-        .crt-flicker {
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,0.02);
-            opacity: 0;
-            pointer-events: none;
-            animation: flicker 0.15s infinite;
-        }
-
-        @keyframes flicker {
-            0% { opacity: 0.1; }
-            50% { opacity: 0; }
-            100% { opacity: 0.1; }
-        }
-
-     
-
-        @media (max-width: 768px) {
-            .game-container {
-                height: 100dvh;
-                width: 100dvw;
-            }
-
-         
-/* menu positioning adjustment */
-.menu-card.active {
-    bottom: 80px;  /* reduced from 100px to account for smaller height */
+    text-shadow: 0 0 5px rgba(255,138,60,0.6);
 }
 
-            .table {
-                bottom: 0;
-                height: 85vh;
-                width: 100vw;
-            }
-
-            .prompt {
-                font-size: 24px;
-                width: 90%;
-                white-space: normal;
-            }
-
-            .subprompt {
-                font-size: 18px;
-                margin-top: 8px;
-            }
-
-            .subprompt::before {
-                content: 'swipe up for menu';
-            }
-
-            .content {
-                font-size: 24px;
-            }
-
-            .menu-item {
-                font-size: 28px;
-                margin: 40px 0;
-            }
-
-            * {
-                touch-action: none;
-            }
-
-
-
-.game-container .menu-card.active {
-    bottom: 80px !important;
+.crt-lines {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        transparent 50%, 
+        rgba(0, 0, 0, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
 }
-        
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <div class="vignette"></div>
-        <div class="prompt">press [space] to draw<br><span class="subprompt"></span></div>        <div class="name-container">
-            <div class="name">neil</div>
-        </div>
-        <div class="table"></div>
-        <div class="crt-lines"></div>
-        <div class="crt-flicker"></div>
-    </div>
+
+.crt-flicker {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.02);
+    opacity: 0;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: 0.1; }
+    50% { opacity: 0; }
+    100% { opacity: 0.1; }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --card-width: 228px;
+        --card-height: 319px;
+        --card-padding: 17px;
+    }
+
+    .game-container {
+        height: 100dvh;
+        width: 100dvw;
+    }
+
+    .menu-card.active {
+        bottom: 100px;
+    }
+
+    .table {
+        bottom: 0;
+        height: 85vh;
+        width: 100vw;
+    }
+
+    .prompt {
+        font-size: 24px;
+        width: 90%;
+        white-space: normal;
+    }
+
+    .subprompt {
+        font-size: 18px;
+        margin-top: 8px;
+        text-align: center;
+    }
+
+    .subprompt::before {
+        content: 'swipe up for menu';
+    }
+
+    .content {
+        font-size: 24px;
+    }
+
+    .menu-item {
+        font-size: 28px;
+        margin: 40px 0;
+    }
+
+    * {
+        touch-action: none;
+    }
+}
 
     <script>
         const cards = [
