@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,19 +8,21 @@
     <style>
         /* Base styles */
         :root {
+            --text-font-size: 32px; /* Default font size for text */
+            --text-color: #fff;     /* Default text color */
             --card-transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
             --mobile-transition: 0.2s ease;
-          --card-width: 414px;
-          --card-height: 580px;
-          --card-padding: 29px;
+            --card-width: 310px;
+            --card-height: 435px;
+            --card-padding: 29px;
         }
 
-        body { 
+        body {
             margin: 0;
             font-family: 'VT323', monospace;
             min-height: 100dvh;
             background: #000;
-            color: #fff;
+            color: var(--text-color);
             overflow: hidden;
             position: fixed;
             width: 100%;
@@ -48,17 +50,16 @@
             top: 10%;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 32px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            font-size: var(--text-font-size); /* Use CSS variable for font size */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: opacity 0.5s ease;
             text-align: center;
-            white-space: nowrap;
+            white-space: normal; /* Allow text to wrap if needed */
         }
 
-     .table { 
-          bottom: -150px;     /* desktop default */
+  
 
 
  
@@ -81,6 +82,7 @@
    --card-width: 228px;    /* ~75% of 414px */
    --card-height: 319px;   /* ~75% of 580px */
    --card-padding: 17px;   /* ~75% of 29px */
+   --text-font-size: 24px; /* Smaller font size for mobile - applies to both! */
 }
  
     .subprompt::before {
@@ -90,38 +92,35 @@
         text-align: center;  /* this helps with mobile alignment */
     }
 }
-      .name-container {
-    position: fixed;  /* changed from absolute */
-    top: 10%;
+
+.name-container {
+    position: absolute;
+    top: 8%;
     left: 0;
     width: 100%;
     height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;  /* cranked up */
+    z-index: 1000;
 }
 
 .name {
-    font-size: 48px;
-    color: #fff;
-    letter-spacing: 4px;
-    text-transform: lowercase;
-    opacity: 0;
-    text-shadow: 0 0 10px rgba(255,255,255,0.8);
-    transition: all 0.4s ease;
+    font-size: var(--text-font-size); /* Use CSS variable for font size */
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+    transition: opacity 0.5s ease;
     text-align: center;
-    width: 100%;
-    pointer-events: auto;  /* ensure clickable */
+    white-space: nowrap;
+    color: var(--text-color);
+    opacity: 0;  /* will be faded in by JS */
 }
 
-        .name:hover {
-            text-shadow: 0 0 15px rgba(255,255,255,0.8);
-        }
+/* Remove any duplicate .name-container or .name definitions later in the CSS */
 
         .table {
             position: absolute;
-            bottom: -400px;
+            bottom: -150px;
             left: 50%;
             transform: translateX(-50%);
             perspective: 2000px;
@@ -150,7 +149,7 @@
 
 /* Card specific */
 .card {
-   bottom: 0;
+   bottom: 10px;  /* makes cards peek from bottom */
 }
 
 .card:hover {
@@ -158,7 +157,7 @@
 }
 
 .content {
-   font-size: 32px;
+   font-size: 32px;  /* restored original font size */
    text-align: center;
    line-height: 1.6;
    position: relative;
@@ -168,12 +167,14 @@
 
 /* Menu card specific */
 .menu-card {
-   bottom: -800px;
-   z-index: 1000;
+   bottom: -800px;  /* starts way off-screen for smooth entry */
+   z-index: 1001;   /* ensures it's above ALL other elements */
+   transform-origin: center bottom;  /* smooth slide up animation */
 }
 
 .menu-card.active {
-   bottom: 100px;
+   bottom: 20px;    /* slides up to just above the other cards */
+   transform: translateZ(50px);  /* subtle 3D effect to emphasize it's on top */
 }
 
 .menu-item {
@@ -182,7 +183,7 @@
    margin: 30px 0;
    cursor: pointer;
    transition: all 0.2s;
-   font-size: 32px;
+   font-size: 32px;  /* same as regular card content */
    text-align: center;
 }
 
@@ -194,11 +195,23 @@
 .menu-item:hover {
    text-shadow: 0 0 5px rgba(255,138,60,0.6);
 }
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .menu-card.active {
+        bottom: 10px;  /* slightly lower on mobile */
+    }
+    
+    .menu-item {
+        font-size: 28px;
+        margin: 30px 0;
+    }
+}
         .crt-lines {
             position: fixed;
             inset: 0;
             background: linear-gradient(
-                transparent 50%, 
+                transparent 50%,
                 rgba(0, 0, 0, 0.1) 50%
             );
             background-size: 100% 4px;
@@ -231,7 +244,7 @@
          
 /* menu positioning adjustment */
 .menu-card.active {
-    bottom: 80px;  /* reduced from 100px to account for smaller height */
+    bottom: 80px !important;
 }
 
             .table {
@@ -278,11 +291,11 @@
 </head>
 <body>
     <div class="game-container">
-        <div class="vignette"></div>
-        <div class="prompt">press [space] to draw<br><span class="subprompt"></span></div>        <div class="name-container">
+        <div class="name-container">
             <div class="name">neil</div>
         </div>
-        <div class="table"></div>
+        <div class="vignette"></div>
+        <div class="prompt">press [space] to draw<br><span class="subprompt"></span></div>        <div class="table"></div>
         <div class="crt-lines"></div>
         <div class="crt-flicker"></div>
     </div>
@@ -395,16 +408,12 @@ function drawCard() {
         // Fade out prompt
         els.prompt.style.transition = 'opacity 0.3s ease';
         els.prompt.style.opacity = '0';
-        
-        // Fade in name with slight delay
-        setTimeout(() => {
-            els.name.style.transition = 'opacity 0.4s ease';
-            els.name.style.opacity = '1';
-        }, 200);
-        
+
+        // Debug - force name visibility
+        els.name.style.opacity = '1';
+        console.log('Name element:', els.name); // debug
+
         state.hasDrawnFirstCard = true;
-        
-        // Start card animation after name fade-in
         setTimeout(createAndAnimateNewCard, 300);
     } else {
         createAndAnimateNewCard();
