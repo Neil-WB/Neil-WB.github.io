@@ -318,7 +318,11 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
 
     async function callClaudeAPI(apiKey, systemPrompt, userContent, maxTokens = 1000) {
       try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        // Use cors-proxy.htmldriven.com as a CORS proxy
+        const proxyUrl = 'https://cors-proxy.htmldriven.com/api/v1/proxy';
+        
+        // Prepare the request to Claude API
+        const claudeRequest = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -339,6 +343,39 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
               }
             ]
           })
+        };
+        
+        // Prepare the proxy request
+        const proxyRequest = {
+          url: 'https://api.anthropic.com/v1/messages',
+          requestMethod: 'POST',
+          contentType: 'application/json',
+          headers: {
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+          },
+          data: JSON.stringify({
+            model: 'claude-3-7-sonnet-20250219',
+            max_tokens: maxTokens,
+            messages: [
+              {
+                role: 'system',
+                content: systemPrompt
+              },
+              {
+                role: 'user',
+                content: userContent
+              }
+            ]
+          })
+        };
+        
+        const response = await fetch(proxyUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(proxyRequest)
         });
 
         if (!response.ok) {
@@ -353,7 +390,14 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           throw new Error(`API Error: ${errorInfo}`);
         }
 
-        return await response.json();
+        const proxyResponse = await response.json();
+        
+        if (proxyResponse.statusCode !== 200) {
+          throw new Error(`API Error: ${proxyResponse.statusCode} - ${proxyResponse.statusText}`);
+        }
+        
+        // Parse the Claude API response from the proxy response body
+        return JSON.parse(proxyResponse.body);
       } catch (error) {
         console.error('Claude API error:', error);
         throw new Error(`Failed to call Claude API: ${error.message}`);
