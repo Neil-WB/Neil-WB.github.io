@@ -1,249 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neil's Deep Research</title>
-  <style>
-    /* Main container */
-    .deep-research-container {
-      font-family: 'Courier New', monospace;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #111;
-      color: #0f0;
-      border: 1px solid #0f0;
-      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    }
+#!/usr/bin/env node
+//
+// deep-research.js
+//
+// A Node.js terminal-based version of your original HTML/JS "Neil's Deep Research" script,
+// adapted for Anthropic’s official API, preserving the same prompts & structure.
+//
+// NOTE: The model name "claude-3-7-sonnet-20250219" may not be publicly available.
+//       Replace it with an Anthropic model your key can access if needed.
+//
 
-    /* Header */
-    .research-header {
-      text-align: center;
-      margin-bottom: 30px;
-      border-bottom: 1px solid #0f0;
-      padding-bottom: 15px;
-    }
+const readline = require('readline');
+const fetch = require('node:fetch'); // In Node 18+, globalThis.fetch is built in, but let's be explicit
 
-    .research-header h1 {
-      font-size: 28px;
-      margin: 0;
-      color: #0f0;
-    }
+// ─────────── Terminal Colors ───────────
+const RESET = "\x1b[0m";
+const BRIGHT = "\x1b[1m";
+const FG_GREEN = "\x1b[32m";
+const FG_CYAN = "\x1b[36m";
+const FG_YELLOW = "\x1b[33m";
+const FG_RED = "\x1b[31m";
 
-    .research-header p {
-      margin: 5px 0 0;
-      color: #0f0;
-      opacity: 0.8;
-    }
-
-    /* Form */
-    .research-form {
-      margin-bottom: 30px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      background-color: #222;
-      border: 1px solid #0f0;
-      color: #0f0;
-      font-family: 'Courier New', monospace;
-    }
-
-    .form-group textarea {
-      height: 100px;
-      resize: vertical;
-    }
-
-    .form-group small {
-      display: block;
-      margin-top: 5px;
-      color: #0f0;
-      opacity: 0.7;
-    }
-
-    button {
-      background-color: #0f0;
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      font-family: 'Courier New', monospace;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    button:hover {
-      background-color: #00ff00;
-      box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-    }
-
-    /* Loading indicator */
-    .loading-indicator {
-      text-align: center;
-      margin: 30px 0;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .spinner {
-      border: 5px solid #111;
-      border-top: 5px solid #0f0;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 15px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .status-text {
-      font-size: 18px;
-    }
-
-    /* Results terminal */
-    .retro-terminal {
-      background-color: #111;
-      border: 1px solid #0f0;
-      padding: 15px;
-      margin-top: 30px;
-      font-family: 'Courier New', monospace;
-      color: #0f0;
-      box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3);
-    }
-
-    .terminal-header {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #0f0;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
-
-    .terminal-title {
-      font-weight: bold;
-      font-size: 20px;
-    }
-
-    .terminal-timestamp {
-      opacity: 0.7;
-    }
-
-    .terminal-section {
-      margin-bottom: 25px;
-    }
-
-    .section-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      border-bottom: 1px dashed #0f0;
-      padding-bottom: 5px;
-    }
-
-    .user-query {
-      color: #ff0;
-      margin-bottom: 15px;
-    }
-
-    .academic-query {
-      color: #0ff;
-      margin-bottom: 15px;
-    }
-
-    .paper-title {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .paper-authors {
-      opacity: 0.8;
-      margin-bottom: 5px;
-    }
-
-    .paper-doi {
-      opacity: 0.7;
-      margin-bottom: 5px;
-    }
-
-    .paper-link a {
-      color: #0ff;
-      text-decoration: none;
-    }
-
-    .paper-link a:hover {
-      text-decoration: underline;
-    }
-
-    .synthesis-content {
-      line-height: 1.5;
-    }
-
-    /* Error message */
-    .error-message {
-      background-color: #300;
-      border: 1px solid #f00;
-      color: #f00;
-      padding: 15px;
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    .error-message h3 {
-      margin-top: 0;
-    }
-  </style>
-</head>
-<body>
-  <div class="deep-research-container">
-    <div class="research-header">
-      <h1>Neil's Deep Research</h1>
-      <p>Powered by Claude 3.7</p>
-    </div>
-    
-    <div class="research-form">
-      <div class="form-group">
-        <label for="claude-api-key">Claude API Key</label>
-        <input type="password" id="claude-api-key" placeholder="Enter your Claude API key">
-        <small>Your API key is stored locally and never sent to our servers</small>
-      </div>
-      
-      <div class="form-group">
-        <label for="research-query">Research Question</label>
-        <textarea id="research-query" placeholder="What would you like to research?"></textarea>
-      </div>
-      
-      <button id="start-research">Start Research</button>
-    </div>
-    
-    <div class="loading-indicator hidden">
-      <div class="spinner"></div>
-      <div class="status-text">Thinking...</div>
-    </div>
-    
-    <div id="research-results"></div>
-  </div>
-
-  <script>
-    // Prompts for Claude API
-    const QUERY_OPTIMIZATION_PROMPT = `You are an expert academic research assistant specializing in transforming casual questions into precise academic search queries. Your task is to:
+// ─────────── Original Prompts ───────────
+const QUERY_OPTIMIZATION_PROMPT = `You are an expert academic research assistant specializing in transforming casual questions into precise academic search queries. Your task is to:
 
 1. Analyze the user's question and identify the core research topics
 2. Reformulate it using academic terminology and precision
@@ -256,7 +34,7 @@ Example:
 Input: "How do brains create memories?"
 Output: "Neural mechanisms of memory formation and consolidation in hippocampal and cortical circuits"`;
 
-    const PAPER_SELECTION_PROMPT = `You are a research paper selection algorithm. You'll receive a scientific query and a list of paper titles. Your task is to select the 5 most relevant papers based on their titles, authors, and publication dates.
+const PAPER_SELECTION_PROMPT = `You are a research paper selection algorithm. You'll receive a scientific query and a list of paper titles. Your task is to select the 5 most relevant papers based on their titles, authors, and publication dates.
 
 You should consider:
 1. Relevance to the query topic
@@ -270,7 +48,7 @@ Return ONLY a JSON array of DOIs for the 5 most relevant papers. Example:
 
 Do not include any explanation or commentary, just the JSON array.`;
 
-    const BEST_PAPER_SELECTION_PROMPT = `You are a scientific literature expert. You'll receive a research query and abstracts for several papers. Your task is to select the SINGLE best paper that would be most informative for addressing the research query.
+const BEST_PAPER_SELECTION_PROMPT = `You are a scientific literature expert. You'll receive a research query and abstracts for several papers. Your task is to select the SINGLE best paper that would be most informative for addressing the research query.
 
 Consider:
 1. Direct relevance to the specific research question
@@ -281,7 +59,7 @@ Consider:
 
 Return ONLY the DOI of the best paper. No explanation or commentary.`;
 
-    const RESEARCH_SYNTHESIS_PROMPT = `You are Deep Research, an advanced scientific research assistant powered by Claude 3.7. You specialize in synthesizing research papers into comprehensive, accurate reports tailored to the user's original question.
+const RESEARCH_SYNTHESIS_PROMPT = `You are Deep Research, an advanced scientific research assistant powered by Claude 3.7. You specialize in synthesizing research papers into comprehensive, accurate reports tailored to the user's original question.
 
 You will receive:
 1. The user's original query
@@ -307,499 +85,380 @@ Format your response as a well-structured research report with:
 
 Important: Write as if you have thoroughly read and analyzed the complete paper, not just the abstract. Use your knowledge to infer what the full paper likely contains based on the abstract and typical structure of papers in this field.`;
 
-    // Core functionality
-    async function processInput(userQuery, apiKey) {
+// ──────────────────────────────────────────
+// Terminal Input Helpers
+// ──────────────────────────────────────────
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+// Ask a question in the terminal. If hideInput=true, mask typed characters.
+function ask(question, hideInput = false) {
+  return new Promise((resolve) => {
+    if (!hideInput) {
+      rl.question(question, (answer) => resolve(answer.trim()));
+    } else {
+      process.stdin.on("data", (char) => {
+        char = char + "";
+        switch (char) {
+          case "\n":
+          case "\r":
+          case "\u0004":
+            process.stdout.write("\n");
+            break;
+          default:
+            process.stdout.write("\x1B[2K\x1B[200D" + question + Array(rl.line.length + 1).join("*"));
+            break;
+        }
+      });
+      rl.question(question, (answer) => resolve(answer.trim()));
+    }
+  });
+}
+
+// ──────────────────────────────────────────
+// Utility: Build Anthropic-Style Prompt
+// (Because we can’t use a messages[] array with role: 'system'/'user'.)
+// ──────────────────────────────────────────
+function buildAnthropicPrompt(systemPrompt, userContent) {
+  // Minimal approach: treat systemPrompt as an initial "Human" instruction
+  // Then userContent as the next "Human" message, with a filler Assistant line in between
+  return `Human: ${systemPrompt}\n\nAssistant:\n\nHuman: ${userContent}\n\nAssistant:`;
+}
+
+// ──────────────────────────────────────────
+// Replacing the old "messages" approach with Anthropic's single-prompt approach
+// ──────────────────────────────────────────
+async function callClaudeAPI(apiKey, systemPrompt, userContent, maxTokens = 1000) {
+  try {
+    // Build the final "Human: ... Assistant: ... Human: ... Assistant:" prompt
+    const prompt = buildAnthropicPrompt(systemPrompt, userContent);
+
+    // Call Anthropic’s official API
+    const response = await fetch('https://api.anthropic.com/v1/complete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01' // from your original script
+      },
+      body: JSON.stringify({
+        model: 'claude-3-7-sonnet-20250219', // same as your original script
+        prompt,
+        max_tokens_to_sample: maxTokens,
+        temperature: 0.7,
+        top_k: 0,
+        top_p: 1,
+        stream: false,
+        stop_sequences: ["Human:"]
+      })
+    });
+
+    if (!response.ok) {
+      let errorInfo;
+      try {
+        const errData = await response.json();
+        errorInfo = errData.error?.message || `Status: ${response.status}`;
+      } catch (e) {
+        errorInfo = `Status: ${response.status}`;
+      }
+      throw new Error(`API Error: ${errorInfo}`);
+    }
+
+    // Parse the JSON
+    const jsonData = await response.json();
+    // The text completion is in jsonData.completion
+    return jsonData; // We'll return the entire object
+  } catch (error) {
+    console.error(`${FG_RED}Claude API error:${RESET}`, error);
+    throw new Error(`Failed to call Claude API: ${error.message}`);
+  }
+}
+
+// ──────────────────────────────────────────
+// Keep your original helper functions
+// ──────────────────────────────────────────
+function extractSearchTerms(optimizedQuery) {
+  // Clean query and split into words
+  const words = optimizedQuery
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .split(/\s+/);
+
+  // Filter out common stop words
+  const stopWords = ['the','and','of','in','on','at','to','for','with','by','as','that','this','are','is'];
+  const filteredWords = words.filter(word => word.length > 2 && !stopWords.includes(word));
+
+  // Get top 5 longest words
+  const sortedWords = filteredWords.sort((a, b) => b.length - a.length).slice(0, 5);
+
+  // Join with OR for bioRxiv
+  return sortedWords.join(' OR ');
+}
+
+// ──────────────────────────────────────────
+// Data flow functions
+// ──────────────────────────────────────────
+async function processInput(userQuery, apiKey) {
+  return {
+    query: userQuery.trim(),
+    apiKey: apiKey.trim(),
+    timestamp: new Date().toISOString()
+  };
+}
+
+async function optimizeQuery(processedInput) {
+  try {
+    // callClaudeAPI -> returns { completion: "...", ... }
+    const result = await callClaudeAPI(
+      processedInput.apiKey,
+      QUERY_OPTIMIZATION_PROMPT,
+      processedInput.query,
+      300
+    );
+
+    // Instead of result.content[0].text, we use result.completion
+    const optimizedQuery = result.completion;
+
+    return {
+      originalQuery: processedInput.query,
+      optimizedQuery,
+      apiKey: processedInput.apiKey,
+      searchTerms: extractSearchTerms(optimizedQuery)
+    };
+  } catch (error) {
+    throw new Error(`Failed to optimize query: ${error.message}`);
+  }
+}
+
+async function retrievePapers(queryData) {
+  try {
+    const currentYear = new Date().getFullYear();
+    const searchUrl = `https://api.biorxiv.org/details/biorxiv/2021-01-01/${currentYear}-12-31/${encodeURIComponent(queryData.searchTerms)}/0/50`;
+
+    console.log(`${FG_CYAN}Searching bioRxiv with URL:${RESET} ${searchUrl}`);
+    const searchResponse = await fetch(searchUrl);
+    if (!searchResponse.ok) {
+      throw new Error(`BioRxiv API error: ${searchResponse.status}`);
+    }
+
+    const searchData = await searchResponse.json();
+    if (!searchData.collection || searchData.collection.length === 0) {
+      return { success: false, error: "No papers found. Try different search terms." };
+    }
+
+    // Step 2: Format paper titles
+    const paperTitles = searchData.collection.map(paper => ({
+      doi: paper.doi,
+      title: paper.title,
+      authors: paper.authors,
+      date: paper.date
+    }));
+
+    // Step 3: Ask Claude to select promising papers
+    const titleSelectionResult = await callClaudeAPI(
+      queryData.apiKey,
+      PAPER_SELECTION_PROMPT,
+      JSON.stringify({ query: queryData.optimizedQuery, papers: paperTitles }),
+      300
+    );
+
+    // The actual text from Anthropic is in titleSelectionResult.completion
+    let textContent = titleSelectionResult.completion;
+    let selectedDOIs;
+    try {
+      const jsonMatch = textContent.match(/\[.*\]/s);
+      if (jsonMatch) {
+        selectedDOIs = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error("Could not parse DOI list from Claude's response");
+      }
+    } catch (error) {
+      console.error("Error parsing DOIs:", error);
+      selectedDOIs = paperTitles.slice(0, 3).map(p => p.doi);
+    }
+
+    if (!Array.isArray(selectedDOIs) || selectedDOIs.length === 0) {
+      throw new Error("Failed to get valid paper selections");
+    }
+
+    // Step 5: Fetch abstracts
+    const abstractPromises = selectedDOIs.map(doi =>
+      fetch(`https://api.biorxiv.org/details/biorxiv/${doi}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.collection && data.collection.length > 0) {
+            return {
+              doi: data.collection[0].doi,
+              title: data.collection[0].title,
+              authors: data.collection[0].authors,
+              abstract: data.collection[0].abstract,
+              url: `https://www.biorxiv.org/content/${data.collection[0].doi}v${data.collection[0].version}`
+            };
+          }
+          return null;
+        })
+        .catch(err => {
+          console.error(`Error fetching abstract for DOI ${doi}:`, err);
+          return null;
+        })
+    );
+
+    const abstracts = (await Promise.all(abstractPromises)).filter(a => a !== null);
+    if (abstracts.length === 0) {
+      return { success: false, error: "Failed to retrieve paper abstracts" };
+    }
+
+    // If only one paper
+    if (abstracts.length === 1) {
       return {
-        query: userQuery.trim(),
-        apiKey: apiKey.trim(),
-        timestamp: new Date().toISOString()
+        success: true,
+        query: queryData,
+        allPaperTitles: paperTitles,
+        selectedAbstracts: abstracts,
+        bestPaper: abstracts[0]
       };
     }
 
-    async function callClaudeAPI(apiKey, systemPrompt, userContent, maxTokens = 1000) {
-      try {
-        // Use cors-proxy.htmldriven.com as a CORS proxy
-        const proxyUrl = 'https://cors-proxy.htmldriven.com/api/v1/proxy';
-        
-        // Prepare the request to Claude API
-        const claudeRequest = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01'
-          },
-          body: JSON.stringify({
-            model: 'claude-3-7-sonnet-20250219',
-            max_tokens: maxTokens,
-            messages: [
-              {
-                role: 'system',
-                content: systemPrompt
-              },
-              {
-                role: 'user',
-                content: userContent
-              }
-            ]
-          })
-        };
-        
-        // Prepare the proxy request
-        const proxyRequest = {
-          url: 'https://api.anthropic.com/v1/messages',
-          requestMethod: 'POST',
-          contentType: 'application/json',
-          headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01'
-          },
-          data: JSON.stringify({
-            model: 'claude-3-7-sonnet-20250219',
-            max_tokens: maxTokens,
-            messages: [
-              {
-                role: 'system',
-                content: systemPrompt
-              },
-              {
-                role: 'user',
-                content: userContent
-              }
-            ]
-          })
-        };
-        
-        const response = await fetch(proxyUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(proxyRequest)
-        });
+    // Step 7: select best paper
+    const bestPaperResult = await callClaudeAPI(
+      queryData.apiKey,
+      BEST_PAPER_SELECTION_PROMPT,
+      JSON.stringify({ query: queryData.optimizedQuery, papers: abstracts }),
+      300
+    );
 
-        if (!response.ok) {
-          let errorInfo = 'Unknown error';
-          try {
-            const errorData = await response.json();
-            errorInfo = errorData.error?.message || `Status: ${response.status}`;
-          } catch (e) {
-            errorInfo = `Status: ${response.status}`;
-          }
-          
-          throw new Error(`API Error: ${errorInfo}`);
-        }
-
-        const proxyResponse = await response.json();
-        
-        if (proxyResponse.statusCode !== 200) {
-          throw new Error(`API Error: ${proxyResponse.statusCode} - ${proxyResponse.statusText}`);
-        }
-        
-        // Parse the Claude API response from the proxy response body
-        return JSON.parse(proxyResponse.body);
-      } catch (error) {
-        console.error('Claude API error:', error);
-        throw new Error(`Failed to call Claude API: ${error.message}`);
-      }
+    let bestPaperDOI = bestPaperResult.completion.trim();
+    if (bestPaperDOI.includes("10.1101/")) {
+      const doiMatch = bestPaperDOI.match(/10\.1101\/[0-9v.]+/);
+      if (doiMatch) bestPaperDOI = doiMatch[0];
     }
 
-    function extractSearchTerms(optimizedQuery) {
-      // Clean query and split into words
-      const words = optimizedQuery
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .split(/\s+/);
-      
-      // Filter out common stop words
-      const stopWords = ['the', 'and', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'as', 'that', 'this', 'are', 'is'];
-      const filteredWords = words.filter(word => 
-        word.length > 2 && !stopWords.includes(word)
-      );
-      
-      // Get top 5 longest words (likely most specific)
-      const sortedWords = filteredWords.sort((a, b) => b.length - a.length).slice(0, 5);
-      
-      // Join with OR for bioRxiv search
-      return sortedWords.join(' OR ');
+    const bestPaper = abstracts.find(p => p.doi === bestPaperDOI);
+    if (!bestPaper) {
+      console.warn("Best paper not found in abstracts, using first paper instead");
+      return {
+        success: true,
+        query: queryData,
+        allPaperTitles: paperTitles,
+        selectedAbstracts: abstracts,
+        bestPaper: abstracts[0]
+      };
     }
 
-    async function optimizeQuery(processedInput) {
-      try {
-        const result = await callClaudeAPI(
-          processedInput.apiKey,
-          QUERY_OPTIMIZATION_PROMPT,
-          processedInput.query,
-          300
-        );
-        
-        return {
-          originalQuery: processedInput.query,
-          optimizedQuery: result.content[0].text,
-          apiKey: processedInput.apiKey,
-          searchTerms: extractSearchTerms(result.content[0].text)
-        };
-      } catch (error) {
-        throw new Error(`Failed to optimize query: ${error.message}`);
-      }
+    return {
+      success: true,
+      query: queryData,
+      allPaperTitles: paperTitles,
+      selectedAbstracts: abstracts,
+      bestPaper
+    };
+  } catch (error) {
+    console.error(`${FG_RED}Paper retrieval error:${RESET}`, error);
+    return { success: false, error: `Failed to retrieve papers: ${error.message}` };
+  }
+}
+
+async function synthesizeResearch(paperData) {
+  try {
+    // Create context
+    const synthesisContext = {
+      originalQuery: paperData.query.originalQuery,
+      optimizedQuery: paperData.query.optimizedQuery,
+      paper: paperData.bestPaper
+    };
+
+    const synthesisResult = await callClaudeAPI(
+      paperData.query.apiKey,
+      RESEARCH_SYNTHESIS_PROMPT,
+      JSON.stringify(synthesisContext),
+      4000
+    );
+
+    // The final text is in .completion
+    return {
+      originalQuery: paperData.query.originalQuery,
+      optimizedQuery: paperData.query.optimizedQuery,
+      paper: paperData.bestPaper,
+      synthesis: synthesisResult.completion,
+      timestamp: new Date().toISOString()
+    };
+  } catch (error) {
+    console.error(`${FG_RED}Research synthesis error:${RESET}`, error);
+    throw new Error(`Failed to synthesize research: ${error.message}`);
+  }
+}
+
+// ──────────────────────────────────────────
+// (Optional) Minimal "render" in console
+// ──────────────────────────────────────────
+function renderResults(researchData) {
+  console.log(`${BRIGHT}${FG_GREEN}\n┌────────────────────────────────────────┐`);
+  console.log(`│        DEEP RESEARCH REPORT            │`);
+  console.log(`└────────────────────────────────────────┘${RESET}`);
+
+  console.log(`${FG_CYAN}\nQUERY:${RESET} ${researchData.originalQuery}`);
+  console.log(`${FG_CYAN}\nACADEMIC FORMULATION:${RESET} ${researchData.optimizedQuery}`);
+
+  console.log(`${FG_CYAN}\nPRIMARY SOURCE:${RESET}`);
+  console.log(`Title:  ${researchData.paper.title}`);
+  console.log(`Authors:${researchData.paper.authors}`);
+  console.log(`DOI:    ${researchData.paper.doi}`);
+  console.log(`URL:    ${researchData.paper.url}`);
+
+  console.log(`${FG_CYAN}\nRESEARCH SYNTHESIS:${RESET}`);
+  console.log(researchData.synthesis);
+
+  console.log(`${FG_GREEN}\nReport generated at ${new Date().toLocaleString()}${RESET}\n`);
+}
+
+// ──────────────────────────────────────────
+// Main driver function (replaces DOM button click)
+// ──────────────────────────────────────────
+async function main() {
+  console.log(`${BRIGHT}${FG_GREEN}
+  ╔══════════════════════════════════════╗
+  ║        Neil's Deep Research         ║
+  ║         Powered by Claude 3.7       ║
+  ╚══════════════════════════════════════╝${RESET}\n`);
+
+  try {
+    const apiKey = await ask(`${FG_YELLOW}Claude API Key: ${RESET}`, true);
+    const query = await ask(`${FG_YELLOW}Research Question: ${RESET}`);
+
+    if (!apiKey || !query) {
+      console.error(`${FG_RED}Please provide both an API key and a research question.${RESET}`);
+      process.exit(1);
     }
 
-    async function retrievePapers(queryData) {
-      try {
-        // Step 1: Get paper titles from bioRxiv
-        const currentYear = new Date().getFullYear();
-        const searchUrl = `https://api.biorxiv.org/details/biorxiv/2021-01-01/${currentYear}-12-31/${encodeURIComponent(queryData.searchTerms)}/0/50`;
-        
-        console.log("Searching bioRxiv with URL:", searchUrl);
-        
-        const searchResponse = await fetch(searchUrl);
-        
-        if (!searchResponse.ok) {
-          throw new Error(`BioRxiv API error: ${searchResponse.status}`);
-        }
-        
-        const searchData = await searchResponse.json();
-        
-        // Handle no results case
-        if (!searchData.collection || searchData.collection.length === 0) {
-          return {
-            success: false,
-            error: "No papers found. Try different search terms."
-          };
-        }
-        
-        // Step 2: Format paper titles for Claude
-        const paperTitles = searchData.collection.map(paper => ({
-          doi: paper.doi,
-          title: paper.title,
-          authors: paper.authors,
-          date: paper.date
-        }));
-        
-        // Step 3: Ask Claude to select promising papers
-        const titleSelectionResult = await callClaudeAPI(
-          queryData.apiKey,
-          PAPER_SELECTION_PROMPT,
-          JSON.stringify({
-            query: queryData.optimizedQuery,
-            papers: paperTitles
-          }),
-          300
-        );
-        
-        // Step 4: Parse selected DOIs - handle potential JSON parsing issues
-        let selectedDOIs;
-        try {
-          // The response might include explanation text, so we need to extract just the JSON part
-          const textContent = titleSelectionResult.content[0].text;
-          // Find JSON array in text (between square brackets)
-          const jsonMatch = textContent.match(/\[.*\]/s);
-          if (jsonMatch) {
-            selectedDOIs = JSON.parse(jsonMatch[0]);
-          } else {
-            throw new Error("Could not parse DOI list from Claude's response");
-          }
-        } catch (error) {
-          console.error("Error parsing DOIs:", error);
-          // Fallback: take first 3 papers if Claude's response is unparseable
-          selectedDOIs = paperTitles.slice(0, 3).map(paper => paper.doi);
-        }
-        
-        // Ensure we have DOIs and they are in the expected format
-        if (!Array.isArray(selectedDOIs) || selectedDOIs.length === 0) {
-          throw new Error("Failed to get valid paper selections");
-        }
-        
-        // Step 5: Fetch abstracts for selected papers
-        const abstractPromises = selectedDOIs.map(doi => 
-          fetch(`https://api.biorxiv.org/details/biorxiv/${doi}`)
-            .then(res => {
-              if (!res.ok) {
-                console.error(`Failed to fetch abstract for DOI ${doi}`);
-                return null;
-              }
-              return res.json();
-            })
-            .then(data => {
-              if (data && data.collection && data.collection.length > 0) {
-                return {
-                  doi: data.collection[0].doi,
-                  title: data.collection[0].title,
-                  authors: data.collection[0].authors,
-                  abstract: data.collection[0].abstract,
-                  url: `https://www.biorxiv.org/content/${data.collection[0].doi}v${data.collection[0].version}`
-                };
-              }
-              return null;
-            })
-            .catch(err => {
-              console.error(`Error fetching abstract for DOI ${doi}:`, err);
-              return null;
-            })
-        );
-        
-        const abstracts = (await Promise.all(abstractPromises)).filter(a => a !== null);
-        
-        if (abstracts.length === 0) {
-          return {
-            success: false,
-            error: "Failed to retrieve paper abstracts"
-          };
-        }
-        
-        // Step 6: If we have only one paper, use it directly
-        if (abstracts.length === 1) {
-          return {
-            success: true,
-            query: queryData,
-            allPaperTitles: paperTitles,
-            selectedAbstracts: abstracts,
-            bestPaper: abstracts[0]
-          };
-        }
-        
-        // Step 7: Select best paper from abstracts
-        const bestPaperResult = await callClaudeAPI(
-          queryData.apiKey,
-          BEST_PAPER_SELECTION_PROMPT,
-          JSON.stringify({
-            query: queryData.optimizedQuery,
-            papers: abstracts
-          }),
-          300
-        );
-        
-        let bestPaperDOI = bestPaperResult.content[0].text.trim();
-        
-        // Handle if Claude returns more than just the DOI
-        if (bestPaperDOI.includes("10.1101/")) {
-          // Extract the DOI using regex
-          const doiMatch = bestPaperDOI.match(/10\.1101\/[0-9v.]+/);
-          if (doiMatch) {
-            bestPaperDOI = doiMatch[0];
-          }
-        }
-        
-        // Find the best paper
-        const bestPaper = abstracts.find(paper => paper.doi === bestPaperDOI);
-        
-        // If best paper not found, use the first abstract
-        if (!bestPaper) {
-          console.warn("Best paper not found in abstracts, using first paper instead");
-          return {
-            success: true,
-            query: queryData,
-            allPaperTitles: paperTitles,
-            selectedAbstracts: abstracts,
-            bestPaper: abstracts[0]
-          };
-        }
-        
-        return {
-          success: true,
-          query: queryData,
-          allPaperTitles: paperTitles,
-          selectedAbstracts: abstracts,
-          bestPaper: bestPaper
-        };
-      } catch (error) {
-        console.error('Paper retrieval error:', error);
-        return {
-          success: false,
-          error: `Failed to retrieve papers: ${error.message}`
-        };
-      }
+    // Step 1: Process input
+    const processedInput = await processInput(query, apiKey);
+
+    // Step 2: Optimize query
+    console.log(`${FG_CYAN}\nOptimizing query...${RESET}`);
+    const optimizedQuery = await optimizeQuery(processedInput);
+
+    // Step 3: Retrieve papers
+    console.log(`${FG_CYAN}Retrieving relevant papers...${RESET}`);
+    const paperData = await retrievePapers(optimizedQuery);
+    if (!paperData.success) {
+      throw new Error(paperData.error || 'Failed to retrieve papers');
     }
 
-    async function synthesizeResearch(paperData) {
-      try {
-        // Create context for synthesis
-        const synthesisContext = {
-          originalQuery: paperData.query.originalQuery,
-          optimizedQuery: paperData.query.optimizedQuery,
-          paper: paperData.bestPaper
-        };
+    // Step 4: Synthesize research
+    console.log(`${FG_CYAN}Synthesizing research report...${RESET}`);
+    const researchResults = await synthesizeResearch(paperData);
 
-        const synthesisResult = await callClaudeAPI(
-          paperData.query.apiKey,
-          RESEARCH_SYNTHESIS_PROMPT,
-          JSON.stringify(synthesisContext),
-          4000
-        );
-        
-        return {
-          originalQuery: paperData.query.originalQuery,
-          optimizedQuery: paperData.query.optimizedQuery,
-          paper: paperData.bestPaper,
-          synthesis: synthesisResult.content[0].text,
-          timestamp: new Date().toISOString()
-        };
-      } catch (error) {
-        console.error('Research synthesis error:', error);
-        throw new Error(`Failed to synthesize research: ${error.message}`);
-      }
-    }
+    // Step 5: Render
+    renderResults(researchResults);
 
-    // Sanitize text for HTML output
-    function sanitizeHTML(text) {
-      const element = document.createElement('div');
-      element.textContent = text;
-      return element.innerHTML;
-    }
+  } catch (error) {
+    console.error(`${FG_RED}Research Error:${RESET} ${error.message}`);
+  } finally {
+    rl.close();
+  }
+}
 
-    // Simple markdown to HTML converter
-    function markdownToHtml(markdown) {
-      return markdown
-        .replace(/\n\n/g, '<br><br>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/\n\* (.*?)(?=\n|$)/g, '<br>• $1')
-        .replace(/\n\d+\. (.*?)(?=\n|$)/g, '<br>$&')
-        .replace(/\n/g, '<br>');
-    }
-
-    // Render results to the DOM
-    function renderResults(researchData, elementId) {
-      const container = document.getElementById(elementId);
-      
-      // Clear previous results
-      container.innerHTML = '';
-      
-      // Create retro terminal style output
-      const terminal = document.createElement('div');
-      terminal.className = 'retro-terminal';
-      
-      // Header
-      const header = document.createElement('div');
-      header.className = 'terminal-header';
-      header.innerHTML = `
-        <div class="terminal-title">DEEP RESEARCH REPORT</div>
-        <div class="terminal-timestamp">${new Date().toLocaleString()}</div>
-      `;
-      
-      // Query section
-      const querySection = document.createElement('div');
-      querySection.className = 'terminal-section';
-      querySection.innerHTML = `
-        <div class="section-title">QUERY</div>
-        <div class="user-query">${sanitizeHTML(researchData.originalQuery)}</div>
-        <div class="section-title">ACADEMIC FORMULATION</div>
-        <div class="academic-query">${sanitizeHTML(researchData.optimizedQuery)}</div>
-      `;
-      
-      // Source section
-      const sourceSection = document.createElement('div');
-      sourceSection.className = 'terminal-section';
-      sourceSection.innerHTML = `
-        <div class="section-title">PRIMARY SOURCE</div>
-        <div class="paper-title">${sanitizeHTML(researchData.paper.title)}</div>
-        <div class="paper-authors">${sanitizeHTML(researchData.paper.authors)}</div>
-        <div class="paper-doi">DOI: ${sanitizeHTML(researchData.paper.doi)}</div>
-        <div class="paper-link"><a href="${researchData.paper.url}" target="_blank">View on bioRxiv</a></div>
-      `;
-      
-      // Synthesis section
-      const synthesisSection = document.createElement('div');
-      synthesisSection.className = 'terminal-section synthesis';
-      synthesisSection.innerHTML = `
-        <div class="section-title">RESEARCH SYNTHESIS</div>
-        <div class="synthesis-content">${markdownToHtml(researchData.synthesis)}</div>
-      `;
-      
-      // Assemble all sections
-      terminal.appendChild(header);
-      terminal.appendChild(querySection);
-      terminal.appendChild(sourceSection);
-      terminal.appendChild(synthesisSection);
-      
-      // Add to container
-      container.appendChild(terminal);
-      
-      // Save to history
-      saveToHistory(researchData);
-    }
-
-    // Save to local storage
-    function saveToHistory(result) {
-      const history = JSON.parse(localStorage.getItem('research-history') || '[]');
-      history.unshift({
-        query: result.originalQuery,
-        timestamp: result.timestamp,
-        id: Date.now().toString()
-      });
-      
-      // Keep only last 10 items
-      const trimmedHistory = history.slice(0, 10);
-      localStorage.setItem('research-history', JSON.stringify(trimmedHistory));
-    }
-
-    // Add event listeners once DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      // Load API key from local storage
-      const savedKey = localStorage.getItem('claude-api-key');
-      if (savedKey) {
-        document.getElementById('claude-api-key').value = savedKey;
-      }
-      
-      // Save API key when changed
-      document.getElementById('claude-api-key').addEventListener('change', (e) => {
-        localStorage.setItem('claude-api-key', e.target.value);
-      });
-      
-      // Start research process on button click
-      document.getElementById('start-research').addEventListener('click', async () => {
-        const apiKey = document.getElementById('claude-api-key').value;
-        const query = document.getElementById('research-query').value;
-        
-        if (!apiKey || !query) {
-          alert('Please provide both an API key and a research question');
-          return;
-        }
-        
-        // Show loading state
-        const loadingIndicator = document.querySelector('.loading-indicator');
-        const statusText = document.querySelector('.status-text');
-        loadingIndicator.classList.remove('hidden');
-        statusText.textContent = 'Optimizing query...';
-        
-        try {
-          // Process input
-          const processedInput = await processInput(query, apiKey);
-          
-          // Optimize query
-          statusText.textContent = 'Transforming question into academic query...';
-          const optimizedQuery = await optimizeQuery(processedInput);
-          
-          // Retrieve papers
-          statusText.textContent = 'Searching bioRxiv for relevant papers...';
-          const paperData = await retrievePapers(optimizedQuery);
-          
-          if (!paperData.success) {
-            throw new Error(paperData.error || 'Failed to retrieve papers');
-          }
-          
-          // Synthesize research
-          statusText.textContent = 'Synthesizing comprehensive research report...';
-          const researchResults = await synthesizeResearch(paperData);
-          
-          // Render results
-          loadingIndicator.classList.add('hidden');
-          renderResults(researchResults, 'research-results');
-          
-        } catch (error) {
-          console.error('Research error:', error);
-          loadingIndicator.classList.add('hidden');
-          
-          // Show error
-          document.getElementById('research-results').innerHTML = `
-            <div class="error-message">
-              <h3>Research Error</h3>
-              <p>${error.message || 'An unknown error occurred'}</p>
-            </div>
-          `;
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+// Run the main function
+main();
