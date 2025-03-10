@@ -539,6 +539,72 @@ if ('ontouchstart' in window) {  // Better touch detection
                 if (!state.menuCard) showMenu();
             }
         });
+
+
+        // Add this at the bottom of your script section but before the closing </script> tag
+
+// Function to check if the page is being visited by Gwern (via URL parameter)
+function checkForGwern() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('for') && urlParams.get('for') === 'gwern') {
+        // Create the Gwern popup
+        const popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '50%';
+        popup.style.left = '50%';
+        popup.style.transform = 'translate(-50%, -50%)';
+        popup.style.width = '80%';
+        popup.style.maxWidth = '500px';
+        popup.style.background = '#FF66CC';
+        popup.style.zIndex = '9999';
+        popup.style.border = '8px ridge gold';
+        popup.style.padding = '20px';
+        popup.style.boxShadow = '0 0 50px #FF00FF';
+        popup.style.fontFamily = '"Comic Sans MS", cursive';
+        popup.style.textAlign = 'center';
+        
+        // Add a tiny X in the corner
+        const closeBtn = document.createElement('div');
+        closeBtn.innerHTML = 'x';
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '2px';
+        closeBtn.style.right = '5px';
+        closeBtn.style.fontSize = '10px';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.color = 'black';
+        closeBtn.onclick = function(e) {
+            e.stopPropagation(); // Prevent triggering card draw
+            popup.remove();
+        };
+        popup.appendChild(closeBtn);
+        
+        // Hamster and content
+        popup.innerHTML += `
+            <img src="alsoimages/hamster.gif" style="width: 150px; margin-bottom: 10px;">
+            <h2 style="color: blue; text-shadow: 2px 2px yellow;">WELCOME GWERN BRANWEN!</h2>
+            <p>We detected your commitment to minimalist typography!</p>
+            <p style="font-size: 24px; color: red;">This special popup is for YOU!</p>
+            <div style="background: yellow; padding: 5px; margin: 10px 0;">
+                <marquee>Isn't Comic Sans just the BEST font for research?</marquee>
+            </div>
+            <p style="font-size: 10px;">press space to continue, or click the tiny x if you can find it</p>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        // Ensure the popup gets removed when drawCard is called
+        const originalDrawCard = window.drawCard;
+        window.drawCard = function() {
+            if (document.body.contains(popup)) {
+                popup.remove();
+            }
+            originalDrawCard();
+        };
+    }
+}
+
+// Call our function when the page loads
+document.addEventListener('DOMContentLoaded', checkForGwern);
     </script>
 </body>
 </html>
