@@ -25,6 +25,7 @@
     }
     #query-form {
       margin-bottom: 20px;
+      position: relative;
     }
     #query-input {
       width: 100%;
@@ -41,7 +42,11 @@
       overflow: auto;
       font-family: inherit;
     }
-    button {
+    .search-button {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
       background: #e25822; /* Reddish-orange */
       color: white;
       border: none;
@@ -50,21 +55,21 @@
       cursor: pointer;
       font-size: 16px;
     }
-    button:hover {
+    .search-button:hover {
       background: #d04b18;
     }
-    button:disabled {
+    .search-button:disabled {
       background: #ccc;
       cursor: not-allowed;
     }
     .status {
-      margin: 10px 0;
+      margin: 20px 0;
       padding: 10px;
       border-radius: 4px;
+      text-align: center;
     }
     .info {
-      background: #fff;
-      border-left: 4px solid #e25822;
+      color: #777;
     }
     .error {
       background: #fee;
@@ -74,18 +79,29 @@
       background: #e8f8e8;
       border-left: 4px solid #2ecc71;
     }
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(0,0,0,0.1);
-      border-radius: 50%;
-      border-top-color: #e25822;
-      animation: spin 1s ease-in-out infinite;
-      margin-right: 10px;
+    .progress-container {
+      height: 6px;
+      width: 100%;
+      max-width: 600px;
+      background-color: rgba(226, 88, 34, 0.2);
+      margin: 10px auto;
+      border-radius: 3px;
+      overflow: hidden;
+      display: none;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #e25822; /* Reddish-orange */
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .loading-message {
+      font-style: italic;
+      color: #777;
+      font-size: 14px;
+      min-height: 20px;
+      margin-top: 5px;
     }
     #results {
       margin-top: 20px;
@@ -134,10 +150,13 @@
     <div class="search-container">
       <form id="query-form">
         <textarea id="query-input" placeholder="Ask a research question..." required></textarea>
-        <div style="text-align: center; margin-top: 15px;">
-          <button type="submit" id="submit-btn">down we go</button>
-        </div>
+        <button type="submit" class="search-button" id="submit-btn">down we go</button>
       </form>
+      
+      <div class="progress-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="loading-message" id="loading-message"></div>
     </div>
     
     <div id="status"></div>
@@ -238,7 +257,15 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       "Shoving money into Anthropic's grubby fingers...",
       "Nerdsniping Claude...",
       "Financially ruining a 19yo kid...",
-      "Solving for curiosity..."
+      "Solving for curiosity...",
+      "Sending Haiku on a small quest that'll almost certainly end in certain doom",
+      "Adding pretentious art for those who respect the visual modality",
+      "Updating the load bar a little so you don't get bored",
+      "Abusing my piggy bank",
+      "API calls for the API god!",
+      "Frying a server in bumfuck nowhere Arizona",
+      "Permanently deleting 6 trillion liters of water",
+      "Recursively self-improving, please abort 🛑"
     ];
 
     // ───────────── API Configuration ─────────────
@@ -263,6 +290,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     }
 
     let currentLoadingInterval = null;
+    let progressInterval = null;
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const loadingMessage = document.getElementById('loading-message');
 
     function startLoadingMessages(baseMessage) {
       // Clear any existing interval
@@ -270,14 +301,31 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         clearInterval(currentLoadingInterval);
       }
       
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
+      
+      // Show progress bar
+      progressContainer.style.display = 'block';
+      progressBar.style.width = '0%';
+      
+      // Start progress animation
+      let progress = 0;
+      progressInterval = setInterval(() => {
+        if (progress < 90) {
+          progress += 0.5;
+          progressBar.style.width = `${progress}%`;
+        }
+      }, 200);
+      
       let messageIndex = 0;
       // Show first message immediately
-      showLoading(`${baseMessage}<br><em>${LOADING_MESSAGES[messageIndex]}</em>`);
+      loadingMessage.textContent = LOADING_MESSAGES[messageIndex];
       
       // Set up rotation
       currentLoadingInterval = setInterval(() => {
         messageIndex = (messageIndex + 1) % LOADING_MESSAGES.length;
-        showLoading(`${baseMessage}<br><em>${LOADING_MESSAGES[messageIndex]}</em>`);
+        loadingMessage.textContent = LOADING_MESSAGES[messageIndex];
       }, 2000);
       
       // Return function to stop the messages
@@ -286,11 +334,24 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           clearInterval(currentLoadingInterval);
           currentLoadingInterval = null;
         }
+        
+        if (progressInterval) {
+          clearInterval(progressInterval);
+          progressInterval = null;
+          // Complete the progress bar
+          progressBar.style.width = '100%';
+          // Hide after animation completes
+          setTimeout(() => {
+            progressContainer.style.display = 'none';
+            loadingMessage.textContent = '';
+          }, 500);
+        }
       };
     }
 
     function showLoading(message) {
-      updateStatus(`<span class="loading"></span>${message}`, 'info');
+      // This is now just a legacy function - we'll start using startLoadingMessages instead
+      updateStatus(message, 'info');
     }
 
     function showError(message) {
@@ -299,6 +360,15 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         clearInterval(currentLoadingInterval);
         currentLoadingInterval = null;
       }
+      
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+        // Hide progress bar
+        progressContainer.style.display = 'none';
+        loadingMessage.textContent = '';
+      }
+      
       updateStatus(message, 'error');
     }
 
@@ -529,7 +599,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         // First, get a good image search term using Claude
         showLoading("Finding relevant imagery...");
         const searchTermCompletion = await callClaudeAPI(
-          "You are an image search term generator. Given a research topic, generate a short, specific search term that would find relevant artistic or scientific imagery. Return ONLY the search term, no explanation.",
+          "You are an image search term generator. Given a research topic, generate a short, specific search term that would find relevant artistic, scientific, or philosophical imagery. Focus on finding an artistic or conceptual representation, not just literal images. Return ONLY the search term, no explanation.",
           query,
           128
         );
@@ -537,14 +607,16 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         const searchTerm = searchTermCompletion.trim();
         console.log("Image search term:", searchTerm);
         
-        // Call our backend proxy to Brave Search
+        // Call our backend proxy to Google Search
         const response = await fetch(`${API_URL}/api/images?query=${encodeURIComponent(searchTerm)}`);
         
         if (!response.ok) {
+          console.error("Image search failed:", response.status);
           throw new Error("Failed to retrieve images");
         }
         
         const data = await response.json();
+        console.log("Image search results:", data);
         
         if (data.results && data.results.length > 0) {
           // Get the first image result
@@ -568,9 +640,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           imageContainer.style.display = 'block';
           
           return true;
+        } else {
+          console.warn("No image results found");
+          return false;
         }
-        
-        return false;
       } catch (error) {
         console.error("Error getting image:", error);
         return false;
@@ -600,28 +673,21 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       document.getElementById('research-image-container').style.display = 'none';
       
       try {
-        showLoading("Processing your query...");
+        const stopLoading = startLoadingMessages();
         const processedInput = await processInput(query);
-        
-        const stopLoading = startLoadingMessages("Optimizing query for academic search");
         const queryData = await optimizeQuery(processedInput);
-        stopLoading();
-        
-        const stopPaperLoading = startLoadingMessages("Hunting for relevant papers");
         const paperData = await retrievePapers(queryData);
-        stopPaperLoading();
         
         if (!paperData.success) {
+          stopLoading();
           throw new Error(paperData.error);
         }
         
-        const stopSynthesisLoading = startLoadingMessages("Synthesizing research findings");
         const researchData = await synthesizeResearch(paperData);
-        stopSynthesisLoading();
+        stopLoading();
         
         showResults(researchData);
         
-        // Get a related image (don't block on this)
         getRelatedImage(queryData.optimizedQuery).catch(err => {
           console.warn("Image retrieval failed, continuing without image:", err);
         });
