@@ -457,66 +457,49 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       updateStatus('Research completed successfully!', 'success');
     }
 
-    // Simple markdown to HTML converter
-    function markdownToHtml(markdown) {
-      if (!markdown) return '';
-      
-      // Process headers
-      markdown = markdown.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
-      markdown = markdown.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
-      markdown = markdown.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
-      
-      // Process lists
-      markdown = markdown.replace(/^\* (.*?)$/gm, '<li>$1</li>');
-      markdown = markdown.replace(/^- (.*?)$/gm, '<li>$1</li>');
-      
-      // Wrap lists in <ul> tags
-      let inList = false;
-      const lines = markdown.split('\n');
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith('<li>') && !inList) {
-          lines[i] = '<ul>' + lines[i];
-          inList = true;
-        } else if (!lines[i].startsWith('<li>') && inList) {
-          lines[i-1] += '</ul>';
-          inList = false;
-        }
-      }
-      if (inList) {
-        lines[lines.length-1] += '</ul>';
-      }
-      markdown = lines.join('\n');
-      
-      // Process bold and italic
-      markdown = markdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      markdown = markdown.replace(/\*(.*?)\*/g, '<em>$1</em>');
-      
-      // Process links
-      markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-      
-      // Process paragraphs
-      markdown = markdown.replace(/^(?!<[hou]).+/gm, '<p>    function showResults(data) {
-      originalQueryDiv.textContent = data.originalQuery;
-      optimizedQueryDiv.textContent = data.optimizedQuery;
-      
-      const paper = data.paper;
-      paperInfoDiv.innerHTML = `
-        <div><strong>Title:</strong> ${paper.title}</div>
-        <div><strong>Authors:</strong> ${paper.authors}</div>
-        <div><strong>DOI:</strong> ${paper.doi}</div>
-        <div><strong>URL:</strong> <a href="${paper.url}" target="_blank">${paper.url}</a></div>
-        <div><strong>Abstract:</strong> ${paper.abstract}</div>
-      `;
-      
-      synthesisDiv.textContent = data.synthesis;
-      resultsDiv.style.display = 'block';
-      updateStatus('Research completed successfully!', 'success');
-    }</p>');
-      markdown = markdown.replace(/<\/p>\n<p>/g, '</p><p>');
-      
-      return markdown;
+  function markdownToHtml(markdown) {
+  if (!markdown) return '';
+  
+  // Process headers
+  markdown = markdown.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+  markdown = markdown.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+  markdown = markdown.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+  
+  // Process lists
+  markdown = markdown.replace(/^\* (.*?)$/gm, '<li>$1</li>');
+  markdown = markdown.replace(/^- (.*?)$/gm, '<li>$1</li>');
+  
+  // Wrap lists in <ul> tags
+  let inList = false;
+  const lines = markdown.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith('<li>') && !inList) {
+      lines[i] = '<ul>' + lines[i];
+      inList = true;
+    } else if (!lines[i].startsWith('<li>') && inList) {
+      lines[i-1] += '</ul>';
+      inList = false;
     }
-
+  }
+  if (inList) {
+    lines[lines.length-1] += '</ul>';
+  }
+  markdown = lines.join('\n');
+  
+  // Process bold and italic
+  markdown = markdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  markdown = markdown.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  
+  // Process links
+  markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+  
+  // Process paragraphs (FIXED LINE)
+  markdown = markdown.replace(/^(?!<).+/gm, '<p>$&</p>');
+  
+  markdown = markdown.replace(/<\/p>\n<p>/g, '</p><p>');
+  
+  return markdown;
+}
     // ───────────── Claude API Call Function ─────────────
     async function callClaudeAPI(systemPrompt, userContent, maxTokens = 512) {
       try {
