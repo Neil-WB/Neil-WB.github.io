@@ -3,36 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neil's Deep Research</title>
+  <title>Abysmal Research!</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       max-width: 800px;
       margin: 0 auto;
       padding: 20px;
-      background: #f5f5f5;
+      background: #f8f5f0; /* Cream background */
       color: #333;
       line-height: 1.6;
     }
     #app {
-      background: white;
+      background: #f8f5f0; /* Cream background */
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .search-container {
+      text-align: center;
+      margin: 40px auto;
+      max-width: 600px;
     }
     #query-form {
       margin-bottom: 20px;
     }
     #query-input {
       width: 100%;
-      padding: 10px;
+      padding: 12px 20px;
       font-size: 16px;
       border: 1px solid #ddd;
-      border-radius: 4px;
-      margin-bottom: 10px;
+      border-radius: 24px;
+      background: #f8f5f0;
+      color: #333;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      min-height: 50px;
+      max-height: 300px;
+      resize: none;
+      overflow: auto;
+      font-family: inherit;
     }
     button {
-      background: #4a90e2;
+      background: #e25822; /* Reddish-orange */
       color: white;
       border: none;
       padding: 10px 20px;
@@ -41,7 +51,7 @@
       font-size: 16px;
     }
     button:hover {
-      background: #3a7bd5;
+      background: #d04b18;
     }
     button:disabled {
       background: #ccc;
@@ -53,8 +63,8 @@
       border-radius: 4px;
     }
     .info {
-      background: #e8f4fd;
-      border-left: 4px solid #4a90e2;
+      background: #fff;
+      border-left: 4px solid #e25822;
     }
     .error {
       background: #fee;
@@ -70,7 +80,7 @@
       height: 20px;
       border: 3px solid rgba(0,0,0,0.1);
       border-radius: 50%;
-      border-top-color: #4a90e2;
+      border-top-color: #e25822;
       animation: spin 1s ease-in-out infinite;
       margin-right: 10px;
     }
@@ -80,15 +90,18 @@
     #results {
       margin-top: 20px;
       padding: 20px;
-      border: 1px solid #eee;
+      background: #f8f5f0;
       border-radius: 4px;
       display: none;
     }
     .header {
       font-weight: bold;
-      color: #4a90e2;
+      color: #e25822; /* Reddish-orange */
       margin-top: 15px;
       margin-bottom: 5px;
+      font-family: serif;
+      border-bottom: 1px dotted #ccc;
+      padding-bottom: 5px;
     }
     .paper-info {
       margin-bottom: 15px;
@@ -100,24 +113,41 @@
       line-height: 1.5;
     }
     h1 {
-      border-bottom: 2px solid #4a90e2;
-      padding-bottom: 10px;
-      color: #2c3e50;
+      text-align: center;
+      color: #e25822; /* Reddish-orange */
+      font-family: serif;
+    }
+    .subtitle {
+      text-align: center;
+      color: #777;
+      font-style: italic;
+      margin-top: -10px;
+      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
   <div id="app">
-    <h1>Neil's Deep Research</h1>
+    <h1>Abysmal Research</h1>
+    <div class="subtitle">research beyond the merely "deep"</div>
     
-    <form id="query-form">
-      <input type="text" id="query-input" placeholder="Enter your research question..." required>
-      <button type="submit" id="submit-btn">Research</button>
-    </form>
+    <div class="search-container">
+      <form id="query-form">
+        <textarea id="query-input" placeholder="Ask a research question..." required></textarea>
+        <div style="text-align: center; margin-top: 15px;">
+          <button type="submit" id="submit-btn">down we go</button>
+        </div>
+      </form>
+    </div>
     
     <div id="status"></div>
     
     <div id="results">
+      <div id="research-image-container" style="display: none; margin-bottom: 20px; text-align: center;">
+        <img id="research-image" style="max-width: 100%; max-height: 400px; border-radius: 4px;" />
+        <div id="image-attribution" style="font-size: 12px; color: #666; margin-top: 5px;"></div>
+      </div>
+      
       <div class="header">QUERY:</div>
       <div id="original-query"></div>
       
@@ -129,6 +159,10 @@
       
       <div class="header">RESEARCH SYNTHESIS:</div>
       <div id="synthesis" class="synthesis"></div>
+      
+      <div style="margin-top: 20px; text-align: right;">
+        <button id="copy-btn" onclick="copyToClipboard()" style="background: #e25822;">Copy Report</button>
+      </div>
     </div>
   </div>
 
@@ -198,8 +232,17 @@ Format your response as a well-structured research report with:
 
 Important: Write as if you have thoroughly read and analyzed the complete paper, not just the abstract. Use your knowledge to infer what the full paper likely contains based on the abstract and typical structure of papers in this field.`;
 
+    // ───────────── Constants ─────────────
+    const LOADING_MESSAGES = [
+      "Depleting Neil's bank account...",
+      "Shoving money into Anthropic's grubby fingers...",
+      "Nerdsniping Claude...",
+      "Financially ruining a 19yo kid...",
+      "Solving for curiosity..."
+    ];
+
     // ───────────── API Configuration ─────────────
-    // Replace with your Railway app URL
+    // Railway app URL
     const API_URL = "https://neil-wbgithubio-production.up.railway.app";
 
     // ───────────── UI Elements ─────────────
@@ -213,10 +256,37 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     const paperInfoDiv = document.getElementById('paper-info');
     const synthesisDiv = document.getElementById('synthesis');
 
-    // ───────────── Helper Functions ─────────────
+    // ───────────── UI Helpers ─────────────
     function updateStatus(message, type = 'info') {
       statusDiv.innerHTML = message;
       statusDiv.className = `status ${type}`;
+    }
+
+    let currentLoadingInterval = null;
+
+    function startLoadingMessages(baseMessage) {
+      // Clear any existing interval
+      if (currentLoadingInterval) {
+        clearInterval(currentLoadingInterval);
+      }
+      
+      let messageIndex = 0;
+      // Show first message immediately
+      showLoading(`${baseMessage}<br><em>${LOADING_MESSAGES[messageIndex]}</em>`);
+      
+      // Set up rotation
+      currentLoadingInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % LOADING_MESSAGES.length;
+        showLoading(`${baseMessage}<br><em>${LOADING_MESSAGES[messageIndex]}</em>`);
+      }, 2000);
+      
+      // Return function to stop the messages
+      return () => {
+        if (currentLoadingInterval) {
+          clearInterval(currentLoadingInterval);
+          currentLoadingInterval = null;
+        }
+      };
     }
 
     function showLoading(message) {
@@ -224,6 +294,11 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     }
 
     function showError(message) {
+      // Clear any loading interval
+      if (currentLoadingInterval) {
+        clearInterval(currentLoadingInterval);
+        currentLoadingInterval = null;
+      }
       updateStatus(message, 'error');
     }
 
@@ -448,6 +523,72 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       }
     }
 
+    // ───────────── Image Helper ─────────────
+    async function getRelatedImage(query) {
+      try {
+        // First, get a good image search term using Claude
+        showLoading("Finding relevant imagery...");
+        const searchTermCompletion = await callClaudeAPI(
+          "You are an image search term generator. Given a research topic, generate a short, specific search term that would find relevant artistic or scientific imagery. Return ONLY the search term, no explanation.",
+          query,
+          128
+        );
+        
+        const searchTerm = searchTermCompletion.trim();
+        console.log("Image search term:", searchTerm);
+        
+        // Call our backend proxy to Brave Search
+        const response = await fetch(`${API_URL}/api/images?query=${encodeURIComponent(searchTerm)}`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to retrieve images");
+        }
+        
+        const data = await response.json();
+        
+        if (data.results && data.results.length > 0) {
+          // Get the first image result
+          const image = data.results[0];
+          
+          // Display the image
+          const imageContainer = document.getElementById('research-image-container');
+          const imageElement = document.getElementById('research-image');
+          const attributionElement = document.getElementById('image-attribution');
+          
+          imageElement.src = image.thumbnail.src;
+          imageElement.alt = image.title || searchTerm;
+          
+          // Set attribution if available
+          if (image.source) {
+            attributionElement.innerHTML = `Source: <a href="${image.link}" target="_blank">${image.source.name || image.source.domain}</a>`;
+          } else {
+            attributionElement.innerHTML = '';
+          }
+          
+          imageContainer.style.display = 'block';
+          
+          return true;
+        }
+        
+        return false;
+      } catch (error) {
+        console.error("Error getting image:", error);
+        return false;
+      }
+    }
+    
+    // Copy to clipboard functionality
+    function copyToClipboard() {
+      const content = document.getElementById('synthesis').textContent;
+      navigator.clipboard.writeText(content)
+        .then(() => {
+          const copyBtn = document.getElementById('copy-btn');
+          copyBtn.textContent = "Copied!";
+          setTimeout(() => { copyBtn.textContent = "Copy Report"; }, 2000);
+        })
+        .catch(err => console.error('Failed to copy:', err));
+    }
+    
     // ───────────── Event Handlers ─────────────
     async function handleSubmit(event) {
       event.preventDefault();
@@ -456,25 +597,34 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       
       submitBtn.disabled = true;
       resultsDiv.style.display = 'none';
+      document.getElementById('research-image-container').style.display = 'none';
       
       try {
         showLoading("Processing your query...");
         const processedInput = await processInput(query);
         
-        showLoading("Optimizing query for academic search...");
+        const stopLoading = startLoadingMessages("Optimizing query for academic search");
         const queryData = await optimizeQuery(processedInput);
+        stopLoading();
         
-        showLoading("Searching for relevant papers...");
+        const stopPaperLoading = startLoadingMessages("Hunting for relevant papers");
         const paperData = await retrievePapers(queryData);
+        stopPaperLoading();
         
         if (!paperData.success) {
           throw new Error(paperData.error);
         }
         
-        showLoading("Synthesizing research findings...");
+        const stopSynthesisLoading = startLoadingMessages("Synthesizing research findings");
         const researchData = await synthesizeResearch(paperData);
+        stopSynthesisLoading();
         
         showResults(researchData);
+        
+        // Get a related image (don't block on this)
+        getRelatedImage(queryData.optimizedQuery).catch(err => {
+          console.warn("Image retrieval failed, continuing without image:", err);
+        });
       } catch (error) {
         showError(`Error: ${error.message}`);
         console.error(error);
@@ -485,6 +635,36 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
 
     // ───────────── Initialize ─────────────
     form.addEventListener('submit', handleSubmit);
+    
+    // Auto-resize textarea based on content
+    const textarea = document.getElementById('query-input');
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      const newHeight = Math.min(this.scrollHeight, 300);
+      this.style.height = newHeight + 'px';
+    });
+    
+    // Handle Cmd+Enter or Ctrl+Enter for new lines
+    textarea.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        if (e.metaKey || e.ctrlKey) {
+          // Insert new line
+          const start = this.selectionStart;
+          const end = this.selectionEnd;
+          const value = this.value;
+          this.value = value.substring(0, start) + '\n' + value.substring(end);
+          this.selectionStart = this.selectionEnd = start + 1;
+          // Trigger resize
+          const event = new Event('input');
+          this.dispatchEvent(event);
+          e.preventDefault();
+        } else {
+          // Regular Enter - submit the form
+          form.dispatchEvent(new Event('submit'));
+          e.preventDefault();
+        }
+      }
+    });
   </script>
 </body>
 </html>
