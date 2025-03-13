@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abysmal Research</title>
+  <title>Neil's Deep Research</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -43,6 +43,10 @@
       font-family: inherit;
     }
     .search-button {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
       background: #e25822; /* Reddish-orange */
       color: white;
       border: none;
@@ -50,8 +54,6 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
-      margin-top: 15px;
-      display: inline-block;
     }
     .search-button:hover {
       background: #d04b18;
@@ -82,7 +84,7 @@
       width: 100%;
       max-width: 600px;
       background-color: rgba(226, 88, 34, 0.2);
-      margin: 15px auto;
+      margin: 10px auto;
       border-radius: 3px;
       overflow: hidden;
       display: none;
@@ -138,6 +140,38 @@
       margin-top: -10px;
       margin-bottom: 30px;
     }
+    .md-h1 {
+      font-size: 1.4em;
+      font-weight: bold;
+      margin: 1em 0 0.5em;
+      color: #333;
+    }
+    .md-h2 {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 1em 0 0.5em;
+      color: #333;
+    }
+    .md-h3 {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin: 0.8em 0 0.4em;
+      color: #333;
+    }
+    .copy-btn {
+      background: #f0f0f0;
+      color: #666;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .copy-btn:hover {
+      background: #e5e5e5;
+    }
   </style>
 </head>
 <body>
@@ -148,9 +182,7 @@
     <div class="search-container">
       <form id="query-form">
         <textarea id="query-input" placeholder="Ask a research question..." required></textarea>
-        <div style="text-align: center;">
-          <button type="submit" class="search-button" id="submit-btn">down we go</button>
-        </div>
+        <button type="submit" class="search-button" id="submit-btn">down we go</button>
       </form>
       
       <div class="progress-container" id="progress-container">
@@ -180,14 +212,12 @@
       <div id="synthesis" class="synthesis"></div>
       
       <div style="margin-top: 20px; text-align: right;">
-        <button id="copy-btn" onclick="copyToClipboard()" style="background: #e25822;">Copy Report</button>
+        <button id="copy-btn" onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
       </div>
     </div>
   </div>
 
   <script>
-    console.log("Script started");
-
     // ─────────── Original Prompts (unchanged) ───────────
     const QUERY_OPTIMIZATION_PROMPT = `You are an expert academic research assistant specializing in transforming casual questions into precise academic search queries. Your task is to:
 
@@ -271,6 +301,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     ];
 
     // ───────────── API Configuration ─────────────
+    // Railway app URL
     const API_URL = "https://neil-wbgithubio-production.up.railway.app";
 
     // ───────────── UI Elements ─────────────
@@ -297,6 +328,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     const loadingMessage = document.getElementById('loading-message');
 
     function startLoadingMessages(baseMessage) {
+      // Clear any existing interval
       if (currentLoadingInterval) {
         clearInterval(currentLoadingInterval);
       }
@@ -305,9 +337,11 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         clearInterval(progressInterval);
       }
       
+      // Show progress bar
       progressContainer.style.display = 'block';
       progressBar.style.width = '0%';
       
+      // Start progress animation
       let progress = 0;
       progressInterval = setInterval(() => {
         if (progress < 90) {
@@ -317,13 +351,16 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       }, 200);
       
       let messageIndex = 0;
+      // Show first message immediately
       loadingMessage.textContent = LOADING_MESSAGES[messageIndex];
       
+      // Set up rotation
       currentLoadingInterval = setInterval(() => {
         messageIndex = (messageIndex + 1) % LOADING_MESSAGES.length;
         loadingMessage.textContent = LOADING_MESSAGES[messageIndex];
       }, 2000);
       
+      // Return function to stop the messages
       return () => {
         if (currentLoadingInterval) {
           clearInterval(currentLoadingInterval);
@@ -333,7 +370,9 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         if (progressInterval) {
           clearInterval(progressInterval);
           progressInterval = null;
+          // Complete the progress bar
           progressBar.style.width = '100%';
+          // Hide after animation completes
           setTimeout(() => {
             progressContainer.style.display = 'none';
             loadingMessage.textContent = '';
@@ -343,10 +382,12 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     }
 
     function showLoading(message) {
+      // This is now just a legacy function - we'll start using startLoadingMessages instead
       updateStatus(message, 'info');
     }
 
     function showError(message) {
+      // Clear any loading interval
       if (currentLoadingInterval) {
         clearInterval(currentLoadingInterval);
         currentLoadingInterval = null;
@@ -355,6 +396,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       if (progressInterval) {
         clearInterval(progressInterval);
         progressInterval = null;
+        // Hide progress bar
         progressContainer.style.display = 'none';
         loadingMessage.textContent = '';
       }
@@ -375,42 +417,15 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         <div><strong>Abstract:</strong> ${paper.abstract}</div>
       `;
       
-      synthesisDiv.innerHTML = markdownToHtml(data.synthesis);
+      synthesisDiv.textContent = data.synthesis;
       resultsDiv.style.display = 'block';
       updateStatus('Research completed successfully!', 'success');
-    }
-
-    function markdownToHtml(markdown) {
-      if (!markdown) return '';
-      markdown = markdown.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
-      markdown = markdown.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
-      markdown = markdown.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
-      markdown = markdown.replace(/^\* (.*?)$/gm, '<li>$1</li>');
-      markdown = markdown.replace(/^- (.*?)$/gm, '<li>$1</li>');
-      let inList = false;
-      const lines = markdown.split('\n');
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith('<li>') && !inList) {
-          lines[i] = '<ul>' + lines[i];
-          inList = true;
-        } else if (!lines[i].startsWith('<li>') && inList) {
-          lines[i-1] += '</ul>';
-          inList = false;
-        }
-      }
-      if (inList) lines[lines.length-1] += '</ul>';
-      markdown = lines.join('\n');
-      markdown = markdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      markdown = markdown.replace(/\*(.*?)\*/g, '<em>$1</em>');
-      markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-      markdown = markdown.replace(/^(?!<).+/gm, '<p>$&</p>');
-      markdown = markdown.replace(/<\/p>\n<p>/g, '</p><p>');
-      return markdown;
     }
 
     // ───────────── Claude API Call Function ─────────────
     async function callClaudeAPI(systemPrompt, userContent, maxTokens = 512) {
       try {
+        // Call our Railway backend proxy instead of Claude directly
         const response = await fetch(`${API_URL}/api/claude`, {
           method: "POST",
           headers: {
@@ -443,7 +458,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       }
     }
 
-    // ───────────── Extract Search Terms ─────────────
+    // ───────────── Extract Search Terms (unchanged) ─────────────
     function extractSearchTerms(optimizedQuery) {
       const words = optimizedQuery
         .toLowerCase()
@@ -456,7 +471,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       return sortedWords.join(' OR ');
     }
 
-    // ───────────── Main Process Functions ─────────────
+    // ───────────── Main Process Functions (minimal changes) ─────────────
     async function processInput(userQuery) {
       return {
         query: userQuery.trim(),
@@ -613,6 +628,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     // ───────────── Image Helper ─────────────
     async function getRelatedImage(query) {
       try {
+        // First, get a good image search term using Claude
         showLoading("Finding relevant imagery...");
         const searchTermCompletion = await callClaudeAPI(
           "You are an image search term generator. Given a research topic, generate a short, specific search term that would find relevant artistic, scientific, or philosophical imagery. Focus on finding an artistic or conceptual representation, not just literal images. Return ONLY the search term, no explanation.",
@@ -623,6 +639,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         const searchTerm = searchTermCompletion.trim();
         console.log("Image search term:", searchTerm);
         
+        // Call our backend proxy to Google Search
         const response = await fetch(`${API_URL}/api/images?query=${encodeURIComponent(searchTerm)}`);
         
         if (!response.ok) {
@@ -634,7 +651,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         console.log("Image search results:", data);
         
         if (data.results && data.results.length > 0) {
+          // Get the first image result
           const image = data.results[0];
+          
+          // Display the image
           const imageContainer = document.getElementById('research-image-container');
           const imageElement = document.getElementById('research-image');
           const attributionElement = document.getElementById('image-attribution');
@@ -642,6 +662,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           imageElement.src = image.thumbnail.src;
           imageElement.alt = image.title || searchTerm;
           
+          // Set attribution if available
           if (image.source) {
             attributionElement.innerHTML = `Source: <a href="${image.link}" target="_blank">${image.source.name || image.source.domain}</a>`;
           } else {
@@ -661,7 +682,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       }
     }
     
-    // ───────────── Copy to Clipboard ─────────────
+    // Copy to clipboard functionality
     function copyToClipboard() {
       const content = document.getElementById('synthesis').textContent;
       navigator.clipboard.writeText(content)
@@ -675,7 +696,6 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     
     // ───────────── Event Handlers ─────────────
     async function handleSubmit(event) {
-      console.log("handleSubmit called");
       event.preventDefault();
       const query = queryInput.value;
       if (!query) return;
@@ -714,6 +734,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     // ───────────── Initialize ─────────────
     form.addEventListener('submit', handleSubmit);
     
+    // Auto-resize textarea based on content
     const textarea = document.getElementById('query-input');
     textarea.addEventListener('input', function() {
       this.style.height = 'auto';
@@ -721,20 +742,22 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       this.style.height = newHeight + 'px';
     });
     
+    // Handle Cmd+Enter or Ctrl+Enter for new lines
     textarea.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
-        console.log("Enter pressed");
         if (e.metaKey || e.ctrlKey) {
+          // Insert new line
           const start = this.selectionStart;
           const end = this.selectionEnd;
           const value = this.value;
           this.value = value.substring(0, start) + '\n' + value.substring(end);
           this.selectionStart = this.selectionEnd = start + 1;
+          // Trigger resize
           const event = new Event('input');
           this.dispatchEvent(event);
           e.preventDefault();
         } else {
-          console.log("Dispatching submit");
+          // Regular Enter - submit the form
           form.dispatchEvent(new Event('submit'));
           e.preventDefault();
         }
