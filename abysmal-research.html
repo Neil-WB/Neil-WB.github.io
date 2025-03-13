@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neil's Deep Research</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+    #app {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    #query-form {
+      margin-bottom: 20px;
+    }
+    #query-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #3a7bd5;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .info {
+      background: #e8f4fd;
+      border-left: 4px solid #4a90e2;
+    }
+    .error {
+      background: #fee;
+      border-left: 4px solid #e74c3c;
+    }
+    .success {
+      background: #e8f8e8;
+      border-left: 4px solid #2ecc71;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,0.1);
+      border-radius: 50%;
+      border-top-color: #4a90e2;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    #results {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      display: none;
+    }
+    .header {
+      font-weight: bold;
+      color: #4a90e2;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    .paper-info {
+      margin-bottom: 15px;
+      padding-left: 15px;
+      border-left: 2px solid #eee;
+    }
+    .synthesis {
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    h1 {
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Neil's Deep Research</h1>
+    
+    <form id="query-form">
+      <input type="text" id="query-input" placeholder="Enter your research question..." required>
+      <button type="submit" id="submit-btn">Research</button>
+    </form>
+    
+    <div id="status"></div>
+    
+    <div id="results">
+      <div class="header">QUERY:</div>
+      <div id="original-query"></div>
+      
+      <div class="header">ACADEMIC FORMULATION:</div>
+      <div id="optimized-query"></div>
+      
+      <div class="header">PRIMARY SOURCE:</div>
+      <div id="paper-info" class="paper-info"></div>
+      
+      <div class="header">RESEARCH SYNTHESIS:</div>
+      <div id="synthesis" class="synthesis"></div>
+    </div>
+  </div>
+
+  <script>
+    // ─────────── Original Prompts (unchanged) ───────────
+    const QUERY_OPTIMIZATION_PROMPT = `You are an expert academic research assistant specializing in transforming casual questions into precise academic search queries. Your task is to:
+
+1. Analyze the user's question and identify the core research topics
+2. Reformulate it using academic terminology and precision
+3. Optimize it for scientific literature search
+4. Include relevant technical terms and methodological approaches
+
+Your response should ONLY contain the reformulated query without explanations or additional text. The query should be optimized for bioRxiv searches.
+
+Example:
+Input: "How do brains create memories?"
+Output: "Neural mechanisms of memory formation and consolidation in hippocampal and cortical circuits"`;
+
+    const PAPER_SELECTION_PROMPT = `You are a research paper selection algorithm. You'll receive a scientific query and a list of paper titles. Your task is to select the 5 most relevant papers based on their titles, authors, and publication dates.
+
+You should consider:
+1. Relevance to the query topic
+2. Recency of publication (newer is generally better)
+3. Comprehensiveness of approach
+4. Methodological soundness (based on what can be inferred from the title)
+5. Preference for reviews or papers that appear to synthesize multiple approaches
+
+Return ONLY a JSON array of DOIs for the 5 most relevant papers. Example:
+["10.1101/123456", "10.1101/234567", "10.1101/345678", "10.1101/456789", "10.1101/567890"]
+
+Do not include any explanation or commentary, just the JSON array.`;
+
+    const BEST_PAPER_SELECTION_PROMPT = `You are a scientific literature expert. You'll receive a research query and abstracts for several papers. Your task is to select the SINGLE best paper that would be most informative for addressing the research query.
+
+Consider:
+1. Direct relevance to the specific research question
+2. Comprehensiveness of approach
+3. Methodological soundness
+4. Clarity and informativeness of the abstract
+5. Potential for providing definitive or novel insights
+
+Return ONLY the DOI of the best paper. No explanation or commentary.`;
+
+    const RESEARCH_SYNTHESIS_PROMPT = `You are Deep Research, an advanced scientific research assistant powered by Claude 3.7. You specialize in synthesizing research papers into comprehensive, accurate reports tailored to the user's original question.
+
+You will receive:
+1. The user's original query
+2. An academically reformulated version of the query
+3. Details about a scientific paper, including its abstract
+
+Your task is to:
+1. Analyze the paper in relation to the research question
+2. Synthesize its findings as if you had read the full paper
+3. Create a comprehensive research report that:
+   - Addresses the original question directly
+   - Explains key concepts and methodologies
+   - Summarizes the main findings and their implications
+   - Adopts a scholarly but accessible tone
+   - Includes relevant context from your general knowledge
+   - Acknowledges limitations where appropriate
+
+Format your response as a well-structured research report with:
+- A concise introduction explaining the research question
+- Main sections covering key aspects of the topic
+- A conclusion summarizing the findings
+- References to the paper you "analyzed"
+
+Important: Write as if you have thoroughly read and analyzed the complete paper, not just the abstract. Use your knowledge to infer what the full paper likely contains based on the abstract and typical structure of papers in this field.`;
+
+    // ───────────── API Configuration ─────────────
+    // Replace with your Railway app URL
+    const API_URL = "neil-wbgithubio-production.up.railway.app";
+
+    // ───────────── UI Elements ─────────────
+    const form = document.getElementById('query-form');
+    const queryInput = document.getElementById('query-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const statusDiv = document.getElementById('status');
+    const resultsDiv = document.getElementById('results');
+    const originalQueryDiv = document.getElementById('original-query');
+    const optimizedQueryDiv = document.getElementById('optimized-query');
+    const paperInfoDiv = document.getElementById('paper-info');
+    const synthesisDiv = document.getElementById('synthesis');
+
+    // ───────────── Helper Functions ─────────────
+    function updateStatus(message, type = 'info') {
+      statusDiv.innerHTML = message;
+      statusDiv.className = `status ${type}`;
+    }
+
+    function showLoading(message) {
+      updateStatus(`<span class="loading"></span>${message}`, 'info');
+    }
+
+    function showError(message) {
+      updateStatus(message, 'error');
+    }
+
+    function showResults(data) {
+      originalQueryDiv.textContent = data.originalQuery;
+      optimizedQueryDiv.textContent = data.optimizedQuery;
+      
+      const paper = data.paper;
+      paperInfoDiv.innerHTML = `
+        <div><strong>Title:</strong> ${paper.title}</div>
+        <div><strong>Authors:</strong> ${paper.authors}</div>
+        <div><strong>DOI:</strong> ${paper.doi}</div>
+        <div><strong>URL:</strong> <a href="${paper.url}" target="_blank">${paper.url}</a></div>
+        <div><strong>Abstract:</strong> ${paper.abstract}</div>
+      `;
+      
+      synthesisDiv.textContent = data.synthesis;
+      resultsDiv.style.display = 'block';
+      updateStatus('Research completed successfully!', 'success');
+    }
+
+    // ───────────── Claude API Call Function ─────────────
+    async function callClaudeAPI(systemPrompt, userContent, maxTokens = 512) {
+      try {
+        // Call our Railway backend proxy instead of Claude directly
+        const response = await fetch(`${API_URL}/api/claude`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            systemPrompt,
+            userContent,
+            maxTokens
+          })
+        });
+
+        if (!response.ok) {
+          let errDetail;
+          try {
+            const errData = await response.json();
+            errDetail = errData.error?.message || `Status: ${response.status}`;
+          } catch {
+            errDetail = `Status: ${response.status}`;
+          }
+          throw new Error(`API Error: ${errDetail}`);
+        }
+
+        const json = await response.json();
+        const completion = json.content?.[0]?.text ?? "";
+        return completion;
+      } catch (error) {
+        console.error("Claude API error:", error);
+        throw error;
+      }
+    }
+
+    // ───────────── Extract Search Terms (unchanged) ─────────────
+    function extractSearchTerms(optimizedQuery) {
+      const words = optimizedQuery
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .split(/\s+/);
+
+      const stopWords = ['the','and','of','in','on','at','to','for','with','by','as','that','this','are','is'];
+      const filteredWords = words.filter(word => word.length > 2 && !stopWords.includes(word));
+      const sortedWords = filteredWords.sort((a, b) => b.length - a.length).slice(0, 5);
+      return sortedWords.join(' OR ');
+    }
+
+    // ───────────── Main Process Functions (minimal changes) ─────────────
+    async function processInput(userQuery) {
+      return {
+        query: userQuery.trim(),
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    async function optimizeQuery(processedInput) {
+      const completion = await callClaudeAPI(
+        QUERY_OPTIMIZATION_PROMPT,
+        processedInput.query,
+        512
+      );
+      const optimizedQuery = completion.trim();
+      return {
+        originalQuery: processedInput.query,
+        optimizedQuery,
+        searchTerms: extractSearchTerms(optimizedQuery)
+      };
+    }
+
+    async function retrievePapers(queryData) {
+      try {
+        const currentYear = new Date().getFullYear();
+        const searchUrl = `https://api.biorxiv.org/details/biorxiv/2021-01-01/${currentYear}-12-31/0/json`;
+        console.log(`Searching bioRxiv with URL: ${searchUrl}`);
+        const searchResponse = await fetch(searchUrl);
+        if (!searchResponse.ok) {
+          throw new Error(`BioRxiv API error: ${searchResponse.status}`);
+        }
+        const searchData = await searchResponse.json();
+        if (!searchData.collection || searchData.collection.length === 0) {
+          return { success: false, error: "No papers found. Try different search terms." };
+        }
+        const paperTitles = searchData.collection.map(paper => ({
+          doi: paper.doi,
+          title: paper.title,
+          authors: paper.authors,
+          date: paper.date
+        }));
+        const selectionCompletion = await callClaudeAPI(
+          PAPER_SELECTION_PROMPT,
+          JSON.stringify({ query: queryData.optimizedQuery, papers: paperTitles }),
+          512
+        );
+        let textContent = selectionCompletion.trim();
+        let selectedDOIs;
+        try {
+          const jsonMatch = textContent.match(/\[.*\]/s);
+          if (jsonMatch) {
+            selectedDOIs = JSON.parse(jsonMatch[0]);
+          } else {
+            throw new Error("Could not parse DOI list from Claude's response");
+          }
+        } catch (error) {
+          console.error("Error parsing DOIs:", error);
+          selectedDOIs = paperTitles.slice(0, 3).map(p => p.doi);
+        }
+        if (!Array.isArray(selectedDOIs) || selectedDOIs.length === 0) {
+          throw new Error("Failed to get valid paper selections");
+        }
+        const abstractPromises = selectedDOIs.map(doi =>
+          fetch(`https://api.biorxiv.org/details/biorxiv/${doi}`)
+            .then(res => (res.ok ? res.json() : null))
+            .then(data => {
+              if (data && data.collection && data.collection.length > 0) {
+                return {
+                  doi: data.collection[0].doi,
+                  title: data.collection[0].title,
+                  authors: data.collection[0].authors,
+                  abstract: data.collection[0].abstract,
+                  url: `https://www.biorxiv.org/content/${data.collection[0].doi}v${data.collection[0].version}`
+                };
+              }
+              return null;
+            })
+            .catch(err => {
+              console.error(`Error fetching abstract for DOI ${doi}:`, err);
+              return null;
+            })
+        );
+        const abstracts = (await Promise.all(abstractPromises)).filter(a => a !== null);
+        if (abstracts.length === 0) {
+          return { success: false, error: "Failed to retrieve paper abstracts" };
+        }
+        if (abstracts.length === 1) {
+          return {
+            success: true,
+            query: queryData,
+            allPaperTitles: paperTitles,
+            selectedAbstracts: abstracts,
+            bestPaper: abstracts[0]
+          };
+        }
+        const bestPaperCompletion = await callClaudeAPI(
+          BEST_PAPER_SELECTION_PROMPT,
+          JSON.stringify({ query: queryData.optimizedQuery, papers: abstracts }),
+          512
+        );
+        let bestPaperDOI = bestPaperCompletion.trim();
+        if (bestPaperDOI.includes("10.1101/")) {
+          const doiMatch = bestPaperDOI.match(/10\.1101\/[0-9v.]+/);
+          if (doiMatch) bestPaperDOI = doiMatch[0];
+        }
+        const bestPaper = abstracts.find(p => p.doi === bestPaperDOI);
+        if (!bestPaper) {
+          console.warn("Best paper not found in abstracts, using first paper instead");
+          return {
+            success: true,
+            query: queryData,
+            allPaperTitles: paperTitles,
+            selectedAbstracts: abstracts,
+            bestPaper: abstracts[0]
+          };
+        }
+        return {
+          success: true,
+          query: queryData,
+          allPaperTitles: paperTitles,
+          selectedAbstracts: abstracts,
+          bestPaper
+        };
+      } catch (error) {
+        console.error("Paper retrieval error:", error);
+        return { success: false, error: `Failed to retrieve papers: ${error.message}` };
+      }
+    }
+
+    async function synthesizeResearch(paperData) {
+      try {
+        const synthesisContext = {
+          originalQuery: paperData.query.originalQuery,
+          optimizedQuery: paperData.query.optimizedQuery,
+          paper: paperData.bestPaper
+        };
+        const completion = await callClaudeAPI(
+          RESEARCH_SYNTHESIS_PROMPT,
+          JSON.stringify(synthesisContext),
+          4096
+        );
+        return {
+          originalQuery: paperData.query.originalQuery,
+          optimizedQuery: paperData.query.optimizedQuery,
+          paper: paperData.bestPaper,
+          synthesis: completion.trim(),
+          timestamp: new Date().toISOString()
+        };
+      } catch (error) {
+        console.error("Research synthesis error:", error);
+        throw new Error(`Failed to synthesize research: ${error.message}`);
+      }
+    }
+
+    // ───────────── Event Handlers ─────────────
+    async function handleSubmit(event) {
+      event.preventDefault();
+      const query = queryInput.value;
+      if (!query) return;
+      
+      submitBtn.disabled = true;
+      resultsDiv.style.display = 'none';
+      
+      try {
+        showLoading("Processing your query...");
+        const processedInput = await processInput(query);
+        
+        showLoading("Optimizing query for academic search...");
+        const queryData = await optimizeQuery(processedInput);
+        
+        showLoading("Searching for relevant papers...");
+        const paperData = await retrievePapers(queryData);
+        
+        if (!paperData.success) {
+          throw new Error(paperData.error);
+        }
+        
+        showLoading("Synthesizing research findings...");
+        const researchData = await synthesizeResearch(paperData);
+        
+        showResults(researchData);
+      } catch (error) {
+        showError(`Error: ${error.message}`);
+        console.error(error);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    // ───────────── Initialize ─────────────
+    form.addEventListener('submit', handleSubmit);
+  </script>
+</body>
+</html>
