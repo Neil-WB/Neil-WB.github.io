@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abysmal Research!</title>
+  <title>Neil's Deep Research</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -43,10 +43,6 @@
       font-family: inherit;
     }
     .search-button {
-      position: absolute;
-      bottom: -50px;
-      left: 50%;
-      transform: translateX(-50%);
       background: #e25822; /* Reddish-orange */
       color: white;
       border: none;
@@ -54,6 +50,8 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
+      margin-top: 15px;
+      display: inline-block;
     }
     .search-button:hover {
       background: #d04b18;
@@ -84,7 +82,7 @@
       width: 100%;
       max-width: 600px;
       background-color: rgba(226, 88, 34, 0.2);
-      margin: 10px auto;
+      margin: 15px auto;
       border-radius: 3px;
       overflow: hidden;
       display: none;
@@ -128,6 +126,63 @@
       white-space: pre-wrap;
       line-height: 1.5;
     }
+    .synthesis h1 {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      text-align: left;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      border-bottom: none;
+    }
+    .synthesis h2 {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+      margin-top: 15px;
+      margin-bottom: 10px;
+      text-align: left;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .synthesis h3 {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #333;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      text-align: left;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .synthesis ul, .synthesis ol {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+    .synthesis p {
+      margin-bottom: 10px;
+    }
+    .synthesis a {
+      color: #e25822;
+      text-decoration: none;
+    }
+    .synthesis a:hover {
+      text-decoration: underline;
+    }
+    .copy-button {
+      background: #f0f0f0;
+      color: #666;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .copy-button:hover {
+      background: #e0e0e0;
+    }
     h1 {
       text-align: center;
       color: #e25822; /* Reddish-orange */
@@ -150,7 +205,9 @@
     <div class="search-container">
       <form id="query-form">
         <textarea id="query-input" placeholder="Ask a research question..." required></textarea>
-        <button type="submit" class="search-button" id="submit-btn">down we go</button>
+        <div style="text-align: center;">
+          <button type="submit" class="search-button" id="submit-btn">down we go</button>
+        </div>
       </form>
       
       <div class="progress-container" id="progress-container">
@@ -180,7 +237,9 @@
       <div id="synthesis" class="synthesis"></div>
       
       <div style="margin-top: 20px; text-align: right;">
-        <button id="copy-btn" onclick="copyToClipboard()" style="background: #e25822;">Copy Report</button>
+        <button id="copy-btn" onclick="copyToClipboard()" class="copy-button">
+          📋 Copy Report
+        </button>
       </div>
     </div>
   </div>
@@ -294,8 +353,9 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     const progressContainer = document.getElementById('progress-container');
     const progressBar = document.getElementById('progress-bar');
     const loadingMessage = document.getElementById('loading-message');
+    const submitBtn = document.getElementById('submit-btn');
 
-    function startLoadingMessages(baseMessage) {
+    function startLoadingMessages() {
       // Clear any existing interval
       if (currentLoadingInterval) {
         clearInterval(currentLoadingInterval);
@@ -304,6 +364,9 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       if (progressInterval) {
         clearInterval(progressInterval);
       }
+      
+      // Hide the submit button
+      submitBtn.style.display = 'none';
       
       // Show progress bar
       progressContainer.style.display = 'block';
@@ -344,6 +407,8 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           setTimeout(() => {
             progressContainer.style.display = 'none';
             loadingMessage.textContent = '';
+            // Show the submit button again
+            submitBtn.style.display = 'inline-block';
           }, 500);
         }
       };
@@ -385,9 +450,71 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         <div><strong>Abstract:</strong> ${paper.abstract}</div>
       `;
       
+      // Convert markdown to HTML
+      synthesisDiv.innerHTML = markdownToHtml(data.synthesis);
+      
+      resultsDiv.style.display = 'block';
+      updateStatus('Research completed successfully!', 'success');
+    }
+
+    // Simple markdown to HTML converter
+    function markdownToHtml(markdown) {
+      if (!markdown) return '';
+      
+      // Process headers
+      markdown = markdown.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+      markdown = markdown.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+      markdown = markdown.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+      
+      // Process lists
+      markdown = markdown.replace(/^\* (.*?)$/gm, '<li>$1</li>');
+      markdown = markdown.replace(/^- (.*?)$/gm, '<li>$1</li>');
+      
+      // Wrap lists in <ul> tags
+      let inList = false;
+      const lines = markdown.split('\n');
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith('<li>') && !inList) {
+          lines[i] = '<ul>' + lines[i];
+          inList = true;
+        } else if (!lines[i].startsWith('<li>') && inList) {
+          lines[i-1] += '</ul>';
+          inList = false;
+        }
+      }
+      if (inList) {
+        lines[lines.length-1] += '</ul>';
+      }
+      markdown = lines.join('\n');
+      
+      // Process bold and italic
+      markdown = markdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      markdown = markdown.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      
+      // Process links
+      markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+      
+      // Process paragraphs
+      markdown = markdown.replace(/^(?!<[hou]).+/gm, '<p>    function showResults(data) {
+      originalQueryDiv.textContent = data.originalQuery;
+      optimizedQueryDiv.textContent = data.optimizedQuery;
+      
+      const paper = data.paper;
+      paperInfoDiv.innerHTML = `
+        <div><strong>Title:</strong> ${paper.title}</div>
+        <div><strong>Authors:</strong> ${paper.authors}</div>
+        <div><strong>DOI:</strong> ${paper.doi}</div>
+        <div><strong>URL:</strong> <a href="${paper.url}" target="_blank">${paper.url}</a></div>
+        <div><strong>Abstract:</strong> ${paper.abstract}</div>
+      `;
+      
       synthesisDiv.textContent = data.synthesis;
       resultsDiv.style.display = 'block';
       updateStatus('Research completed successfully!', 'success');
+    }</p>');
+      markdown = markdown.replace(/<\/p>\n<p>/g, '</p><p>');
+      
+      return markdown;
     }
 
     // ───────────── Claude API Call Function ─────────────
