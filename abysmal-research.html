@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neil's Deep Research</title>
+  <title>Abysmal Research!</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -404,6 +404,28 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       updateStatus(message, 'error');
     }
 
+    // ───────────── Markdown conversion ─────────────
+    function convertMarkdownToHtml(markdown) {
+      if (!markdown) return '';
+      
+      // Convert headers (but not using h1-h6 to avoid conflicts with page structure)
+      let html = markdown.replace(/^# (.+)$/gm, '<div class="md-h1">$1</div>');
+      html = html.replace(/^## (.+)$/gm, '<div class="md-h2">$1</div>');
+      html = html.replace(/^### (.+)$/gm, '<div class="md-h3">$1</div>');
+      
+      // Convert bold and italic
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      
+      // Convert lists
+      html = html.replace(/^- (.+)$/gm, '<ul><li>$1</li></ul>');
+      
+      // Handle line breaks
+      html = html.replace(/\n\n/g, '<br><br>');
+      
+      return html;
+    }
+    
     function showResults(data) {
       originalQueryDiv.textContent = data.originalQuery;
       optimizedQueryDiv.textContent = data.optimizedQuery;
@@ -417,7 +439,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         <div><strong>Abstract:</strong> ${paper.abstract}</div>
       `;
       
-      synthesisDiv.textContent = data.synthesis;
+      synthesisDiv.innerHTML = convertMarkdownToHtml(data.synthesis);
       resultsDiv.style.display = 'block';
       updateStatus('Research completed successfully!', 'success');
     }
@@ -701,6 +723,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
       if (!query) return;
       
       submitBtn.disabled = true;
+      submitBtn.style.display = 'none'; // Hide button during loading
       resultsDiv.style.display = 'none';
       document.getElementById('research-image-container').style.display = 'none';
       
@@ -728,6 +751,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         console.error(error);
       } finally {
         submitBtn.disabled = false;
+        submitBtn.style.display = ''; // Restore button visibility
       }
     }
 
