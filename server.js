@@ -19,12 +19,34 @@ app.use(cors({
 // Proxy endpoint for Claude API
 app.post('/api/claude', async (req, res) => {
   try {
-    const { systemPrompt, userContent, maxTokens } = req.body;
+    const { systemPrompt, userContent, maxTokens, promptType } = req.body;
+    
+    // Use prompt from environment variables if promptType is provided
+    let finalSystemPrompt = systemPrompt;
+    if (promptType) {
+      switch(promptType) {
+        case 'query_optimization':
+          finalSystemPrompt = PROMPT_QUERY_OPTIMIZATION;
+          break;
+        case 'paper_selection':
+          finalSystemPrompt = PROMPT_PAPER_SELECTION;
+          break;
+        case 'best_paper_selection':
+          finalSystemPrompt = PROMPT_BEST_PAPER_SELECTION;
+          break;
+        case 'research_synthesis':
+          finalSystemPrompt = PROMPT_RESEARCH_SYNTHESIS;
+          break;
+        case 'image_search':
+          finalSystemPrompt = PROMPT_IMAGE_SEARCH;
+          break;
+      }
+    }
     
     const payload = {
       model: "claude-3-7-sonnet-20250219",
       max_tokens: maxTokens || 512,
-      system: systemPrompt,
+      system: finalSystemPrompt,
       messages: [
         { role: "user", content: userContent }
       ]
@@ -55,7 +77,7 @@ app.post('/api/claude', async (req, res) => {
   }
 });
 
-// Image search endpoint using Brave Search API
+// Image search endpoint using Google Custom Search API
 app.get('/api/images', async (req, res) => {
   try {
     const { query } = req.query;
@@ -63,24 +85,56 @@ app.get('/api/images', async (req, res) => {
       return res.status(400).json({ error: { message: 'Query parameter is required' } });
     }
     
-    const response = await fetch(`https://api.search.brave.com/res/v1/images/search?q=${encodeURIComponent(query)}&count=5`, {
-      headers: {
-        'Accept': 'application/json',
-        'Accept-Encoding': 'gzip',
-        'X-Subscription-Token': BRAVE_API_KEY
+    // Log for debugging
+    console.log(`Searching Google for images with query: ${query}`);
+    
+    // Use Google Custom Search API for images
+    const response = await fetch(
+      `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_SEARCH_ID}&q=${encodeURIComponent(query)}&searchType=image&num=5`,
+      {
+        headers: {
+          'Accept': 'application/json'
+        }
       }
-    });
+    );
     
     if (!response.ok) {
+      // Get detailed error information
+      let errorDetail;
+      try {
+        const errorResponse = await response.json();
+        errorDetail = errorResponse.error?.message || `Status: ${response.status}`;
+        console.error('Google API error details:', errorResponse);
+      } catch (e) {
+        errorDetail = `Status: ${response.status}`;
+      }
+      
       return res.status(response.status).json({ 
-        error: { message: `Brave API Error: ${response.status}` } 
+        error: { message: `Google Search API Error: ${errorDetail}` } 
       });
     }
     
     const data = await response.json();
-    res.json(data);
+    console.log(`Successfully retrieved ${data.items?.length || 0} image results`);
+    
+    // Transform Google's response format to match what our frontend expects
+    const transformedResponse = {
+      results: data.items?.map(item => ({
+        thumbnail: {
+          src: item.link
+        },
+        title: item.title,
+        link: item.image?.contextLink || item.link,
+        source: {
+          name: item.displayLink,
+          domain: item.displayLink
+        }
+      })) || []
+    };
+    
+    res.json(transformedResponse);
   } catch (error) {
-    console.error('Error calling Brave Search API:', error);
+    console.error('Error calling Google Search API:', error);
     res.status(500).json({ error: { message: error.message } });
   }
 });
