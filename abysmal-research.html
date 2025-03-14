@@ -445,7 +445,7 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
     }
 
     // ───────────── Claude API Call Function ─────────────
-    async function callClaudeAPI(systemPrompt, userContent, maxTokens = 512) {
+    async function callClaudeAPI(systemPrompt, userContent, maxTokens = 512, promptType = null) {
       try {
         // Call our Railway backend proxy instead of Claude directly
         const response = await fetch(`${API_URL}/api/claude`, {
@@ -456,7 +456,8 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           body: JSON.stringify({
             systemPrompt,
             userContent,
-            maxTokens
+            maxTokens,
+            promptType
           })
         });
 
@@ -503,9 +504,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
 
     async function optimizeQuery(processedInput) {
       const completion = await callClaudeAPI(
-        QUERY_OPTIMIZATION_PROMPT,
+        "", // Empty string as we'll use backend prompt
         processedInput.query,
-        512
+        512,
+        "query_optimization" // Prompt type
       );
       const optimizedQuery = completion.trim();
       return {
@@ -535,9 +537,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           date: paper.date
         }));
         const selectionCompletion = await callClaudeAPI(
-          PAPER_SELECTION_PROMPT,
+          "",
           JSON.stringify({ query: queryData.optimizedQuery, papers: paperTitles }),
-          512
+          512,
+          "paper_selection"
         );
         let textContent = selectionCompletion.trim();
         let selectedDOIs;
@@ -589,9 +592,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           };
         }
         const bestPaperCompletion = await callClaudeAPI(
-          BEST_PAPER_SELECTION_PROMPT,
+          "",
           JSON.stringify({ query: queryData.optimizedQuery, papers: abstracts }),
-          512
+          512,
+          "best_paper_selection"
         );
         let bestPaperDOI = bestPaperCompletion.trim();
         if (bestPaperDOI.includes("10.1101/")) {
@@ -630,9 +634,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
           paper: paperData.bestPaper
         };
         const completion = await callClaudeAPI(
-          RESEARCH_SYNTHESIS_PROMPT,
+          "",
           JSON.stringify(synthesisContext),
-          4096
+          4096,
+          "research_synthesis"
         );
         return {
           originalQuery: paperData.query.originalQuery,
@@ -653,9 +658,10 @@ Important: Write as if you have thoroughly read and analyzed the complete paper,
         // First, get a good image search term using Claude
         showLoading("Finding relevant imagery...");
         const searchTermCompletion = await callClaudeAPI(
-          "You are an image search term generator. Given a research topic, generate a short, specific search term that would find relevant artistic, scientific, or philosophical imagery. Focus on finding an artistic or conceptual representation, not just literal images. Return ONLY the search term, no explanation.",
+          "",
           query,
-          128
+          128,
+          "image_search"
         );
         
         const searchTerm = searchTermCompletion.trim();
