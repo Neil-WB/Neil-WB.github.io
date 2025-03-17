@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I am neil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            background: url('alsoimages/icarus.jpg') center/cover;
+            position: relative;
+            background-attachment: fixed;
+        }
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.7));
+            pointer-events: none;
+            position: fixed;
+        }
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+            position: fixed;
+        }
+        .crt-lines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.05) 50%);
+            background-size: 100% 4px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.01);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            margin-bottom: 3rem;
+        }
+        .date {
+            opacity: 0.6;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 500;
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1rem;
+            font-weight: 500;
+        }
+        .text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+        }
+        p {
+            margin: 1.5rem 0;
+        }
+        ul {
+            padding-left: 1.5rem;
+        }
+        li {
+            margin: 0.5rem 0;
+        }
+        a {
+            color: #FF8A3C;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #FF9F5B;
+        }
+        .footnotes {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px dotted rgba(255,255,255,0.3);
+            font-size: 1.2rem;
+        }
+        .footnote {
+            display: inline-block;
+            margin-right: 0.3rem;
+            vertical-align: super;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="vignette"></div>
+        <div class="gradient-overlay"></div>
+        <div class="crt-lines"></div>
+        <div class="crt-flicker"></div>
+        
+        <div class="content">
+            <div class="header">
+                <div class="date">Mar 17, 2025</div>
+                <h1>neil warren-bancquart</h1>
+            </div>
+            <div class="text">
+                <p>so far:</p>
+                <ul>
+                    <li>Marseille 0-0.8yo</li>
+                    <li>Mountain View 0.8-12yo</li>
+                    <li>Bordeaux 12-18yo</li>
+                    <li>Dijon 18yo-</li>
+                </ul>
+
+                <p>I like:</p>
+                <ul>
+                    <li>snorting to myself while everyone glares at me and the Thing to be Seen</li>
+                    <li>walking along the Seine, watching the City of Enlightenment, ignoring the giant metal tower they TURN OFF AFTER ELEVEN for obscure reasons</li>
+                    <li>Balthazar Picsou</li>
+                    <li>large language models</li>
+                    <li>the high bandwidth feeling of writing</li>
+                    <li>when "I" (Claude) can code the MVP in &lt; a day</li>
+                    <li>getting a CAPTCHA right</li>
+                    <li>in no particular order: <a href="https://music.youtube.com/watch?v=nJ8SiN3CnAk">a</a>, <a href="https://music.youtube.com/watch?v=_276G0E2P30">b</a>, <a href="https://music.youtube.com/watch?v=qQzdAsjWGPg">c</a>, <a href="https://music.youtube.com/watch?v=Ph8Qt3DHVwo">d</a>, <a href="https://music.youtube.com/watch?v=q5MI9D0OXFw">e</a>, <a href="https://music.youtube.com/watch?v=IoUjigENpUI">f</a>, <a href="https://music.youtube.com/watch?v=K3DA-uHfLqU">g</a>, <a href="https://music.youtube.com/watch?v=bYh3g_fSbJc">h</a>, <a href="https://music.youtube.com/watch?v=EWMPVn1kgIQ">i</a></li>
+                    <li>making my future self grin</li>
+                    <li><a href="https://gwern.net/unseeing">unseeing things</a></li>
+                    <li>running like mad to catch a train</li>
+                    <li>microeconomics</li>
+                    <li>grinning at my past self</li>
+                    <li>typing really fast</li>
+                    <li>the French language</li>
+                    <li><a href="https://www.readthesequences.com/">books 1-3 of the Sequences</a> (and a lot of related posts not strictly in that set)</li>
+                    <li>the dialogue in <em>Atlas Shrugged</em></li>
+                    <li>increasing my default present info bandwidth with people (this page)</li>
+                </ul>
+
+                <p>I don't like:</p>
+                <ul>
+                    <li>rooms with high CO2 content but no one believes in CO2 so they don't open the windows</li>
+                    <li>holy fuck why is school so badly designed</li>
+                    <li>feeling like I'm crazy (looking crazy is ok tho)</li>
+                    <li>people telling me I don't have slack
+                        <ul>
+                            <li>also having no slack</li>
+                        </ul>
+                    </li>
+                    <li><a href="https://neil.com">AAAAAAH</a> WHAT ARE THEY DOING WITH (WHAT SHOULD BE) MY BABY!</li>
+                    <li>video games
+                        <ul>
+                            <li>(I'm not sure why honestly)</li>
+                        </ul>
+                    </li>
+                    <li>death</li>
+                    <li>Sciences Po</li>
+                    <li>writing with my actual hand with an actual pen on actual paper</li>
+                    <li>intellectual cowardice (e.g. retreating into facetious bad faith defenses when your beliefs are under fire by me. You're allowed to walk away, just <em>please don't do</em> <em>this</em>.)</li>
+                    <li>passive-aggression
+                        <ul>
+                            <li>you are allowed to be aggressive</li>
+                            <li>you are encouraged to be calm</li>
+                            <li>you are NOT allowed to toy with me</li>
+                        </ul>
+                    </li>
+                    <li>infohazards (e.g. a public list of things that annoy me)</li>
+                </ul>
+
+                <h2>What I'm doing</h2>
+                <p>Checking off bucket-list-item-shaped actions?</p>
+
+                <p>Deep Research is the only useful OpenAI product but also it costs as much as my rent so: building my own version! You may annoy me about getting this done. I want something with high taste, that ideally costs under 2 bucks per query, and uses Claude 3.7 + Gemini 2.0 Flash as the embedded models. (I think Gemini is psychopathic but also I really like those cheap API calls and don't trust DeepSeek R1 to be good at googling-rigor.)</p>
+
+                <p><a href="https://neilwb.com/abysmal-research">Abysmal Research</a> won't answer you directly, but will go on as many tangents as possible. If there aren't 20 footnotes and 6 appendixes in the final product, then I have failed.</p>
+
+                <p>I'm doing this mostly because it's fun and because since Nov 30 2022 the amount of complicated questions that pop up into my mind has radically increased and I want them all answered.</p>
+
+                <p>As a child, I decided once I would be ambitious and bring great changes to the world. After some thought, I decided writing down all my ideas for doing this was a good idea, so I started a google doc. Years later, this doc, its continuations and annexxes, have gotten <em>quite long</em> and by accident my most competent skill now is probably writing?</p>
+
+                <p>It was an accident! I was meant to do things and instead I wrote things! But now when I want to think I want to write, and even for things like math I can't bring myself to actually write out equations or whatever, I just write English sentences, and it's kind of worrying to me how dependent I now am on CoT for <em>everything</em>. The plus side is LLMs are probably more useful to me than most people. We're pals. Soul-brothers.</p>
+
+                <p>I write an absurd amount, and very little of that gets published, and the little that gets published goes on random platforms all over the place (on an anonymous alt, <a href="https://lesswrong.com/users/neil-warren">LessWrong</a>, Twitter, Substack, and other nooks and crannies of the interwebs). If you want to stalk me I, uh, good luck with that. <a href="#fn3" class="footnote">[3]</a></p>
+
+                <p>(For magical reasons somehow I barely have an internet trace? I'm not even sure you can find a <em>picture</em> of me out there. I am satoshi.)</p>
+
+                <h2>Values</h2>
+                <p>Standard <a href="https://en.wikipedia.org/wiki/Humanism">humanism</a>? I'm pretty chill, and feel the most chills when I read texts from Enlightenment-era writers circumnavigating ethics. The problems we have with tribalism, <a href="https://x.com/arithmoquine/status/1890469150310481976">performative virtue/cruelty</a>, etc. seem solvable with an extremely basic and fairly ancient framework?</p>
+
+                <p>If you have any worries over what that might imply about my ethics, you can ask me about it and there's a chance I'll agree with you—I haven't spent much time formalizing my ethics, bc being a generally good person hasn't implied the need for that yet.</p>
+
+                <p>I should probably get around to doing it at some point though, bc it seems like a good bucket list item.</p>
+
+                <p>Emotions that I don't feel while acting out ethics: anger, revenge, fear, disgust, envy. If I'm feeling those while simultaneously telling myself I'm acting out ethics, I think I ought to be very suspicious (bc when I see others do it they are always <em>not</em> acting out ethics).</p>
+
+                <p><a href="https://www.lesswrong.com/posts/Aud7CL7uhz55KL8jG/transhumanism-as-simplified-humanism">Transhumanism is simplified humanism</a>, throw that one into the book too.</p>
+
+                <p>Humanism need not exclude AIs btw, though I (gut-based) don't think current LLMs are ~more sentient than golden retrievers. (Note that I do not condone mistreating golden retrievers.)</p>
+
+                <p><a href="https://joecarlsmith.com/2024/01/04/deep-atheism-and-ai-risk">Quite atheist.</a></p>
+
+                <p>I'm not sure much of anything is worth paying attention to except AI (<em>that is, for reasons beyond curiosity</em>).</p>
+
+                <p>I'd have to be given a great reason to mistrust median AI lab timelines for the <a href="https://www.lesswrong.com/s/6YHHWqmQ7x6vf4s5C">conflationary alliance</a> that is "AGI" to change my mind here, and some other cruxes besides.</p>
+
+                <p>Not eating meat seems pretty straightforward too.</p>
+
+                <p>Worried about tribalism or salivating for <a href="https://www.lewissociety.org/innerring/">inner-ringhood</a>, so I will only rarely say "I'm a proud X". <a href="#fn1" class="footnote">[1]</a> There are some drawbacks to a policy of deliberately avoiding ingroup signals (which does not imply I'm successful at it!), but I think generally the benefits are worth it. I extend this to avoiding signalling you're-in-my-ingroup to others.</p>
+
+                <h2>How you can interact with me</h2>
+                <p>I'm willing to bet with you on object-level things. We can talk until we disagree about something.</p>
+
+                <p>I condone pranking me.</p>
+
+                <p>I'm also open to most kinds of trades between money and social services. (e.g. can do research for you, edit/write your blog post, or do anything you can think of for money so that we increase variety on the market).</p>
+
+                <p>I'm a proponent of an internet where everyone has a personal website with a Stripe link on it, an email, and a list of interesting trades. So if you want to give me money for whatever reason: paypal.me/cashforneil.</p>
+
+                <p>I like long rambling emails/google doc convos, and am willing to do those with you. I largely prefer them to google meet conversations, because they feel a lot more data-dense and interesting.</p>
+
+                <p>We can meet in person if I'm around, but I'm almost never around (I live in the woods).</p>
+
+                <p>You can send me anonymous feedback <a href="https://www.admonymous.co/neil">here</a>.</p>
+
+                <p>My email is neil.m.warren [at] gmail.com.</p>
+
+                <p>I'm hard to anger or rile in any way, so don't hesitate to reach out. If you're reading this, you're probably at the very least in the top decile of humans I'd like to speak to, and maybe at coin-flip-odds in the top <em>percentile</em><a href="#fn2" class="footnote">[2]</a>. If you dump this website into your company slack, you will be significantly reducing the effectiveness of this site as a filter for me (but I condone pranking me).</p>
+
+                <p><em>Please please please don't rent a billboard spot and put this link on it.</em></p>
+
+                <div class="footnotes">
+                    <p id="fn1"><strong>[1]</strong> Part of this is that I don't believe there is an "X" I could stumble upon anytime soon such that I wouldn't ever want to evolve to a "Y" (ie X would be on the Pareto frontier of "character"). Surely there's an optimal thing to be, and if it doesn't exist yet I could just make it, but even then I'm fallible so 'X' wouldn't be X and even then OTHER people are fallible so 'X' as-seen-by-an-LLM's-training-data would not be X.</p>
+
+                    <p>This is what happened to "rationalist" btw. You can read the paragraph again and replace X with "rationalist".</p>
+
+                    <p>So I'm just going to be Neil. One of the advantages here is that I'm the highest arbiter when it comes to defining Neil, and Neil will never breach containment on the internet such that other people somehow have a reasonable claim on defining Neil. Autocracies manage to avoid dealing with a very particular kind of bullshit, and that's what I'm aiming for here.</p>
+
+                    <p>The sacrifice here is that Neil will never become a community project of constantly-evolving norms—not because I don't want my friends to treat me like a construction project (I do) but because I'm the final arbiter in all cases and most of your suggested construction directions will not be followed. There will never be a LessNotNeil community forum (MoreNeil, on the other hand,).</p>
+
+                    <p>The buddhists and one of my DMT-prone friends would tell me even defining myself as "Neil" is dangerous, but 19 and unfortunately I've decided I'm too young to buy into spiritual crap, and I'm going to remain in a solidly materialistic universe for the time being.</p>
+
+                    <p id="fn2"><strong>[2]</strong> What I mean here is "in the subset of people I already speak with a tiny bit". Obviously out of all of Earth you're already way up there in the top percentile.</p>
+
+                    <p id="fn3"><strong>[3]</strong> I do like the idea of getting into the training data, and putting all my writing in the same basket would get me more bang for my buck, so this isn't a permanent ideal state. (<a href="https://gwern.net/llm-writing">cf. if you're interested</a>)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
