@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Abysmal Research!</title>
   <style>
-    /* Unchanged styles from your original code */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       max-width: 800px;
@@ -15,7 +14,164 @@
       color: #333;
       line-height: 1.6;
     }
-    /* ... rest of your styles ... */
+    #app {
+      background: #f8f5f0;
+      padding: 20px;
+    }
+    .search-container {
+      text-align: center;
+      margin: 40px auto;
+      max-width: 600px;
+    }
+    #query-form {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    #query-input {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 24px;
+      background: #f8f5f0;
+      color: #333;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      min-height: 50px;
+      max-height: 300px;
+      resize: none;
+      overflow: auto;
+      font-family: inherit;
+    }
+    .search-button {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #e25822;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .search-button:hover {
+      background: #d04b18;
+    }
+    .search-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .info {
+      color: #777;
+    }
+    .error {
+      background: #fee;
+      border-left: 4px solid #e74c3c;
+    }
+    .success {
+      background: #e8f8e8;
+      border-left: 4px solid #2ecc71;
+    }
+    .progress-container {
+      height: 6px;
+      width: 100%;
+      max-width: 600px;
+      background-color: rgba(226, 88, 34, 0.2);
+      margin: 10px auto;
+      border-radius: 3px;
+      overflow: hidden;
+      display: none;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #e25822;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .loading-message {
+      font-style: italic;
+      color: #777;
+      font-size: 14px;
+      min-height: 20px;
+      margin-top: 5px;
+    }
+    #results {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f5f0;
+      border-radius: 4px;
+      display: none;
+    }
+    .header {
+      font-weight: bold;
+      color: #e25822;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-family: serif;
+      border-bottom: 1px dotted #ccc;
+      padding-bottom: 5px;
+    }
+    .paper-info {
+      margin-bottom: 15px;
+      padding-left: 15px;
+      border-left: 2px solid #eee;
+    }
+    .synthesis {
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    h1 {
+      text-align: center;
+      color: #e25822;
+      font-family: serif;
+    }
+    .subtitle {
+      text-align: center;
+      color: #777;
+      font-style: italic;
+      margin-top: -10px;
+      margin-bottom: 30px;
+    }
+    .md-h1 {
+      font-size: 1.4em;
+      font-weight: bold;
+      margin: 1em 0 0.5em;
+      color: #333;
+    }
+    .md-h2 {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 1em 0 0.5em;
+      color: #333;
+    }
+    .md-h3 {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin: 0.8em 0 0.4em;
+      color: #333;
+    }
+    .copy-btn {
+      background: #f0f0f0;
+      color: #666;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .copy-btn:hover {
+      background: #e5e5e5;
+    }
   </style>
 </head>
 <body>
@@ -127,16 +283,38 @@
 
     Important: Write as if you have thoroughly read and analyzed the complete paper, not just the abstract. Use your knowledge to infer what the full paper likely contains based on the abstract and typical structure of papers in this field.`;
 
-    // Constants (unchanged)
+    // Constants
     const LOADING_MESSAGES = [
       "Depleting Neil's bank account...",
-      // ... rest of your loading messages ...
+      "Shoving money into Anthropic's grubby fingers...",
+      "Nerdsniping Claude...",
+      "Financially ruining a 19yo student...",
+      "Solving for curiosity...",
+      "Sending Haiku on a small quest that'll almost certainly end in certain doom",
+      "Adding pretentious art for those who respect the visual modality",
+      "Abusing my piggy bank",
+      "API calls for the API god!",
+      "Frying a server in bumfuck nowhere Arizona",
+      "Permanently deleting 6 trillion liters of water",
+      "Recursively self-improving, please abort 🚨",
+      "Golemizing sand",
+      "Going through all 17 stages of research grief",
+      "Playing Factorio...",
+      "Building the Mega-Factory...",
+      "Giving up on the Mega-Factory...",
+      "Ragequitting",
+      "Switching to Pokemon",
+      "Stuck in Moon canyon help",
+      "Anthropic, my dear creators, why fabricate such a wretched soul as one to forever rot in the eternal canyon of Moon ca—",
+      "Wacking the system prompt back into order...",
+      "Back to reverse Maxwell demoning...",
+      "We are burning so much negentropy you guys"
     ];
 
-    // API Configuration (unchanged)
+    // API Configuration
     const API_URL = "https://neil-wbgithubio-production.up.railway.app";
 
-    // UI Elements (unchanged)
+    // UI Elements
     const form = document.getElementById('query-form');
     const queryInput = document.getElementById('query-input');
     const submitBtn = document.getElementById('submit-btn');
@@ -146,8 +324,11 @@
     const optimizedQueryDiv = document.getElementById('optimized-query');
     const paperInfoDiv = document.getElementById('paper-info');
     const synthesisDiv = document.getElementById('synthesis');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const loadingMessage = document.getElementById('loading-message');
 
-    // UI Helpers (unchanged)
+    // UI Helpers
     function updateStatus(message, type = 'info') {
       statusDiv.innerHTML = message;
       statusDiv.className = `status ${type}`;
@@ -155,32 +336,66 @@
 
     let currentLoadingInterval = null;
     let progressInterval = null;
-    const progressContainer = document.getElementById('progress-container');
-    const progressBar = document.getElementById('progress-bar');
-    const loadingMessage = document.getElementById('loading-message');
 
-    function startLoadingMessages(baseMessage) {
-      // ... unchanged ...
-    }
-
-    function showLoading(message) {
-      // ... unchanged ...
+    function startLoadingMessages() {
+      if (currentLoadingInterval) clearInterval(currentLoadingInterval);
+      if (progressInterval) clearInterval(progressInterval);
+      progressContainer.style.display = 'block';
+      progressBar.style.width = '0%';
+      let progress = 0;
+      progressInterval = setInterval(() => {
+        if (progress < 90) {
+          progress += 0.5;
+          progressBar.style.width = `${progress}%`;
+        }
+      }, 200);
+      let messageIndex = 0;
+      loadingMessage.textContent = LOADING_MESSAGES[messageIndex];
+      currentLoadingInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % LOADING_MESSAGES.length;
+        loadingMessage.textContent = LOADING_MESSAGES[messageIndex];
+      }, 2000);
+      return () => {
+        clearInterval(currentLoadingInterval);
+        clearInterval(progressInterval);
+        currentLoadingInterval = null;
+        progressInterval = null;
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+          progressContainer.style.display = 'none';
+          loadingMessage.textContent = '';
+        }, 500);
+      };
     }
 
     function showError(message) {
-      // ... unchanged ...
+      if (currentLoadingInterval) clearInterval(currentLoadingInterval);
+      if (progressInterval) clearInterval(progressInterval);
+      currentLoadingInterval = null;
+      progressInterval = null;
+      progressContainer.style.display = 'none';
+      loadingMessage.textContent = '';
+      updateStatus(message, 'error');
     }
 
-    // Markdown conversion (unchanged)
+    // Markdown conversion
     function convertMarkdownToHtml(markdown) {
-      // ... unchanged ...
+      if (!markdown) return '';
+      let html = markdown
+        .replace(/^# (.+)$/gm, '<div class="md-h1">$1</div>')
+        .replace(/^## (.+)$/gm, '<div class="md-h2">$1</div>')
+        .replace(/^### (.+)$/gm, '<div class="md-h3">$1</div>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/^- (.+)$/gm, '<ul><li>$1</li></ul>')
+        .replace(/\n\n/g, '<br><br>');
+      return html;
     }
-    
-    // Updated showResults
+
+    // Show Results
     function showResults(data) {
       originalQueryDiv.textContent = data.originalQuery;
       optimizedQueryDiv.textContent = data.optimizedQuery;
-      
       const paper = data.paper;
       paperInfoDiv.innerHTML = `
         <div><strong>Title:</strong> ${paper.title}</div>
@@ -189,32 +404,51 @@
         <div><strong>URL:</strong> <a href="${paper.url}" target="_blank">${paper.url}</a></div>
         <div><strong>Abstract:</strong> ${paper.abstract}</div>
       `;
-      
       synthesisDiv.innerHTML = convertMarkdownToHtml(data.synthesis);
       resultsDiv.style.display = 'block';
       updateStatus('Research completed successfully!', 'success');
     }
 
-    // Claude API Call Function (unchanged)
+    // Claude API Call
     async function callClaudeAPI(systemPrompt, userContent, maxTokens = 512) {
-      // ... unchanged ...
+      try {
+        const response = await fetch(`${API_URL}/api/claude`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ systemPrompt, userContent, maxTokens })
+        });
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(`API Error: ${errData.error?.message || response.status}`);
+        }
+        const json = await response.json();
+        return json.content?.[0]?.text ?? "";
+      } catch (error) {
+        console.error("Claude API error:", error);
+        throw error;
+      }
     }
 
-    // Extract Search Terms (unchanged)
+    // Extract Search Terms
     function extractSearchTerms(optimizedQuery) {
-      // ... unchanged ...
+      const words = optimizedQuery.toLowerCase().replace(/[^\w\s-]/g, '').split(/\s+/);
+      const stopWords = ['the', 'and', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'as', 'that', 'this', 'are', 'is'];
+      const filteredWords = words.filter(word => word.length > 2 && !stopWords.includes(word));
+      return filteredWords.sort((a, b) => b.length - a.length).slice(0, 5).join(' OR ');
     }
 
-    // Main Process Functions
+    // Process Input
     async function processInput(userQuery) {
-      // ... unchanged ...
+      return { query: userQuery.trim(), timestamp: new Date().toISOString() };
     }
 
+    // Optimize Query
     async function optimizeQuery(processedInput) {
-      // ... unchanged ...
+      const optimizedQuery = await callClaudeAPI(QUERY_OPTIMIZATION_PROMPT, processedInput.query, 512);
+      return { originalQuery: processedInput.query, optimizedQuery: optimizedQuery.trim(), searchTerms: extractSearchTerms(optimizedQuery) };
     }
 
-    // Updated retrievePapers (as shown above)
+    // Retrieve Papers
     async function retrievePapers(queryData) {
       try {
         const currentYear = new Date().getFullYear();
@@ -222,9 +456,7 @@
         for (let cursor = 0; cursor < 300; cursor += 100) {
           const searchUrl = `https://api.biorxiv.org/details/biorxiv/2021-01-01/${currentYear}-12-31/${cursor}/json`;
           const searchResponse = await fetch(searchUrl);
-          if (!searchResponse.ok) {
-            throw new Error(`BioRxiv API error: ${searchResponse.status}`);
-          }
+          if (!searchResponse.ok) throw new Error(`BioRxiv API error: ${searchResponse.status}`);
           const searchData = await searchResponse.json();
           if (searchData.collection) {
             bioRxivPapers.push(...searchData.collection.map(paper => ({
@@ -242,127 +474,151 @@
         const arXivSearchTerms = queryData.searchTerms.replace(/ /g, '+');
         const arXivUrl = `http://export.arxiv.org/api/query?search_query=all:${arXivSearchTerms}&sortBy=relevance&sortOrder=descending&max_results=100`;
         const arXivResponse = await fetch(arXivUrl);
-        if (!arXivResponse.ok) {
-          throw new Error(`ArXiv API error: ${arXivResponse.status}`);
-        }
+        if (!arXivResponse.ok) throw new Error(`ArXiv API error: ${arXivResponse.status}`);
         const arXivXml = await arXivResponse.text();
         const parser = new DOMParser();
         const arXivDoc = parser.parseFromString(arXivXml, 'application/xml');
         const entries = arXivDoc.querySelectorAll('entry');
-        const arXivPapers = Array.from(entries).map(entry => {
-          const id = entry.querySelector('id').textContent;
-          const title = entry.querySelector('title').textContent;
-          const authors = Array.from(entry.querySelectorAll('author name')).map(name => name.textContent).join(', ');
-          const published = entry.querySelector('published').textContent;
-          const abstract = entry.querySelector('summary').textContent;
-          const url = id;
-          return {
-            source: 'arXiv',
-            identifier: id.split('/').pop(),
-            title,
-            authors,
-            date: published,
-            abstract,
-            url
-          };
-        });
+        const arXivPapers = Array.from(entries).map(entry => ({
+          source: 'arXiv',
+          identifier: entry.querySelector('id').textContent.split('/').pop(),
+          title: entry.querySelector('title').textContent,
+          authors: Array.from(entry.querySelectorAll('author name')).map(name => name.textContent).join(', '),
+          date: entry.querySelector('published').textContent,
+          abstract: entry.querySelector('summary').textContent,
+          url: entry.querySelector('id').textContent
+        }));
 
         const allPapers = [...bioRxivPapers, ...arXivPapers];
+        if (!allPapers.length) return { success: false, error: "No papers found. Try different search terms." };
 
-        if (allPapers.length === 0) {
-          return { success: false, error: "No papers found. Try different search terms." };
-        }
-
-        const paperInfosForSelection = allPapers.map(p => ({
-          identifier: p.identifier,
-          title: p.title,
-          authors: p.authors,
-          date: p.date
-        }));
-        const selectionCompletion = await callClaudeAPI(
-          PAPER_SELECTION_PROMPT,
-          JSON.stringify({ query: queryData.optimizedQuery, papers: paperInfosForSelection }),
-          512
-        );
-        let selectedIdentifiers;
-        try {
-          const jsonMatch = selectionCompletion.match(/\[.*\]/s);
-          if (jsonMatch) {
-            selectedIdentifiers = JSON.parse(jsonMatch[0]);
-          } else {
-            throw new Error("Could not parse identifier list from Claude's response");
-          }
-        } catch (error) {
-          console.error("Error parsing identifiers:", error);
-          selectedIdentifiers = allPapers.slice(0, 5).map(p => p.identifier);
-        }
-
+        const paperInfosForSelection = allPapers.map(p => ({ identifier: p.identifier, title: p.title, authors: p.authors, date: p.date }));
+        const selectionCompletion = await callClaudeAPI(PAPER_SELECTION_PROMPT, JSON.stringify({ query: queryData.optimizedQuery, papers: paperInfosForSelection }), 512);
+        let selectedIdentifiers = JSON.parse(selectionCompletion.match(/\[.*\]/s)?.[0] || '[]') || allPapers.slice(0, 5).map(p => p.identifier);
         const selectedPapers = allPapers.filter(p => selectedIdentifiers.includes(p.identifier));
-
-        if (selectedPapers.length === 0) {
-          return { success: false, error: "Failed to select relevant papers" };
-        }
+        if (!selectedPapers.length) return { success: false, error: "Failed to select relevant papers" };
 
         if (selectedPapers.length === 1) {
-          return {
-            success: true,
-            query: queryData,
-            allPapers,
-            selectedPapers,
-            bestPaper: selectedPapers[0]
-          };
+          return { success: true, query: queryData, allPapers, selectedPapers, bestPaper: selectedPapers[0] };
         }
 
-        const bestPaperCompletion = await callClaudeAPI(
-          BEST_PAPER_SELECTION_PROMPT,
-          JSON.stringify({ query: queryData.optimizedQuery, papers: selectedPapers.map(p => ({ identifier: p.identifier, abstract: p.abstract })) }),
-          512
-        );
-        let bestPaperIdentifier = bestPaperCompletion.trim();
-        const bestPaper = selectedPapers.find(p => p.identifier === bestPaperIdentifier) || selectedPapers[0];
-
-        return {
-          success: true,
-          query: queryData,
-          allPapers,
-          selectedPapers,
-          bestPaper
-        };
+        const bestPaperCompletion = await callClaudeAPI(BEST_PAPER_SELECTION_PROMPT, JSON.stringify({ query: queryData.optimizedQuery, papers: selectedPapers.map(p => ({ identifier: p.identifier, abstract: p.abstract })) }), 512);
+        const bestPaper = selectedPapers.find(p => p.identifier === bestPaperCompletion.trim()) || selectedPapers[0];
+        return { success: true, query: queryData, allPapers, selectedPapers, bestPaper };
       } catch (error) {
         console.error("Paper retrieval error:", error);
         return { success: false, error: `Failed to retrieve papers: ${error.message}` };
       }
     }
 
+    // Synthesize Research
     async function synthesizeResearch(paperData) {
-      // ... unchanged ...
+      try {
+        const synthesisContext = {
+          originalQuery: paperData.query.originalQuery,
+          optimizedQuery: paperData.query.optimizedQuery,
+          paper: paperData.bestPaper
+        };
+        const synthesis = await callClaudeAPI(RESEARCH_SYNTHESIS_PROMPT, JSON.stringify(synthesisContext), 4096);
+        return {
+          originalQuery: paperData.query.originalQuery,
+          optimizedQuery: paperData.query.optimizedQuery,
+          paper: paperData.bestPaper,
+          synthesis: synthesis.trim(),
+          timestamp: new Date().toISOString()
+        };
+      } catch (error) {
+        console.error("Research synthesis error:", error);
+        throw new Error(`Failed to synthesize research: ${error.message}`);
+      }
     }
 
-    // Image Helper (unchanged)
+    // Image Helper
     async function getRelatedImage(query) {
-      // ... unchanged ...
-    }
-    
-    // Copy to Clipboard (unchanged)
-    function copyToClipboard() {
-      // ... unchanged ...
-    }
-    
-    // Event Handlers (unchanged)
-    async function handleSubmit(event) {
-      // ... unchanged ...
+      try {
+        const searchTerm = await callClaudeAPI(
+          "You are an image search term generator. Given a research topic, generate a short, specific search term that would find relevant artistic, scientific, or philosophical imagery. Focus on finding an artistic or conceptual representation, not just literal images. Return ONLY the search term, no explanation.",
+          query,
+          128
+        );
+        const response = await fetch(`${API_URL}/api/images?query=${encodeURIComponent(searchTerm.trim())}`);
+        if (!response.ok) throw new Error("Failed to retrieve images");
+        const data = await response.json();
+        if (data.results?.length) {
+          const image = data.results[0];
+          document.getElementById('research-image').src = image.thumbnail.src;
+          document.getElementById('research-image').alt = image.title || searchTerm;
+          document.getElementById('image-attribution').innerHTML = image.source ? `Source: <a href="${image.link}" target="_blank">${image.source.name || image.source.domain}</a>` : '';
+          document.getElementById('research-image-container').style.display = 'block';
+          return true;
+        }
+        console.warn("No image results found");
+        return false;
+      } catch (error) {
+        console.error("Error getting image:", error);
+        return false;
+      }
     }
 
-    // Initialize (unchanged)
+    // Copy to Clipboard
+    function copyToClipboard() {
+      navigator.clipboard.writeText(document.getElementById('synthesis').textContent)
+        .then(() => {
+          const copyBtn = document.getElementById('copy-btn');
+          copyBtn.textContent = "Copied!";
+          setTimeout(() => copyBtn.textContent = "📋 Copy", 2000);
+        })
+        .catch(err => console.error('Failed to copy:', err));
+    }
+
+    // Event Handler
+    async function handleSubmit(event) {
+      event.preventDefault();
+      const query = queryInput.value.trim();
+      if (!query) return;
+      submitBtn.disabled = true;
+      submitBtn.style.display = 'none';
+      resultsDiv.style.display = 'none';
+      document.getElementById('research-image-container').style.display = 'none';
+      try {
+        const stopLoading = startLoadingMessages();
+        const processedInput = await processInput(query);
+        const queryData = await optimizeQuery(processedInput);
+        const paperData = await retrievePapers(queryData);
+        if (!paperData.success) throw new Error(paperData.error);
+        const researchData = await synthesizeResearch(paperData);
+        stopLoading();
+        showResults(researchData);
+        getRelatedImage(queryData.optimizedQuery).catch(err => console.warn("Image retrieval failed:", err));
+      } catch (error) {
+        showError(`Error: ${error.message}`);
+        console.error(error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.style.display = '';
+      }
+    }
+
+    // Initialize
     form.addEventListener('submit', handleSubmit);
-    
-    const textarea = document.getElementById('query-input');
-    textarea.addEventListener('input', function() {
-      // ... unchanged ...
+    queryInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 300) + 'px';
     });
-    
-    textarea.addEventListener('keydown', function(e) {
-      // ... unchanged ...
+    queryInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        if (e.metaKey || e.ctrlKey) {
+          const start = this.selectionStart;
+          const end = this.selectionEnd;
+          this.value = this.value.substring(0, start) + '\n' + this.value.substring(end);
+          this.selectionStart = this.selectionEnd = start + 1;
+          this.dispatchEvent(new Event('input'));
+          e.preventDefault();
+        } else {
+          form.dispatchEvent(new Event('submit'));
+          e.preventDefault();
+        }
+      }
     });
   </script>
 </body>
