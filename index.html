@@ -430,9 +430,10 @@ function drawCard() {
     }
 }
 
-// Split out the card creation logic
+
+// Then update the createAndAnimateNewCard function:
 function createAndAnimateNewCard() {
-    state.currentCard = (state.currentCard + 1) % cards.length;
+    state.currentCard = getRandomCardIndex(state.currentCard, cards.length);
     const card = createCard(cards[state.currentCard]);
     updateBackground(cards[state.currentCard].bgImage);
     maintainCardLimit();
@@ -545,6 +546,21 @@ if ('ontouchstart' in window) {  // Better touch detection
             }
         });
 
+        // Replace the sequential selection with this function
+function getRandomCardIndex(currentIndex, maxLength) {
+    // If this is the first card draw (currentIndex is -1), just return a random index
+    if (currentIndex === -1) {
+        return Math.floor(Math.random() * maxLength);
+    }
+    
+    // Generate random index that's different from current
+    let newIndex;
+    do {
+        newIndex = Math.floor(Math.random() * maxLength);
+    } while (newIndex === currentIndex);
+    
+    return newIndex;
+}
 
 // Function to check if the page is being visited by Gwern (via URL parameter)
 function checkForGwern() {
