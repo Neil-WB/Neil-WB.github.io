@@ -353,6 +353,18 @@
     
         ];
 
+        // Fisher-Yates shuffle algorithm to randomize the cards array once
+        function shuffleCards(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Shuffle cards on page load
+        shuffleCards(cards);
+
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
         const els = {
@@ -430,10 +442,9 @@ function drawCard() {
     }
 }
 
-
-// Then update the createAndAnimateNewCard function:
+// Split out the card creation logic
 function createAndAnimateNewCard() {
-    state.currentCard = getRandomCardIndex(state.currentCard, cards.length);
+    state.currentCard = (state.currentCard + 1) % cards.length;
     const card = createCard(cards[state.currentCard]);
     updateBackground(cards[state.currentCard].bgImage);
     maintainCardLimit();
@@ -546,21 +557,6 @@ if ('ontouchstart' in window) {  // Better touch detection
             }
         });
 
-        // Replace the sequential selection with this function
-function getRandomCardIndex(currentIndex, maxLength) {
-    // If this is the first card draw (currentIndex is -1), just return a random index
-    if (currentIndex === -1) {
-        return Math.floor(Math.random() * maxLength);
-    }
-    
-    // Generate random index that's different from current
-    let newIndex;
-    do {
-        newIndex = Math.floor(Math.random() * maxLength);
-    } while (newIndex === currentIndex);
-    
-    return newIndex;
-}
 
 // Function to check if the page is being visited by Gwern (via URL parameter)
 function checkForGwern() {
