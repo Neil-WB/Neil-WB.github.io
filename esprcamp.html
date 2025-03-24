@@ -1,145 +1,230 @@
-import React, { useState, useEffect } from 'react';
-
-const TackyESPR = () => {
-  const [showPopup, setShowPopup] = useState(false);
-  const [titleColor, setTitleColor] = useState('#FF0000');
-
-  // Make title blink between ESPR blue and orange
-  useEffect(() => {
-    const colors = ['#4F9EB9', '#E78D27']; // ESPR blue and orange
-    let colorIndex = 0;
-    
-    const interval = setInterval(() => {
-      colorIndex = (colorIndex + 1) % colors.length;
-      setTitleColor(colors[colorIndex]);
-    }, 2000);
-    
-    // Show popup after 15 seconds
-    const popupTimer = setTimeout(() => {
-      setShowPopup(true);
-    }, 15000);
-    
-    return () => {
-      clearInterval(interval);
-      clearTimeout(popupTimer);
-    };
-  }, []);
-
-  return (
-    <div className="relative w-full min-h-screen p-4" style={{ 
-      backgroundColor: '#c4c4a1', 
-      fontFamily: '"Comic Sans MS", cursive',
-      cursor: 'url("https://i.imgur.com/JNMRT3t.png"), auto'
-    }}>
-      {/* Header */}
-      <header className="flex justify-center mb-8">
-        <div className="text-center">
-          <h1 
-            className="text-4xl font-bold mb-2" 
-            style={{ 
-              fontFamily: 'Papyrus, fantasy',
-              color: titleColor,
-              textShadow: '2px 2px 5px #000'
-            }}
-          >
-            european summer program of "rationality"
-          </h1>
-          <div className="relative h-16">
-            <div 
-              className="absolute w-full text-xl" 
-              style={{
-                transform: 'rotate(-10deg) translateY(20px)',
-                fontFamily: '"Comic Sans MS", cursive',
-              }}
-            >
-              proud attendee
-            </div>
-          </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESPR "Rationality" Program</title>
+    <style>
+        body {
+            background-color: #c4c4a1;
+            font-family: "Comic Sans MS", cursive;
+            margin: 0;
+            padding: 20px;
+            cursor: url('alsoimages/espr.png'), auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-family: Papyrus, fantasy;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 5px #000;
+        }
+        
+        .subtitle {
+            font-family: "Comic Sans MS", cursive;
+            font-size: 1.3rem;
+            transform: rotate(-10deg);
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .text-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .image-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .round-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .round-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .button {
+            background-color: #E78D27;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-family: "Comic Sans MS", cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 10px 0;
+            display: block;
+        }
+        
+        .button:hover {
+            background-color: #d47d17;
+            cursor: pointer;
+        }
+        
+        .apply-button {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffff33;
+            border: 4px solid #ff0000;
+            padding: 20px;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: none;
+            text-align: center;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #ff0000;
+            color: white;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .popup-title {
+            color: #ff0000;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            animation: pulse 1s infinite;
+        }
+        
+        .popup-button {
+            background-color: #00cc00;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin-top: 10px;
+            animation: bounce 1s infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title" id="blinking-title">european summer program of "rationality"</h1>
+        <div>
+            <span class="subtitle">proud attendee</span>
         </div>
-      </header>
-
-      {/* Main content */}
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/2">
-          <p className="mb-4">
-            The European Summer Program on Rationality (ESPR) is an
-            immersive workshop for mathematically talented students with a
-            desire to understand themselves and the world.
-          </p>
-          
-          <p className="mb-4">
-            <b>You'll want to put this on your linkedin and say "I'm a proud #ESPRcool attendee"</b>
-          </p>
-
-          <p className="mb-2">
-            <strong>Where:</strong> Somerset, UK.
-          </p>
-          
-          <p className="mb-2">
-            <strong>When:</strong> August 21st - 31st 2025
-          </p>
-          
-          <p className="mb-4">
-            <strong>Who:</strong> Applicants between 16-19 yo.
-          </p>
-          
-          <div className="flex flex-col gap-4 items-center md:items-start">
-            <button 
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded animate-pulse"
-            >
-              APPLY NOW
-            </button>
+    </div>
+    
+    <div class="content">
+        <div class="text-section">
+            <p>
+                The European Summer Program on Rationality (ESPR) is an
+                immersive workshop for mathematically talented students with a
+                desire to understand themselves and the world.
+            </p>
             
-            <button 
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded"
-            >
-              MORE CAMPS
-            </button>
-          </div>
-          
-          <p className="mt-6">
-            The curriculum covers a wide range of topics, from game theory,
-            cryptography, and mathematical logic, to AI safety, styles of
-            communication, and cognitive science. The goal of the program
-            is to help students hone rigorous, quantitative skills as they
-            acquire a toolbox of useful concepts and practical techniques
-            applicable in all walks of life.
-          </p>
+            <p>
+                <b>You'll want to put this on your linkedin and say "I'm a proud #ESPRcool attendee"</b>
+            </p>
+            
+            <p>
+                <strong>Where:</strong> Somerset, UK.
+            </p>
+            
+            <p>
+                <strong>When:</strong> August 21st - 31st 2025
+            </p>
+            
+            <p>
+                <strong>Who:</strong> Applicants between 16-19 yo.
+            </p>
+            
+            <button class="button apply-button">APPLY NOW</button>
+            <button class="button">MORE CAMPS</button>
+            
+            <p style="margin-top: 20px;">
+                The curriculum covers a wide range of topics, from game theory,
+                cryptography, and mathematical logic, to AI safety, styles of
+                communication, and cognitive science. The goal of the program
+                is to help students hone rigorous, quantitative skills as they
+                acquire a toolbox of useful concepts and practical techniques
+                applicable in all walks of life.
+            </p>
         </div>
         
-        <div className="w-full md:w-1/2 flex justify-center items-center">
-          <div className="w-72 h-72 rounded-full overflow-hidden">
-            <img 
-              src="alsoimages/oxford.jpg" 
-              alt="ESPR campus" 
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <div class="image-section">
+            <div class="round-image">
+                <img src="alsoimages/oxford.jpg" alt="ESPR campus">
+            </div>
         </div>
-      </div>
-
-      {/* Popup */}
-      {showPopup && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-300 border-4 border-red-600 p-6 z-50 shadow-lg">
-          <div className="absolute top-0 right-0">
-            <button 
-              onClick={() => setShowPopup(false)}
-              className="bg-red-500 text-white w-6 h-6 flex items-center justify-center"
-            >
-              X
-            </button>
-          </div>
-          <div className="text-center animate-pulse">
-            <h2 className="text-2xl mb-2 text-red-600">🚀 SPECIAL OFFER! 🚀</h2>
-            <p className="mb-4">At ESPR, we believe crypto to be the future. Buy $GAVN today!</p>
-            <button className="bg-green-500 text-white py-2 px-4 animate-bounce">
-              BUY NOW!!!
-            </button>
-          </div>
-        </div>
-      )}
     </div>
-  );
-};
-
-export default TackyESPR;
+    
+    <div class="popup" id="crypto-popup">
+        <div class="popup-close" onclick="closePopup()">X</div>
+        <h2 class="popup-title">🚀 SPECIAL OFFER! 🚀</h2>
+        <p>At ESPR, we believe crypto to be the future. Buy $GAVN today!</p>
+        <button class="popup-button">BUY NOW!!!</button>
+    </div>
+    
+    <script>
+        // Title blinking
+        const title = document.getElementById('blinking-title');
+        const colors = ['#4F9EB9', '#E78D27']; // ESPR blue and orange
+        let colorIndex = 0;
+        
+        setInterval(function() {
+            colorIndex = (colorIndex + 1) % colors.length;
+            title.style.color = colors[colorIndex];
+        }, 2000);
+        
+        // Popup
+        const popup = document.getElementById('crypto-popup');
+        
+        setTimeout(function() {
+            popup.style.display = 'block';
+        }, 15000);
+        
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
