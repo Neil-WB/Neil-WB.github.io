@@ -30,7 +30,7 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: minmax(min-content, auto);
+            grid-auto-rows: minmax(33vh, auto);
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
@@ -39,19 +39,17 @@
         
         header {
             grid-column: 1 / span 3;
-            padding: 4rem 2rem 2rem;
-            scroll-snap-align: start;
-            height: 100vh;
+            grid-row: span 3;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            scroll-snap-align: start;
         }
         
         .title-container {
             width: 66.6%;
-            margin: 0;
-            padding-left: calc(100% / 3);
+            text-align: center;
         }
         
         .title {
@@ -69,20 +67,26 @@
             margin-top: 0;
         }
         
-        main {
-            grid-column: 2 / span 1;
-            grid-row: 2;
-            padding: 0 2rem;
+        section {
+            display: contents;
         }
         
         h2 {
+            grid-column: 1 / span 3;
             font-size: 2rem;
             font-weight: 500;
-            margin-top: 30vh;
-            margin-bottom: 30vh;
+            margin: 0;
             scroll-snap-align: start;
-            padding: 2rem 0;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 33vh;
+        }
+        
+        .content-wrapper {
+            grid-column: 2 / span 1;
+            padding: 0 2rem;
+            align-self: start;
         }
         
         p {
@@ -241,38 +245,46 @@
             </div>
         </header>
         
-        <main>
+        <section>
             <h2 id="section1">La mathématique subtile du Médiéval</h2>
-            <p>En fait, c'est surtout de la géométrie. Dans le cas de l'Abbey St.Denis (c.1140), la mathématique est au service du pragmatisme: on construit une arche plus pointue car elle permet de distribuer le poids de la tour de façon plus efficace, permettant de construire avec plus de hauteur, ce qui est un but majeur dans la constructions d'immeubles à office religieuse.</p>
             
-            <div class="image-container">
-                <img src="alsoimages/art/arch.webp" alt="Arche de l'Abbey St.Denis">
+            <div class="content-wrapper">
+                <p>En fait, c'est surtout de la géométrie. Dans le cas de l'Abbey St.Denis (c.1140), la mathématique est au service du pragmatisme: on construit une arche plus pointue car elle permet de distribuer le poids de la tour de façon plus efficace, permettant de construire avec plus de hauteur, ce qui est un but majeur dans la constructions d'immeubles à office religieuse.</p>
+                
+                <div class="image-container">
+                    <img src="alsoimages/art/arch.webp" alt="Arche de l'Abbey St.Denis">
+                </div>
+                
+                <p>Mais cette mathématique, c'est de la géométrie simple, sans formalisme: c'est plus le résultat d'experimentations multiples que de découverte systématique comme la mathématique d'aujourd'hui. Autrement dit, on ne commence pas avec des <em>a priori</em> pour ensuite, après réflection et étapes logiques, arriver à un résultat composé de ces <em>a priori</em>.</p>
+                
+                <p>Par exemple, dans le journal d'un dénommé Villard de Honnecourt, qui vivait au 13è siècle, on trouve des mécanismes primitifs, sans calculs, le produit d'intuition simple:</p>
+                
+                <div class="image-container">
+                    <img src="alsoimages/art/churchlectern.webp" alt="Mécanisme de Villard de Honnecourt">
+                </div>
+                
+                <p>La géométrie sert aussi à refléter la théologie de l'époque, qui voit en la Terre un exemple d'ordre divin. La rosace de la cathédrale de Chartres est censée le refléter:</p>
+                
+                <div class="image-container">
+                    <img src="alsoimages/art/rose.webp" alt="Rosace de la cathédrale de Chartres">
+                </div>
+                
+                <p>La musique est considérée comme art mathématique. Avec l'arithmétique, la géométrie et l'astronomie, elle forme le Quadrivium, la compilation des 4 sujets les plus hauts-placés de l'éducation médiévale. La mathématique de la musique, qui s'opère dans les cloches de monastères ou les orgues de cathédrales, c'est celle des intervalles.</p>
+                
+                <p>Comme avec l'architecture ou la géométrie des rosaces, c'est surtout des maths <em>par accident</em>. On sait depuis Pythagore que certains intervalles sont particulièrement harmonieux.</p>
+                
+                <p>Nous n'avons donc pas encore de formalisme mathématique.</p>
             </div>
+        </section>
             
-            <p>Mais cette mathématique, c'est de la géométrie simple, sans formalisme: c'est plus le résultat d'experimentations multiples que de découverte systématique comme la mathématique d'aujourd'hui. Autrement dit, on ne commence pas avec des <em>a priori</em> pour ensuite, après réflection et étapes logiques, arriver à un résultat composé de ces <em>a priori</em>.</p>
-            
-            <p>Par exemple, dans le journal d'un dénommé Villard de Honnecourt, qui vivait au 13è siècle, on trouve des mécanismes primitifs, sans calculs, le produit d'intuition simple:</p>
-            
-            <div class="image-container">
-                <img src="alsoimages/art/churchlectern.webp" alt="Mécanisme de Villard de Honnecourt">
-            </div>
-            
-            <p>La géométrie sert aussi à refléter la théologie de l'époque, qui voit en la Terre un exemple d'ordre divin. La rosace de la cathédrale de Chartres est censée le refléter:</p>
-            
-            <div class="image-container">
-                <img src="alsoimages/art/rose.webp" alt="Rosace de la cathédrale de Chartres">
-            </div>
-            
-            <p>La musique est considérée comme art mathématique. Avec l'arithmétique, la géométrie et l'astronomie, elle forme le Quadrivium, la compilation des 4 sujets les plus hauts-placés de l'éducation médiévale. La mathématique de la musique, qui s'opère dans les cloches de monastères ou les orgues de cathédrales, c'est celle des intervalles.</p>
-            
-            <p>Comme avec l'architecture ou la géométrie des rosaces, c'est surtout des maths <em>par accident</em>. On sait depuis Pythagore que certains intervalles sont particulièrement harmonieux.</p>
-            
-            <p>Nous n'avons donc pas encore de formalisme mathématique.</p>
-            
+        <section>
             <h2 id="section2">Lorem ipsum</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
-            <p>Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim.</p>
-        </main>
+            
+            <div class="content-wrapper">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
+                <p>Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim.</p>
+            </div>
+        </section>
         
         <footer>
             <div class="signature">
@@ -315,7 +327,7 @@
             
             // Find the current heading - we define it as the last heading that passed 
             // the top of the viewport (with some threshold)
-            const threshold = 50; // pixels
+            const threshold = 100; // pixels
             
             // Check header first
             if (scrollTop < 100) {
@@ -324,10 +336,15 @@
                 // Check all headings
                 headings.forEach(heading => {
                     // Get the heading's position relative to the top of the document
-                    const headingPosition = heading.getBoundingClientRect().top + scrollTop;
+                    const headingTop = heading.getBoundingClientRect().top;
+                    const headingBottom = heading.getBoundingClientRect().bottom;
                     
-                    // If the heading has passed the top of the viewport (plus threshold)
-                    if (scrollTop >= headingPosition - threshold) {
+                    // If the heading is at or just past the top of the viewport
+                    if (headingTop <= threshold && headingBottom > -threshold) {
+                        currentHeadingText = heading.textContent;
+                    }
+                    // If we've scrolled past this heading but not yet to the next one
+                    else if (headingTop <= threshold) {
                         currentHeadingText = heading.textContent;
                     }
                 });
@@ -345,7 +362,7 @@
                         const headingRect = heading.getBoundingClientRect();
                         const headingTop = headingRect.top;
                         
-                        // If heading is within 100px of top of viewport, snap to it
+                        // If heading is within snap threshold of top of viewport
                         if (Math.abs(headingTop) < 100) {
                             isSnapping = true;
                             
