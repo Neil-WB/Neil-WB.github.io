@@ -40,11 +40,10 @@
         header {
             grid-column: 1 / span 3;
             grid-row: span 3;
-            display: block;
+            padding: 4rem 2rem 2rem;
             scroll-snap-align: start;
             position: relative;
             z-index: 20; /* Ensure header appears above grid lines */
-            padding-top: 33vh;
         }
         
         .title-container {
@@ -76,7 +75,7 @@
         }
         
         h2 {
-            grid-column: 2 / span 2;
+            grid-column: 2 / span 1;
             font-size: 2rem;
             font-weight: 500;
             margin: 0;
@@ -85,7 +84,7 @@
             display: flex;
             align-items: center;
             position: relative;
-            z-index: 15; /* Above grid lines but below main title */
+            z-index: 15;
         }
         
         .content-wrapper {
