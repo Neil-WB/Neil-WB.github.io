@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La mathématisation de l'art</title>
+    <title>La mathématique subtile du Médiéval</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
         
@@ -76,11 +76,16 @@
             margin-bottom: 1.5rem;
         }
         
+        .image-container {
+            width: 100%;
+            margin: 2rem 0;
+        }
+        
         img {
             display: block;
-            width: 66.67%;
+            width: 100%;
             border: 3px solid var(--deep-blue);
-            margin: 2rem auto;
+            margin: 0 auto;
             position: relative;
             z-index: 20;
         }
@@ -197,7 +202,7 @@
 <body>
     <!-- Section indicator in left column -->
     <div class="section-indicator">
-        <div class="current-section">Lorem Ipsum Heading</div>
+        <div class="current-section">La mathématique subtile du Médiéval</div>
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
@@ -218,12 +223,32 @@
         </header>
         
         <main>
-            <h2>Lorem Ipsum Heading</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies tincidunt, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies tincidunt, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl.</p>
+            <h2>La mathématique subtile du Médiéval</h2>
+            <p>En fait, c'est surtout de la géométrie. Dans le cas de l'Abbey St.Denis (c.1140), la mathématique est au service du pragmatisme: on construit une arche plus pointue car elle permet de distribuer le poids de la tour de façon plus efficace, permettant de construire avec plus de hauteur, ce qui est un but majeur dans la constructions d'immeubles à office religieuse.</p>
             
-            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <div class="image-container">
+                <img src="alsoimages/art/arch.webp" alt="Arche de l'Abbey St.Denis">
+            </div>
             
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+            <p>Mais cette mathématique, c'est de la géométrie simple, sans formalisme: c'est plus le résultat d'experimentations multiples que de découverte systématique comme la mathématique d'aujourd'hui. Autrement dit, on ne commence pas avec des <em>a priori</em> pour ensuite, après réflection et étapes logiques, arriver à un résultat composé de ces <em>a priori</em>.</p>
+            
+            <p>Par exemple, dans le journal d'un dénommé Villard de Honnecourt, qui vivait au 13è siècle, on trouve des mécanismes primitifs, sans calculs, le produit d'intuition simple:</p>
+            
+            <div class="image-container">
+                <img src="alsoimages/art/churchlectern.webp" alt="Mécanisme de Villard de Honnecourt">
+            </div>
+            
+            <p>La géométrie sert aussi à refléter la théologie de l'époque, qui voit en la Terre un exemple d'ordre divin. La rosace de la cathédrale de Chartres est censée le refléter:</p>
+            
+            <div class="image-container">
+                <img src="alsoimages/art/rose.webp" alt="Rosace de la cathédrale de Chartres">
+            </div>
+            
+            <p>La musique est considérée comme art mathématique. Avec l'arithmétique, la géométrie et l'astronomie, elle forme le Quadrivium, la compilation des 4 sujets les plus hauts-placés de l'éducation médiévale. La mathématique de la musique, qui s'opère dans les cloches de monastères ou les orgues de cathédrales, c'est celle des intervalles.</p>
+            
+            <p>Comme avec l'architecture ou la géométrie des rosaces, c'est surtout des maths <em>par accident</em>. On sait depuis Pythagore que certains intervalles sont particulièrement harmonieux.</p>
+            
+            <p>Nous n'avons donc pas encore de formalisme mathématique.</p>
         </main>
         
         <footer>
@@ -255,17 +280,15 @@
                 sectionIndicator.classList.remove('visible');
             }
             
-            // Update current section (would update with actual section names in real implementation)
-            // This is a placeholder - in real usage, you'd detect which section is in viewport
+            // Update current section based on headings
             const currentSection = document.querySelector('.current-section');
-            const sections = document.querySelectorAll('h2');
+            const headings = document.querySelectorAll('main h2');
             
-            // Simple implementation to update the section title
-            // In a real site, you'd want to check which section is actually in view
-            sections.forEach(section => {
-                const sectionTop = section.getBoundingClientRect().top;
-                if (sectionTop < 200 && sectionTop > -200) {
-                    currentSection.textContent = section.textContent;
+            // Update section title based on visible headings
+            headings.forEach(heading => {
+                const headingTop = heading.getBoundingClientRect().top;
+                if (headingTop < 200 && headingTop > -200) {
+                    currentSection.textContent = heading.textContent;
                 }
             });
         });
