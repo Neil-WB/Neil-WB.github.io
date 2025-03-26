@@ -282,8 +282,7 @@
 
     <script>
         // Elements for scroll detection and manipulation
-        const headings = document.querySelectorAll('.section-heading');
-        const contentSections = document.querySelectorAll('.content-section');
+        const headings = document.querySelectorAll('h2');
         const header = document.querySelector('header');
         
         // Track if we're currently in a "snap" animation
@@ -325,7 +324,7 @@
             headings.forEach(heading => {
                 const headingRect = heading.getBoundingClientRect();
                 if (headingRect.top < winHeight/2 && headingRect.bottom > 0) {
-                    visibleSection = heading.querySelector('h2').textContent;
+                    visibleSection = heading.textContent;
                 }
             });
             
