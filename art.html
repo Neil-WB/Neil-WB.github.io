@@ -81,6 +81,8 @@
             width: 66.67%;
             border: 3px solid var(--deep-blue);
             margin: 2rem auto;
+            position: relative;
+            z-index: 20;
         }
         
         footer {
@@ -159,6 +161,7 @@
             width: calc(100% / 3 - 2rem);
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 10;
         }
         
         .section-indicator.visible {
@@ -168,16 +171,17 @@
         .current-section {
             color: #aaa;
             font-size: 0.9rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 400;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             margin-bottom: 0.5rem;
         }
         
         .progress-container {
             width: 100%;
-            height: 1px;
+            height: 3px;
             background-color: rgba(170, 170, 170, 0.2);
+            border-radius: 1.5px;
+            overflow: hidden;
         }
         
         .progress-bar {
