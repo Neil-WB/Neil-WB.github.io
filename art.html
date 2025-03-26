@@ -77,8 +77,11 @@
         }
         
         .image-container {
-            width: 100%;
+            width: 120%;
             margin: 2rem 0;
+            position: relative;
+            left: -10%;
+            z-index: 20;
         }
         
         img {
@@ -87,7 +90,6 @@
             border: 3px solid var(--deep-blue);
             margin: 0 auto;
             position: relative;
-            z-index: 20;
         }
         
         footer {
@@ -125,7 +127,7 @@
             right: 0;
             bottom: 0;
             pointer-events: none;
-            z-index: -1;
+            z-index: 10;
         }
         
         .grid-lines::before,
