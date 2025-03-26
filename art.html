@@ -45,6 +45,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
         }
         
         .title-container {
@@ -77,9 +78,11 @@
         h2 {
             font-size: 2rem;
             font-weight: 500;
-            margin-bottom: 1.5rem;
+            margin-top: 30vh;
+            margin-bottom: 30vh;
             scroll-snap-align: start;
-            padding-top: 2rem;
+            padding: 2rem 0;
+            position: relative;
         }
         
         p {
@@ -284,6 +287,7 @@
         // Elements for scroll detection and manipulation
         const headings = document.querySelectorAll('h2');
         const header = document.querySelector('header');
+        let currentHeadingText = "";
         
         // Track if we're currently in a "snap" animation
         let isSnapping = false;
@@ -309,30 +313,28 @@
                 sectionIndicator.classList.remove('visible');
             }
             
-            // Update current section based on headings
-            const currentSection = document.querySelector('.current-section');
-            
-            // Find which section is currently visible
-            let visibleSection = "La mathématisation de l'art";
+            // Find the current heading - we define it as the last heading that passed 
+            // the top of the viewport (with some threshold)
+            const threshold = 50; // pixels
             
             // Check header first
-            if (header.getBoundingClientRect().top > -winHeight/2) {
-                visibleSection = "La mathématisation de l'art";
+            if (scrollTop < 100) {
+                currentHeadingText = "La mathématisation de l'art";
+            } else {
+                // Check all headings
+                headings.forEach(heading => {
+                    // Get the heading's position relative to the top of the document
+                    const headingPosition = heading.getBoundingClientRect().top + scrollTop;
+                    
+                    // If the heading has passed the top of the viewport (plus threshold)
+                    if (scrollTop >= headingPosition - threshold) {
+                        currentHeadingText = heading.textContent;
+                    }
+                });
             }
             
-            // Then check section headings
-            headings.forEach(heading => {
-                const headingRect = heading.getBoundingClientRect();
-                if (headingRect.top < winHeight/2 && headingRect.bottom > 0) {
-                    visibleSection = heading.textContent;
-                }
-            });
-            
-            currentSection.textContent = visibleSection;
-            
-            // Detect direction of scroll
-            const isScrollingDown = scrollTop > lastScrollY;
-            lastScrollY = scrollTop;
+            // Update the current section display
+            document.querySelector('.current-section').textContent = currentHeadingText;
             
             // Handle scroll snapping logic
             if (!isSnapping) {
@@ -398,6 +400,9 @@
             
             window.requestAnimationFrame(step);
         }
+        
+        // Initial call to set things up
+        window.dispatchEvent(new Event('scroll'));
     </script>
 </body>
 </html>
