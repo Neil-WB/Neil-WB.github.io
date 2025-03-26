@@ -36,13 +36,13 @@
         
         header {
             grid-column: 1 / span 3;
-            text-align: center;
             padding: 4rem 2rem 2rem;
         }
         
         .title-container {
             width: 66.6%;
-            margin: 0 auto;
+            margin: 0;
+            padding-left: calc(100% / 3);
         }
         
         .title {
@@ -74,6 +74,13 @@
         
         p {
             margin-bottom: 1.5rem;
+        }
+        
+        img {
+            display: block;
+            width: 66.67%;
+            border: 3px solid var(--deep-blue);
+            margin: 2rem auto;
         }
         
         footer {
@@ -144,9 +151,52 @@
             height: 1px;
             top: 66.66%;
         }
+        /* Left column section header */
+        .section-indicator {
+            position: fixed;
+            top: 2rem;
+            left: calc(100% / 6);
+            width: calc(100% / 3 - 2rem);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .section-indicator.visible {
+            opacity: 1;
+        }
+        
+        .current-section {
+            color: #aaa;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 1px;
+            background-color: rgba(170, 170, 170, 0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: #aaa;
+            transition: width 0.1s ease;
+        }
     </style>
 </head>
 <body>
+    <!-- Section indicator in left column -->
+    <div class="section-indicator">
+        <div class="current-section">Lorem Ipsum Heading</div>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+    
     <!-- Grid reference lines -->
     <div class="grid-lines vertical-1"></div>
     <div class="grid-lines vertical-2"></div>
@@ -178,5 +228,41 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        // Update progress bar and section title on scroll
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight;
+            const winHeight = window.innerHeight;
+            const scrollPercent = scrollTop / (docHeight - winHeight);
+            const scrollPercentRounded = Math.round(scrollPercent * 100);
+            
+            // Update progress bar
+            document.querySelector('.progress-bar').style.width = scrollPercentRounded + '%';
+            
+            // Show/hide section indicator based on scroll position
+            const sectionIndicator = document.querySelector('.section-indicator');
+            if (scrollTop > 100) {
+                sectionIndicator.classList.add('visible');
+            } else {
+                sectionIndicator.classList.remove('visible');
+            }
+            
+            // Update current section (would update with actual section names in real implementation)
+            // This is a placeholder - in real usage, you'd detect which section is in viewport
+            const currentSection = document.querySelector('.current-section');
+            const sections = document.querySelectorAll('h2');
+            
+            // Simple implementation to update the section title
+            // In a real site, you'd want to check which section is actually in view
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < 200 && sectionTop > -200) {
+                    currentSection.textContent = section.textContent;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
