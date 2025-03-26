@@ -22,12 +22,15 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-y: scroll;
+            scroll-snap-type: y proximity;
         }
         
         .grid-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: auto auto auto;
+            grid-auto-rows: minmax(min-content, auto);
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
@@ -37,6 +40,11 @@
         header {
             grid-column: 1 / span 3;
             padding: 4rem 2rem 2rem;
+            scroll-snap-align: start;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .title-container {
@@ -60,16 +68,32 @@
             margin-top: 0;
         }
         
-        main {
-            grid-column: 2 / span 1;
-            grid-row: 2;
-            padding: 0 2rem;
+        .section-heading {
+            grid-column: 1 / span 3;
+            min-height: 33vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: start;
+            position: relative;
         }
         
-        h2 {
-            font-size: 2rem;
+        .section-heading h2 {
+            font-size: 2.5rem;
             font-weight: 500;
-            margin-bottom: 1.5rem;
+            color: var(--deep-blue);
+            text-align: center;
+            margin: 0;
+            padding: 4rem 0;
+            width: 100%;
+            max-width: 66.6%;
+            position: relative;
+        }
+        
+        .content-section {
+            grid-column: 2 / span 1;
+            padding: 0 2rem;
+            margin-bottom: 4rem;
         }
         
         p {
@@ -94,9 +118,13 @@
         
         footer {
             grid-column: 1 / span 3;
-            grid-row: 3;
             text-align: center;
             padding: 4rem 2rem;
+            scroll-snap-align: end;
+            min-height: 33vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .signature {
@@ -217,41 +245,70 @@
     <div class="grid-lines horizontal-2"></div>
 
     <div class="grid-container">
-        <header>
+        <header id="top">
             <div class="title-container">
                 <h1 class="title">La mathématisation de l'art</h1>
                 <p class="subtitle">les avancées technologiques dans l'art européen</p>
             </div>
         </header>
         
-        <main>
+        <!-- Section Heading 1 -->
+        <div class="section-heading" id="section1">
             <h2>La mathématique subtile du Médiéval</h2>
+        </div>
+        
+        <!-- Content Section 1 -->
+        <div class="content-section">
             <p>En fait, c'est surtout de la géométrie. Dans le cas de l'Abbey St.Denis (c.1140), la mathématique est au service du pragmatisme: on construit une arche plus pointue car elle permet de distribuer le poids de la tour de façon plus efficace, permettant de construire avec plus de hauteur, ce qui est un but majeur dans la constructions d'immeubles à office religieuse.</p>
             
             <div class="image-container">
-                <img src="alsoimages/art/arch.webp" alt="Arche de l'Abbey St.Denis">
+                <img src="/api/placeholder/400/320" alt="Arche de l'Abbey St.Denis">
             </div>
             
             <p>Mais cette mathématique, c'est de la géométrie simple, sans formalisme: c'est plus le résultat d'experimentations multiples que de découverte systématique comme la mathématique d'aujourd'hui. Autrement dit, on ne commence pas avec des <em>a priori</em> pour ensuite, après réflection et étapes logiques, arriver à un résultat composé de ces <em>a priori</em>.</p>
-            
+        </div>
+
+        <!-- Section Heading 2 -->
+        <div class="section-heading" id="section2">
+            <h2>Mécanismes primitifs</h2>
+        </div>
+        
+        <!-- Content Section 2 -->
+        <div class="content-section">
             <p>Par exemple, dans le journal d'un dénommé Villard de Honnecourt, qui vivait au 13è siècle, on trouve des mécanismes primitifs, sans calculs, le produit d'intuition simple:</p>
             
             <div class="image-container">
-                <img src="alsoimages/art/churchlectern.webp" alt="Mécanisme de Villard de Honnecourt">
+                <img src="/api/placeholder/400/320" alt="Mécanisme de Villard de Honnecourt">
             </div>
-            
+        </div>
+
+        <!-- Section Heading 3 -->
+        <div class="section-heading" id="section3">
+            <h2>Géométrie et théologie</h2>
+        </div>
+        
+        <!-- Content Section 3 -->
+        <div class="content-section">
             <p>La géométrie sert aussi à refléter la théologie de l'époque, qui voit en la Terre un exemple d'ordre divin. La rosace de la cathédrale de Chartres est censée le refléter:</p>
             
             <div class="image-container">
-                <img src="alsoimages/art/rose.webp" alt="Rosace de la cathédrale de Chartres">
+                <img src="/api/placeholder/400/320" alt="Rosace de la cathédrale de Chartres">
             </div>
-            
+        </div>
+
+        <!-- Section Heading 4 -->
+        <div class="section-heading" id="section4">
+            <h2>La musique comme art mathématique</h2>
+        </div>
+        
+        <!-- Content Section 4 -->
+        <div class="content-section">
             <p>La musique est considérée comme art mathématique. Avec l'arithmétique, la géométrie et l'astronomie, elle forme le Quadrivium, la compilation des 4 sujets les plus hauts-placés de l'éducation médiévale. La mathématique de la musique, qui s'opère dans les cloches de monastères ou les orgues de cathédrales, c'est celle des intervalles.</p>
             
             <p>Comme avec l'architecture ou la géométrie des rosaces, c'est surtout des maths <em>par accident</em>. On sait depuis Pythagore que certains intervalles sont particulièrement harmonieux.</p>
             
             <p>Nous n'avons donc pas encore de formalisme mathématique.</p>
-        </main>
+        </div>
         
         <footer>
             <div class="signature">
@@ -263,6 +320,16 @@
     </div>
 
     <script>
+        // Elements for scroll detection and manipulation
+        const headings = document.querySelectorAll('.section-heading');
+        const contentSections = document.querySelectorAll('.content-section');
+        const header = document.querySelector('header');
+        
+        // Track if we're currently in a "snap" animation
+        let isSnapping = false;
+        let lastScrollY = window.scrollY;
+        let scrollTimeout = null;
+        
         // Update progress bar and section title on scroll
         window.addEventListener('scroll', function() {
             const scrollTop = window.scrollY;
@@ -284,16 +351,93 @@
             
             // Update current section based on headings
             const currentSection = document.querySelector('.current-section');
-            const headings = document.querySelectorAll('main h2');
             
-            // Update section title based on visible headings
+            // Find which section is currently visible
+            let visibleSection = "La mathématisation de l'art";
+            
+            // Check header first
+            if (header.getBoundingClientRect().top > -winHeight/2) {
+                visibleSection = "La mathématisation de l'art";
+            }
+            
+            // Then check section headings
             headings.forEach(heading => {
-                const headingTop = heading.getBoundingClientRect().top;
-                if (headingTop < 200 && headingTop > -200) {
-                    currentSection.textContent = heading.textContent;
+                const headingRect = heading.getBoundingClientRect();
+                if (headingRect.top < winHeight/2 && headingRect.bottom > 0) {
+                    visibleSection = heading.querySelector('h2').textContent;
                 }
             });
+            
+            currentSection.textContent = visibleSection;
+            
+            // Detect direction of scroll
+            const isScrollingDown = scrollTop > lastScrollY;
+            lastScrollY = scrollTop;
+            
+            // Handle scroll snapping logic
+            if (!isSnapping) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    // Check if we're close to a section heading
+                    headings.forEach(heading => {
+                        const headingRect = heading.getBoundingClientRect();
+                        const headingTop = headingRect.top;
+                        
+                        // If heading is within 100px of top of viewport, snap to it
+                        if (Math.abs(headingTop) < 100) {
+                            isSnapping = true;
+                            
+                            // Calculate scroll position to snap to heading
+                            const targetScrollY = scrollTop + headingTop;
+                            
+                            // Smoothly scroll to target
+                            smoothScrollTo(targetScrollY, 300, () => {
+                                isSnapping = false;
+                            });
+                        }
+                    });
+                    
+                    // Also check if header is close
+                    const headerRect = header.getBoundingClientRect();
+                    if (Math.abs(headerRect.top) < 100) {
+                        isSnapping = true;
+                        const targetScrollY = scrollTop + headerRect.top;
+                        smoothScrollTo(targetScrollY, 300, () => {
+                            isSnapping = false;
+                        });
+                    }
+                }, 100);
+            }
         });
+        
+        // Smooth scroll function with callback
+        function smoothScrollTo(targetY, duration, callback) {
+            const startingY = window.scrollY;
+            const diff = targetY - startingY;
+            let start;
+            
+            // Easing function for deceleration
+            function easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
+            }
+            
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const time = timestamp - start;
+                const percent = Math.min(time / duration, 1);
+                const eased = easeOutCubic(percent);
+                
+                window.scrollTo(0, startingY + diff * eased);
+                
+                if (time < duration) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (callback) callback();
+                }
+            }
+            
+            window.requestAnimationFrame(step);
+        }
     </script>
 </body>
 </html>
