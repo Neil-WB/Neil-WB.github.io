@@ -45,11 +45,15 @@
             justify-content: center;
             align-items: center;
             scroll-snap-align: start;
+            position: relative;
+            z-index: 20; /* Ensure header appears above grid lines */
         }
         
         .title-container {
             width: 66.6%;
             text-align: center;
+            position: relative;
+            z-index: 20; /* Ensure title appears above grid lines */
         }
         
         .title {
@@ -77,10 +81,14 @@
             font-weight: 500;
             margin: 0;
             scroll-snap-align: start;
+            display: block;
+            min-height: 33vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 33vh;
+            padding-left: calc(33.33% * (1/6));
+            width: 66.6%;
+            position: relative;
+            z-index: 15; /* Above grid lines but below main title */
         }
         
         .content-wrapper {
