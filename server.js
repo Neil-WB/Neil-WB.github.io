@@ -126,3 +126,101 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Add at the top with other requires
+const axios = require('axios');
+const xml2js = require('xml2js');
+
+// Authors list - modify as needed
+const AUTHORS = [
+  "Robert+Avery",
+  "Yudhister+Kumar",
+  "Raul+Alcantara",
+  "Nasan+Mehndiratta",
+  "Edward+Chen",
+  "Laura+Gao",
+  "Jack+Edwards",
+  "Sophia+Cai",
+  "Espen+Slettnes",
+  "Anita+Kerco+Molnar"
+];
+
+// Get authors endpoint
+app.get('/api/authors', (req, res) => {
+  res.json(AUTHORS);
+});
+
+// Arxiv search endpoint
+app.get('/api/arxiv', async (req, res) => {
+  try {
+    const { authorName, startDate } = req.query;
+    
+    if (!authorName) {
+      return res.status(400).json({ error: 'Author name is required' });
+    }
+    
+    console.log(`Searching arXiv for author: ${authorName} since ${startDate || 'all time'}`);
+    
+    const url = `http://export.arxiv.org/api/query?search_query=au:${encodeURIComponent(authorName)}&sortBy=submittedDate&sortOrder=descending&start=0&max_results=100`;
+    const response = await axios.get(url);
+    
+    // Parse XML
+    const parser = new xml2js.Parser({ explicitArray: false });
+    const result = await parser.parseStringPromise(response.data);
+    
+    const entries = result.feed.entry || [];
+    let papers = [];
+    
+    // Handle case when only one paper is returned (not in array)
+    if (!Array.isArray(entries)) {
+      papers = [processEntry(entries, startDate)].filter(Boolean);
+    } else {
+      papers = entries
+        .map(entry => processEntry(entry, startDate))
+        .filter(Boolean);
+    }
+    
+    res.json({ papers });
+  } catch (error) {
+    console.error('Error searching arXiv:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Helper function to process entry
+function processEntry(entry, startDate) {
+  try {
+    const published = entry.published;
+    
+    // Filter by date if startDate is provided
+    if (startDate && published < startDate) {
+      return null;
+    }
+    
+    return {
+      title: entry.title,
+      published: published,
+      authors: Array.isArray(entry.author) 
+        ? entry.author.map(a => a.name) 
+        : [entry.author.name],
+      link: entry.id,
+      summary: entry.summary
+    };
+  } catch (error) {
+    console.error('Error processing entry:', error);
+    return null;
+  }
+}
