@@ -11,3 +11,8 @@
     "start": "node server.js"
   }
 }
+
+{
+"axios": "^1.6.2",
+"xml2js": "^0.6.2"
+} 
