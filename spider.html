@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>arXiv Scraper</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .results { margin-top: 20px; }
+        .author { font-weight: bold; margin-top: 15px; }
+        .paper { margin: 5px 0 15px 20px; }
+    </style>
+</head>
+<body>
+    <h1>arXiv Scraper</h1>
+    <div>
+        <label for="startDate">Start Date (YYYY-MM-DD):</label>
+        <input type="date" id="startDate">
+        <button onclick="scrape()">Scrape</button>
+    </div>
+    <div id="status"></div>
+    <div id="results" class="results"></div>
+
+    <script>
+        async function scrape() {
+            const status = document.getElementById('status');
+            const results = document.getElementById('results');
+            const startDate = document.getElementById('startDate').value;
+            
+            if (!startDate) {
+                status.textContent = "Please enter a start date";
+                return;
+            }
+            
+            status.textContent = "Fetching authors...";
+            
+            try {
+                // Get authors from your Railway backend
+                const authorsResponse = await fetch('https://your-railway-app.up.railway.app/authors');
+                const authors = await authorsResponse.json();
+                
+                status.textContent = `Processing ${authors.length} authors...`;
+                results.innerHTML = '';
+                
+                let paperCount = 0;
+                
+                for (let i = 0; i < authors.length; i++) {
+                    const author = authors[i];
+                    status.textContent = `Processing author ${i+1}/${authors.length}: ${author}`;
+                    
+                    const papers = await fetchPapersForAuthor(author, startDate);
+                    
+                    if (papers.length > 0) {
+                        paperCount += papers.length;
+                        
+                        const authorDiv = document.createElement('div');
+                        authorDiv.className = 'author';
+                        authorDiv.textContent = author;
+                        results.appendChild(authorDiv);
+                        
+                        papers.forEach(paper => {
+                            const paperDiv = document.createElement('div');
+                            paperDiv.className = 'paper';
+                            paperDiv.textContent = paper;
+                            results.appendChild(paperDiv);
+                        });
+                    }
+                    
+                    // Add a delay to prevent rate limiting
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                status.textContent = `Complete! Found ${paperCount} papers for ${authors.length} authors.`;
+                
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                console.error(error);
+            }
+        }
+        
+        async function fetchPapersForAuthor(author, startDate) {
+            const encodedAuthor = encodeURIComponent(author);
+            const url = `https://export.arxiv.org/api/query?search_query=au:${encodedAuthor}&sortBy=submittedDate&sortOrder=descending&start=0&max_results=100`;
+            
+            // Use a CORS proxy if needed
+            // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            
+            const response = await fetch(url);
+            const text = await response.text();
+            
+            // Parse the XML
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(text, "text/xml");
+            
+            const entries = xmlDoc.getElementsByTagName("entry");
+            const papers = [];
+            
+            for (let i = 0; i < entries.length; i++) {
+                const entry = entries[i];
+                const published = entry.getElementsByTagName("published")[0].textContent;
+                
+                // Check if the published date is after the start date
+                if (published >= startDate) {
+                    const title = entry.getElementsByTagName("title")[0].textContent;
+                    papers.push(title);
+                }
+            }
+            
+            return papers;
+        }
+    </script>
+</body>
+</html>
