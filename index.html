@@ -536,19 +536,51 @@ function startGwernFlicker() {
         // Only continue if Gwern card is still active
         if (!gwernCardActive) return;
         
-        // Random chance to flicker (about 15% chance every interval)
-        if (Math.random() < 0.15) {
-            // Flash the overlay briefly
-            gwernOverlay.style.opacity = '0.5';
+        // Random chance to trigger sequence (about 10% chance every interval)
+        if (Math.random() < 0.1) {
+            // Execute glitch sequence: blink-blink-BOOM-poof
             
-            // Random duration between 50-150ms
-            const flashDuration = 150 + Math.random() * 100;
+            // First blink
+            gwernOverlay.style.opacity = '0.2';
             
+            // Second blink after 100ms
             setTimeout(() => {
                 gwernOverlay.style.opacity = '0';
-            }, flashDuration);
+                
+                setTimeout(() => {
+                    // Third blink stronger
+                    gwernOverlay.style.opacity = '0.35';
+                    
+                    setTimeout(() => {
+                        gwernOverlay.style.opacity = '0';
+                        
+                        // BOOM - main visibility (0.75 seconds)
+                        setTimeout(() => {
+                            // Quick flash to full opacity first
+                            gwernOverlay.style.opacity = '0.8';
+                            gwernOverlay.style.transition = 'opacity 0.1s ease';
+                            
+                            setTimeout(() => {
+                                // Settle to medium opacity for the main duration
+                                gwernOverlay.style.opacity = '0.5';
+                                gwernOverlay.style.transition = 'opacity 0.15s ease';
+                                
+                                // POOF - disappear with a final flash
+                                setTimeout(() => {
+                                    gwernOverlay.style.opacity = '0.7'; // Brief flash up
+                                    
+                                    setTimeout(() => {
+                                        gwernOverlay.style.opacity = '0';
+                                        gwernOverlay.style.transition = 'opacity 0.05s ease'; // Reset transition
+                                    }, 50);
+                                }, 750); // Main visibility duration
+                            }, 100);
+                        }, 120);
+                    }, 80);
+                }, 100);
+            }, 70);
         }
-    }, 800); // Check roughly every 800ms
+    }, 4000); // Check less frequently for this dramatic effect
 }
 
 function stopGwernFlicker() {
@@ -563,45 +595,6 @@ function stopGwernFlicker() {
 window.addEventListener('beforeunload', () => {
     stopGwernFlicker();
 });
-
-if ('ontouchstart' in window) {  // Better touch detection
-    let touchStartY = null;
-    let touchStartX = null;
-    
-    document.addEventListener('touchstart', e => {
-        touchStartY = e.touches[0].clientY;
-        touchStartX = e.touches[0].clientX;
-    }, { passive: false });
-
-    document.addEventListener('touchmove', e => {
-        e.preventDefault(); // Prevent scroll interference
-    }, { passive: false });
-
-    document.addEventListener('touchend', e => {
-        if (touchStartY === null) return;
-        
-        const touchEndY = e.changedTouches[0].clientY;
-        const touchEndX = e.changedTouches[0].clientX;
-        
-        const diffY = touchStartY - touchEndY;  // positive = up swipe, negative = down swipe
-        const diffX = Math.abs(touchStartX - touchEndX);
-        
-        // Check if vertical swipe is more prominent than horizontal
-        if (Math.abs(diffY) > diffX) {
-            if (diffY > 30 && !state.menuCard) {
-                // Swipe up - show menu
-                showMenu();
-            } else if (diffY < -30 && state.menuCard) {
-                // Swipe down - hide menu and draw card
-                hideMenu();
-                drawCard();
-            }
-        }
-        
-        touchStartY = null;
-        touchStartX = null;
-    }, { passive: false });
-}
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -635,70 +628,7 @@ if ('ontouchstart' in window) {  // Better touch detection
         });
 
 
-// Function to check if the page is being visited by Gwern (via URL parameter)
-function checkForGwern() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if(urlParams.has('for') && urlParams.get('for') === 'gwern') {
-        // Create the Gwern popup
-        const popup = document.createElement('div');
-        popup.style.position = 'fixed';
-        popup.style.top = '50%';
-        popup.style.left = '50%';
-        popup.style.transform = 'translate(-50%, -50%)';
-        popup.style.width = '80%';
-        popup.style.maxWidth = '500px';
-        popup.style.background = '#FF66CC';
-        popup.style.zIndex = '9999';
-        popup.style.border = '8px ridge gold';
-        popup.style.padding = '20px';
-        popup.style.boxShadow = '0 0 50px #FF00FF';
-        popup.style.fontFamily = '"Comic Sans MS", cursive';
-        popup.style.textAlign = 'center';
-        
-        // Set popup content first
-        popup.innerHTML = `
-            <img src="alsoimages/hamster.gif" style="width: 150px; margin-bottom: 10px;">
-            <h2 style="color: blue; text-shadow: 2px 2px yellow;">WELCOME GWERN BRANWEN!</h2>
-            <p>We detected your commitment to minimalist typography!</p>
-            <p style="font-size: 24px; color: red;">This special popup is for YOU!</p>
-            <div style="background: yellow; padding: 5px; margin: 10px 0;">
-                <marquee>Isn't Comic Sans just the BEST font for research?</marquee>
-            </div>
-            <p style="font-size: 10px;">press space to continue, or click the tiny x if you can find it</p>
-        `;
-        
-        // Add a tiny X in the corner after setting innerHTML
-        const closeBtn = document.createElement('div');
-        closeBtn.innerHTML = 'x';
-        closeBtn.style.position = 'absolute';
-        closeBtn.style.top = '2px';
-        closeBtn.style.right = '5px';
-        closeBtn.style.fontSize = '10px';
-        closeBtn.style.cursor = 'pointer';
-        closeBtn.style.color = 'black';
-        closeBtn.onclick = function(e) {
-            e.stopPropagation(); // Prevent triggering card draw
-            popup.remove();
-        };
-        popup.appendChild(closeBtn);
-        
-        document.body.appendChild(popup);
-        
-        // Store reference to original drawCard function
-        const originalDrawCard = drawCard;
-        
-        // Replace the global drawCard function
-        window.drawCard = function() {
-            if (document.body.contains(popup)) {
-                popup.remove();
-            }
-            originalDrawCard();
-        };
-    }
-}
 
-// Call checkForGwern after the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', checkForGwern);
     </script>
 </body>
 </html>
