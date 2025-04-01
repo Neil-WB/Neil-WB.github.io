@@ -487,6 +487,82 @@ function createAndAnimateNewCard() {
                 });
             }, 50);
         }
+
+// Find the Gwern card in the array
+const gwernCardIndex = cards.findIndex(card => card.bgImage && card.bgImage.includes('gwern.webp'));
+
+// Track if the Gwern card is currently displayed
+let gwernCardActive = false;
+let flickerInterval = null;
+
+// Create the overlay element once
+const gwernOverlay = document.createElement('div');
+gwernOverlay.style.position = 'fixed';
+gwernOverlay.style.inset = '0';
+gwernOverlay.style.backgroundImage = 'url("alsoimages/gwerninverse.webp")';
+gwernOverlay.style.backgroundSize = 'cover';
+gwernOverlay.style.backgroundPosition = 'center';
+gwernOverlay.style.transform = 'rotate(1deg)';
+gwernOverlay.style.opacity = '0';
+gwernOverlay.style.pointerEvents = 'none';
+gwernOverlay.style.transition = 'opacity 0.05s ease';
+gwernOverlay.style.zIndex = '10';
+document.body.appendChild(gwernOverlay);
+
+// Modify the drawCard function to handle Gwern flickering
+const originalCreateAndAnimateNewCard = createAndAnimateNewCard;
+createAndAnimateNewCard = function() {
+    originalCreateAndAnimateNewCard();
+    
+    // Check if we've just drawn the Gwern card
+    if (state.currentCard === gwernCardIndex) {
+        gwernCardActive = true;
+        startGwernFlicker();
+    } else {
+        gwernCardActive = false;
+        stopGwernFlicker();
+    }
+};
+
+function startGwernFlicker() {
+    // Clear any existing interval
+    if (flickerInterval) {
+        clearInterval(flickerInterval);
+    }
+    
+    // Start new random interval flickering
+    flickerInterval = setInterval(() => {
+        // Only continue if Gwern card is still active
+        if (!gwernCardActive) return;
+        
+        // Random chance to flicker (about 15% chance every interval)
+        if (Math.random() < 0.15) {
+            // Flash the overlay briefly
+            gwernOverlay.style.opacity = '0.5';
+            
+            // Random duration between 50-150ms
+            const flashDuration = 50 + Math.random() * 100;
+            
+            setTimeout(() => {
+                gwernOverlay.style.opacity = '0';
+            }, flashDuration);
+        }
+    }, 800); // Check roughly every 800ms
+}
+
+function stopGwernFlicker() {
+    if (flickerInterval) {
+        clearInterval(flickerInterval);
+        flickerInterval = null;
+    }
+    gwernOverlay.style.opacity = '0';
+}
+
+// Clean up when page unloads
+window.addEventListener('beforeunload', () => {
+    stopGwernFlicker();
+});
+
 if ('ontouchstart' in window) {  // Better touch detection
     let touchStartY = null;
     let touchStartX = null;
