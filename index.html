@@ -506,8 +506,9 @@ gwernOverlay.style.transform = 'rotate(1deg)';
 gwernOverlay.style.opacity = '0';
 gwernOverlay.style.pointerEvents = 'none';
 gwernOverlay.style.transition = 'opacity 0.05s ease';
-gwernOverlay.style.zIndex = '10';
-document.body.appendChild(gwernOverlay);
+gwernOverlay.style.zIndex = '1'; // Low z-index to be just above background
+// Insert as first child of game container (before table, etc)
+els.gameContainer.insertBefore(gwernOverlay, els.gameContainer.firstChild);
 
 // Modify the drawCard function to handle Gwern flickering
 const originalCreateAndAnimateNewCard = createAndAnimateNewCard;
