@@ -118,6 +118,7 @@
             position: relative;
             left: -10%; /* Center the overflow */
             z-index: 20; /* Ensure images are above background effects */
+            overflow: visible; /* Allow metadata to show outside container */
         }
 
         img {
@@ -126,6 +127,29 @@
             border: 3px solid var(--deep-blue);
             margin: 0 auto; /* Center within container */
             position: relative; /* Ensure z-index applies */
+        }
+        
+        .image-metadata {
+            position: absolute;
+            top: 10px;
+            right: -280px;
+            width: 250px;
+            padding: 8px 12px;
+            background-color: rgba(248, 248, 248, 0.85);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 300;
+            font-size: 0.9rem;
+            color: #aaa;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 25;
+        }
+        
+        .image-container:hover .image-metadata {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         footer {
@@ -679,7 +703,61 @@
         const cubeWall = document.querySelector('.cube-wall');
         const stainedGlass = document.querySelector('.stained-glass');
         const baroqueContainer = document.querySelector('.baroque-container');
+        
+        // Image metadata - add these to all image containers
+        const imageMetadata = {
+            'bisons.webp': 'Peintures rupestres, Grotte de Lascaux, ~15000 av. J.-C.',
+            'arch.webp': 'Arche gothique, Abbaye de Saint-Denis, ~1140',
+            'churchlectern.webp': 'Mécanismes de lutrin, Villard de Honnecourt, XIIIe siècle',
+            'rose.webp': 'Rosace, Cathédrale de Chartres, XIIIe siècle',
+            'noperspective.jpg': 'Art médiéval sans perspective, Anonyme, XIIe siècle',
+            'noperspective2.webp': 'Exemple d\'art plat, Anonyme, XIVe siècle',
+            'baptistery.jpg': 'Baptistère de Florence, Filippo Brunelleschi, ~1420',
+            'fresco.jpg': 'La Sainte Trinité, Masaccio, 1427',
+            'fresco2.jpg': 'Analyse de perspective, Masaccio, 1427',
+            'fresco3.png': 'Détail architectural, Masaccio, 1427',
+            'alberti1.jpg': 'Illustration de De Pictura, Leon Battista Alberti, 1435',
+            'alberti2.jpg': 'Diagramme de perspective, Leon Battista Alberti, 1435',
+            'monk.jpg': 'Le moine au jardin, Anonyme, XVe siècle',
+            'vinci2.jpg': 'Étude de perspective, Léonard de Vinci, ~1480',
+            'pierro.jpg': 'La Flagellation du Christ, Piero della Francesca, ~1455',
+            'piero.png': 'Étude de multiples points de fuite, Piero della Francesca, ~1470',
+            'durer.png': 'Machine à perspective, Albrecht Dürer, 1525',
+            'vinci.jpg': 'L\'Homme de Vitruve, Léonard de Vinci, ~1490',
+            'reverie.jpg': 'Rêverie, Anonyme, XVIe siècle',
+            'ambassadeurs.jpg': 'Les Ambassadeurs, Hans Holbein le Jeune, 1533',
+            'crane.jpg': 'Anamorphose de crâne, Hans Holbein le Jeune, 1533',
+            'pozzo.jpg': 'Plafond de Sant\'Ignazio, Andrea Pozzo, 1685-1694',
+            'hyperbolic.svg': 'Géométrie hyperbolique, Modèle mathématique, XXe siècle',
+            'plafond.png': 'Trompe-l\'œil baroque, Anonyme, XVIIe siècle',
+            'hire.jpg': 'Théorie des couleurs, Philippe de La Hire, ~1700',
+            'goethe.jpg': 'Cercle chromatique, Johann Wolfgang von Goethe, 1810'
+        };
 
+        // Add metadata divs to all image containers
+        function addImageMetadata() {
+            const imageContainers = document.querySelectorAll('.image-container');
+            
+            imageContainers.forEach(container => {
+                const img = container.querySelector('img');
+                if (!img) return;
+                
+                // Extract filename from src
+                const src = img.getAttribute('src');
+                const filename = src.split('/').pop();
+                
+                // Create metadata div if we have info for this image
+                if (imageMetadata[filename]) {
+                    // Check if metadata div already exists
+                    if (!container.querySelector('.image-metadata')) {
+                        const metadataDiv = document.createElement('div');
+                        metadataDiv.className = 'image-metadata';
+                        metadataDiv.textContent = imageMetadata[filename];
+                        container.appendChild(metadataDiv);
+                    }
+                }
+            });
+        }
 
         // --- SETUP Background Effects ---
 
@@ -937,7 +1015,13 @@
         }
 
         // Initial call to set section/effects based on initial load position
-        window.dispatchEvent(new Event('scroll'));
+        window.addEventListener('load', function() {
+            // Add metadata to images
+            addImageMetadata();
+            
+            // Trigger initial scroll event
+            window.dispatchEvent(new Event('scroll'));
+        });
     </script>
 </body>
 </html>
