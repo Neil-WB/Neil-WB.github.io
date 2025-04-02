@@ -247,7 +247,7 @@
             opacity: 0.7;
         }
 
-        /* --- MEDIEVAL Stained glass effect container (Reverted) --- */
+        /* --- MEDIEVAL Stained glass effect container --- */
         .stained-glass {
             position: fixed;
             top: 0;
@@ -283,7 +283,7 @@
             100% { transform: rotateX(60deg) translateZ(-500px) translateY(5px); }
         }
 
-        /* --- BAROQUE Baroque container styles (Reverted) --- */
+        /* --- BAROQUE Baroque container styles --- */
         .baroque-container {
             position: fixed;
             top: 0;
@@ -298,55 +298,125 @@
         }
 
         .baroque-container.active {
-            opacity: 1; /* Original opacity */
+            opacity: 1;
         }
 
-        .ornate-frame { /* Reverted style */
+        /* Baroque frame with overlapping layers */
+        .baroque-frame-top,
+        .baroque-frame-bottom,
+        .baroque-frame-left,
+        .baroque-frame-right {
             position: absolute;
-            width: 120%;
-            height: 120%;
-            top: -10%;
-            left: -10%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M100,100 C150,50 250,50 300,100 S350,150 400,100 S450,50 500,100 S550,150 600,100 S650,50 700,100 S750,150 800,100 S850,50 900,100 L900,900 C850,950 750,950 700,900 S650,850 600,900 S550,950 500,900 S450,850 400,900 S350,950 300,900 S250,850 200,900 S150,950 100,900 Z" fill="none" stroke="gold" stroke-width="5"/></svg>') no-repeat center/contain;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
-            transform: scale(0.9);
-            transition: transform 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background-color: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
-        .baroque-container.active .ornate-frame {
-            transform: scale(1); /* Original active state */
+        .baroque-frame-top {
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            height: 15px;
+            border-bottom: none;
         }
 
-        .light-beam { /* Reverted style */
+        .baroque-frame-bottom {
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            height: 15px;
+            border-top: none;
+        }
+
+        .baroque-frame-left {
+            top: 30px;
+            bottom: 30px;
+            left: 15px;
+            width: 15px;
+            border-right: none;
+        }
+
+        .baroque-frame-right {
+            top: 30px;
+            bottom: 30px;
+            right: 15px;
+            width: 15px;
+            border-left: none;
+        }
+
+        /* Inner frames */
+        .baroque-inner-top,
+        .baroque-inner-bottom,
+        .baroque-inner-left,
+        .baroque-inner-right {
             position: absolute;
-            width: 30%;
-            height: 200%;
-            background: radial-gradient(ellipse at center, rgba(255,215,0,0.2) 0%, rgba(255,255,255,0.1) 40%, transparent 70%);
-            transform-origin: top center;
-            transform: rotate(-30deg) translateY(-50%);
-            mix-blend-mode: overlay;
-            animation: beam-move 20s infinite alternate ease-in-out;
+            background-color: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.15);
         }
 
-        @keyframes beam-move { /* Reverted animation */
-            0% { transform: rotate(-30deg) translateY(-50%); opacity: 0.7; }
-            50% { transform: rotate(-20deg) translateY(-40%); opacity: 0.9; }
-            100% { transform: rotate(-35deg) translateY(-45%); opacity: 0.7; }
+        .baroque-inner-top {
+            top: 40px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
         }
 
-        .spiral-element { /* Reverted style */
+        .baroque-inner-bottom {
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+        }
+
+        .baroque-inner-left {
+            top: 40px;
+            bottom: 40px;
+            left: 40px;
+            width: 3px;
+        }
+
+        .baroque-inner-right {
+            top: 40px;
+            bottom: 40px;
+            right: 40px;
+            width: 3px;
+        }
+
+        /* Corner ornaments */
+        .baroque-corner {
             position: absolute;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 50%;
-            transform-origin: center;
-            animation: spiral-rotate 15s infinite linear;
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.25);
+            background-color: rgba(255, 215, 0, 0.05);
         }
 
-        @keyframes spiral-rotate { /* Reverted animation */
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(360deg) scale(1.05); }
+        .baroque-corner-tl {
+            top: 15px;
+            left: 15px;
+            border-right: none;
+            border-bottom: none;
         }
 
+        .baroque-corner-tr {
+            top: 15px;
+            right: 15px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .baroque-corner-bl {
+            bottom: 15px;
+            left: 15px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .baroque-corner-br {
+            bottom: 15px;
+            right: 15px;
+            border-left: none;
+            border-top: none;
+        }
 
         /* --- Left column section indicator --- */
         .section-indicator {
@@ -391,6 +461,7 @@
             background-color: #aaa;
             transition: width 0.1s linear; /* Linear transition for smooth progress */
         }
+
 
     </style>
 </head>
@@ -526,59 +597,59 @@
                 </div>
                 <p>Au musée de Dijon:</p>
 
-<div class="image-container">
-    <img src="alsoimages/art/reverie.jpg" alt="Reverie" style="border: 3px solid #FFDD00;">
-</div>
+                <div class="image-container">
+                    <img src="alsoimages/art/reverie.jpg" alt="Reverie" style="border: 3px solid #FFDD00;">
+                </div>
             </div>
         </section>
 
 
-<!-- SECTION: Baroque -->
-<section>
-    <h2 id="baroque">Le Baroque</h2>
-    <div class="content-wrapper">
-        <p>On commence à s'amuser avec la perspective linéaire! Le but n'est plus d'être aussi prêt du réel que possible, mais de <strong>crâner</strong> à l'égard regardeur, parfois littéralement:</p>
-        <div class="image-container">
-            <img src="alsoimages/art/ambassadeurs.png" alt="Les Ambassadeurs de Holbein">
-        </div>
-        <div class="image-container">
-            <img src="alsoimages/art/crane.jpg" alt="Anamorphose d'un crâne" style="border: 3px solid #FF6600;">
-        </div>
-        <p>L'expression devient dramatique, exagérée, le but est de <em>prestigiditer</em>.</p>
-        <p>La <em>quadratura</em>, c'est la continuation d'architecture réelle dans une illusion optique. Le Jésuite Andrea Pozzo fit ainsi son plafond de Sant'Ignazio:</p>
-        <div class="image-container">
-            <img src="alsoimages/art/pozzo.jpg" alt="Plafond de Sant'Ignazio par Andrea Pozzo">
-        </div>
-        <p>Enfin, regardez ce truc. Un faux palais entier semble érigé dans un ciel infini, et il y a toute une scène tirée d'Où est Charlie superimposée dessus! C'est <strong>l'optique spectaculaire</strong>.</p>
-        <p>Les mathématiques impliquées sont celles de la géométrie hyperbolique, c'est à dire non-euclidienne, c'est à dire qui prend une chose <em>a priori</em> droite, comme le regard de quelqu'un ou un filet de lumière, et prédit comment cette droite naviguerait un environment pas du tout plat, comme ici la forme hyperbolique par défaut, qui est la selle de cheval.</p>
-        <div class="image-container">
-            <img src="alsoimages/art/hyperbolic.svg" alt="Géométrie hyperbolique">
-        </div>
-        <p>Les calculs qu'il faut opérer si on est artiste ont a voir avec les calculs qu'il faut opérer pour prédire le mouvement d'une droite sur cette plane. En fait, c'est la même mathématique: ce qui est beau avec l'art de la Renaissance, c'est qu'en émulant la réalité avec autant de fidélité que possible, il a fallu émuler la les maths qui régissent le monde, et par conséquence le monde académique de l'époque a fait des bonds en intuitions physiques.</p>
-        <div class="image-container">
-            <img src="alsoimages/art/plafond.png" alt="Plafond baroque à illusion">
-        </div>
-        <p>Mais pour une fois, l'échafaudage mathématique de l'art n'est pas <em>que</em> la géométrie ou les fractions tels qu'on l'a vu jusqu'ici. On badine avec la <em>théorie des couleurs.</em> C'est Newton qui publie en 1704 <em>Opticks</em>, une description du spectre de la lumière. Il invente le concept de la roue des couleurs, et d'autres théoriciens, comme Philippe de La Hire, prendront ses découvertes pour les appliquer à l'optimisation de la peinture par ses choix de couleurs, en se basant sur l'hypothèse que les couleurs, <em>aussi</em>, sont des facettes de l'harmonie universelle qui gouverne tout.</p>
-        <div class="image-container">
-            <img src="alsoimages/art/hire.jpg" alt="Théorie des couleurs de La Hire">
-        </div>
-        <p>Même Goethe finira par écrire une <em>Théorie des Couleurs</em>, qu'il dressera contre Newton. Sa théorie est que la couleur est le résultat des transitions entre le blanc et le noir, et non des vaguelettes comme le postule Newton. C'est une espèce de métaphysique, plus artistique que scientifique car elle n'est simplement pas exacte.</p>
-        <p>Schopenhauer, Wittgenstein, et Bauhaus, entre autres, joindront le débat, présentant la théorie de Goethe comme un élément romantique s'opposant à la mécanisation du monde qu'on voit dans les Lumières.</p>
-        <div class="image-container">
-            <img src="alsoimages/art/goethe.jpg" alt="Théorie des couleurs de Goethe">
-        </div>
-        <p>L'ordre apollonien s'oppose effectivement au désordre dionysosien dans l'Histoire de l'art. Alors moi je ne parle que de la mathématisation de l'art, et non des contre-courants occasionnels qui souhaitent "revenir" à un mode sans structure, censé être plus authentique—mais je ne décris pas un long méandre unidirectionnel!</p>
-        <p>L'écriture automatique, la poésie de Byron, l'impressionnisme, l'opéra italien ou le symbolisme sont des exemples de ce même esprit philosophique qui réagit à la défensive face à la mathématisation. Il apparaît partout dans les interstices de ma présentation.</p>
-    </div>
-</section>
+        <!-- SECTION: Baroque -->
+        <section>
+            <h2 id="baroque">Le Baroque</h2>
+            <div class="content-wrapper">
+                <p>On commence à s'amuser avec la perspective linéaire! Le but n'est plus d'être aussi prêt du réel que possible, mais de <strong>crâner</strong> à l'égard regardeur, parfois littéralement:</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/ambassadeurs.png" alt="Les Ambassadeurs de Holbein">
+                </div>
+                <div class="image-container">
+                    <img src="alsoimages/art/crane.jpg" alt="Anamorphose d'un crâne" style="border: 3px solid #FF6600;">
+                </div>
+                <p>L'expression devient dramatique, exagérée, le but est de <em>prestigiditer</em>.</p>
+                <p>La <em>quadratura</em>, c'est la continuation d'architecture réelle dans une illusion optique. Le Jésuite Andrea Pozzo fit ainsi son plafond de Sant'Ignazio:</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/pozzo.jpg" alt="Plafond de Sant'Ignazio par Andrea Pozzo">
+                </div>
+                <p>Enfin, regardez ce truc. Un faux palais entier semble érigé dans un ciel infini, et il y a toute une scène tirée d'Où est Charlie superimposée dessus! C'est <strong>l'optique spectaculaire</strong>.</p>
+                <p>Les mathématiques impliquées sont celles de la géométrie hyperbolique, c'est à dire non-euclidienne, c'est à dire qui prend une chose <em>a priori</em> droite, comme le regard de quelqu'un ou un filet de lumière, et prédit comment cette droite naviguerait un environment pas du tout plat, comme ici la forme hyperbolique par défaut, qui est la selle de cheval.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/hyperbolic.svg" alt="Géométrie hyperbolique">
+                </div>
+                <p>Les calculs qu'il faut opérer si on est artiste ont a voir avec les calculs qu'il faut opérer pour prédire le mouvement d'une droite sur cette plane. En fait, c'est la même mathématique: ce qui est beau avec l'art de la Renaissance, c'est qu'en émulant la réalité avec autant de fidélité que possible, il a fallu émuler la les maths qui régissent le monde, et par conséquence le monde académique de l'époque a fait des bonds en intuitions physiques.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/plafond.png" alt="Plafond baroque à illusion">
+                </div>
+                <p>Mais pour une fois, l'échafaudage mathématique de l'art n'est pas <em>que</em> la géométrie ou les fractions tels qu'on l'a vu jusqu'ici. On badine avec la <em>théorie des couleurs.</em> C'est Newton qui publie en 1704 <em>Opticks</em>, une description du spectre de la lumière. Il invente le concept de la roue des couleurs, et d'autres théoriciens, comme Philippe de La Hire, prendront ses découvertes pour les appliquer à l'optimisation de la peinture par ses choix de couleurs, en se basant sur l'hypothèse que les couleurs, <em>aussi</em>, sont des facettes de l'harmonie universelle qui gouverne tout.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/hire.jpg" alt="Théorie des couleurs de La Hire">
+                </div>
+                <p>Même Goethe finira par écrire une <em>Théorie des Couleurs</em>, qu'il dressera contre Newton. Sa théorie est que la couleur est le résultat des transitions entre le blanc et le noir, et non des vaguelettes comme le postule Newton. C'est une espèce de métaphysique, plus artistique que scientifique car elle n'est simplement pas exacte.</p>
+                <p>Schopenhauer, Wittgenstein, et Bauhaus, entre autres, joindront le débat, présentant la théorie de Goethe comme un élément romantique s'opposant à la mécanisation du monde qu'on voit dans les Lumières.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/goethe.jpg" alt="Théorie des couleurs de Goethe">
+                </div>
+                <p>L'ordre apollonien s'oppose effectivement au désordre dionysosien dans l'Histoire de l'art. Alors moi je ne parle que de la mathématisation de l'art, et non des contre-courants occasionnels qui souhaitent "revenir" à un mode sans structure, censé être plus authentique—mais je ne décris pas un long méandre unidirectionnel!</p>
+                <p>L'écriture automatique, la poésie de Byron, l'impressionnisme, l'opéra italien ou le symbolisme sont des exemples de ce même esprit philosophique qui réagit à la défensive face à la mathématisation. Il apparaît partout dans les interstices de ma présentation.</p>
+            </div>
+        </section>
 
-<!-- SECTION: Bach -->
-<section>
-    <h2 id="bach">Bach!</h2>
-    <div class="content-wrapper">
-        <p>Lui mérite sa propre section à lui tout seul.</p>
-    </div>
-</section>
+        <!-- SECTION: Bach -->
+        <section>
+            <h2 id="bach">Bach!</h2>
+            <div class="content-wrapper">
+                <p>Lui mérite sa propre section à lui tout seul.</p>
+            </div>
+        </section>
 
       
         <!-- FOOTER -->
@@ -633,9 +704,9 @@
             }
         }
 
-        // --- MEDIEVAL: Generate light rays for stained glass effect (Reverted) ---
+        // --- MEDIEVAL: Generate light rays for stained glass effect ---
          if (stainedGlass) {
-            const colors = [ // Original colors
+            const colors = [
                 'hsla(0, 70%, 50%, 0.3)',    // Red
                 'hsla(30, 70%, 50%, 0.3)',   // Orange
                 'hsla(60, 70%, 50%, 0.3)',   // Yellow
@@ -645,45 +716,74 @@
                 'hsla(270, 70%, 50%, 0.3)',  // Purple
                 'hsla(300, 70%, 50%, 0.3)',  // Magenta
             ];
-            for (let i = 0; i < 20; i++) { // Original count
+            for (let i = 0; i < 20; i++) {
                 const ray = document.createElement('div');
-                ray.className = 'light-ray'; // Uses reverted CSS
+                ray.className = 'light-ray';
                 ray.style.left = `${Math.random() * 100}%`;
-                ray.style.background = `linear-gradient(to bottom, transparent 0%, ${colors[i % colors.length]} 20%, ${colors[i % colors.length]} 100%)`; // Original background
-                ray.style.animationDelay = `${Math.random() * 5}s`; // Original delay
+                ray.style.background = `linear-gradient(to bottom, transparent 0%, ${colors[i % colors.length]} 20%, ${colors[i % colors.length]} 100%)`;
+                ray.style.animationDelay = `${Math.random() * 5}s`;
                 stainedGlass.appendChild(ray);
             }
         }
 
-        // --- BAROQUE: Create baroque elements (Reverted) ---
+        // --- BAROQUE: Create baroque elements ---
         if (baroqueContainer) {
-            // Create ornate frame
-            const ornateFrame = document.createElement('div');
-            ornateFrame.className = 'ornate-frame'; // Uses reverted CSS
-            baroqueContainer.appendChild(ornateFrame);
-
-            // Create dramatic light beams
-            for (let i = 0; i < 3; i++) { // Original count
-                const beam = document.createElement('div');
-                beam.className = 'light-beam'; // Uses reverted CSS
-                beam.style.left = `${15 + i * 25}%`;
-                beam.style.animationDelay = `${i * 3}s`; // Original delay
-                baroqueContainer.appendChild(beam);
-            }
-
-            // Create spiral elements (volutes)
-            for (let i = 0; i < 5; i++) { // Original count
-                const spiral = document.createElement('div');
-                spiral.className = 'spiral-element'; // Uses reverted CSS
-                spiral.style.width = `${(i+2) * 10}vw`;
-                spiral.style.height = `${(i+2) * 10}vw`;
-                spiral.style.top = `${50 - ((i+2) * 5)}%`;
-                spiral.style.left = `${50 - ((i+2) * 5)}%`;
-                spiral.style.animationDuration = `${15 + i * 5}s`; // Original duration
-                spiral.style.animationDirection = i % 2 ? 'normal' : 'reverse'; // Original direction
-                baroqueContainer.appendChild(spiral);
-            }
+            // Clear any previous baroque elements
+            baroqueContainer.innerHTML = '';
+            
+            // Create outer frame elements
+            const topFrame = document.createElement('div');
+            topFrame.className = 'baroque-frame-top';
+            baroqueContainer.appendChild(topFrame);
+            
+            const bottomFrame = document.createElement('div');
+            bottomFrame.className = 'baroque-frame-bottom';
+            baroqueContainer.appendChild(bottomFrame);
+            
+            const leftFrame = document.createElement('div');
+            leftFrame.className = 'baroque-frame-left';
+            baroqueContainer.appendChild(leftFrame);
+            
+            const rightFrame = document.createElement('div');
+            rightFrame.className = 'baroque-frame-right';
+            baroqueContainer.appendChild(rightFrame);
+            
+            // Create inner frame elements
+            const innerTop = document.createElement('div');
+            innerTop.className = 'baroque-inner-top';
+            baroqueContainer.appendChild(innerTop);
+            
+            const innerBottom = document.createElement('div');
+            innerBottom.className = 'baroque-inner-bottom';
+            baroqueContainer.appendChild(innerBottom);
+            
+            const innerLeft = document.createElement('div');
+            innerLeft.className = 'baroque-inner-left';
+            baroqueContainer.appendChild(innerLeft);
+            
+            const innerRight = document.createElement('div');
+            innerRight.className = 'baroque-inner-right';
+            baroqueContainer.appendChild(innerRight);
+            
+            // Create corner elements
+            const cornerTL = document.createElement('div');
+            cornerTL.className = 'baroque-corner baroque-corner-tl';
+            baroqueContainer.appendChild(cornerTL);
+            
+            const cornerTR = document.createElement('div');
+            cornerTR.className = 'baroque-corner baroque-corner-tr';
+            baroqueContainer.appendChild(cornerTR);
+            
+            const cornerBL = document.createElement('div');
+            cornerBL.className = 'baroque-corner baroque-corner-bl';
+            baroqueContainer.appendChild(cornerBL);
+            
+            const cornerBR = document.createElement('div');
+            cornerBR.className = 'baroque-corner baroque-corner-br';
+            baroqueContainer.appendChild(cornerBR);
         }
+        
+
 
 
         // --- Scroll Event Listener ---
@@ -756,14 +856,14 @@
 
             // Activate the correct one based on the determined currentHeadingId
             if (currentHeadingId === "medieval") {
-                if (stainedGlass) stainedGlass.classList.add('active'); // Original Medieval effect
+                if (stainedGlass) stainedGlass.classList.add('active'); // Medieval effect
             } else if (currentHeadingId === "renaissance") {
                 if (cubeWall) {
                     // Add 'active' and the specific 'style-5' class
-                    cubeWall.classList.add('active', 'style-5'); // Liked Renaissance effect
+                    cubeWall.classList.add('active', 'style-5'); // Renaissance 3D grid effect
                 }
             } else if (currentHeadingId === "baroque") {
-                if (baroqueContainer) baroqueContainer.classList.add('active'); // Original Baroque effect
+                if (baroqueContainer) baroqueContainer.classList.add('active'); // Baroque effect
             }
             // No specific background for other sections
 
