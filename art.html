@@ -6,7 +6,7 @@
     <title>La mathématique subtile du Médiéval</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
-        
+
         :root {
             --deep-blue: #0066CC;
             --light-blue: #4c9be8;
@@ -14,7 +14,7 @@
             --bg-color: #f8f8f8;
             --text-color: #333;
         }
-        
+
         body {
             font-family: 'Space Grotesk', sans-serif;
             margin: 0;
@@ -24,37 +24,45 @@
             line-height: 1.6;
             scroll-behavior: smooth;
             overflow-y: scroll;
-            scroll-snap-type: y proximity;
+            scroll-snap-type: y proximity; /* Changed from mandatory */
         }
-        
+
         .grid-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            /* Let rows grow naturally, min height ensures space */
             grid-auto-rows: minmax(33vh, auto);
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             min-height: 100vh;
+            position: relative;
+            z-index: 10; /* Content above backgrounds */
         }
-        
+
         header {
             grid-column: 1 / span 3;
-            grid-row: span 3;
+            /* Span enough rows to typically fill the viewport */
+            grid-row: span 3; /* Header takes up 3 grid rows */
             padding: 4rem 2rem 2rem;
             scroll-snap-align: start;
             position: relative;
-            z-index: 20; /* Ensure header appears above grid lines */
+            z-index: 20; /* Above other elements */
+            min-height: 100vh; /* Ensure header takes full viewport height */
+            display: flex; /* Use flexbox for vertical centering */
+            align-items: center; /* Vertically center the title container */
+            box-sizing: border-box;
         }
-        
+
         .title-container {
             width: 66.6%;
-            margin: 0;
-            padding-left: calc(100% / 3);
+            margin: 0; /* Remove default margins */
+            padding-left: calc(100% / 3); /* Align with the second column */
             text-align: left;
-            position: relative;
-            z-index: 20; /* Ensure title appears above grid lines */
+            position: relative; /* Keep for potential future relative positioning */
+            z-index: 20;
         }
-        
+
         .title {
             font-size: 3.5rem;
             font-weight: 700;
@@ -62,81 +70,90 @@
             margin-bottom: 0.5rem;
             line-height: 1.1;
         }
-        
+
         .subtitle {
             font-size: 1.5rem;
             font-weight: 300;
             color: var(--light-blue);
             margin-top: 0;
         }
-        
+
         section {
+            /* Allows children (h2, content-wrapper) to be placed directly on the grid */
             display: contents;
         }
-        
+
         h2 {
-            grid-column: 2 / span 1;
+            grid-column: 2 / span 1; /* Always in the middle column */
             font-size: 2rem;
             font-weight: 500;
-            margin: 0;
-            scroll-snap-align: start;
-            min-height: 33vh;
+            margin: 0; /* Reset default margins */
+            scroll-snap-align: start; /* Snap scrolling to the start of this element */
+            min-height: 33vh; /* Ensure it occupies at least one grid row height */
             display: flex;
-            align-items: center;
-            position: relative;
-            z-index: 15;
+            align-items: center; /* Vertically center text */
+            position: relative; /* Needed for z-index */
+            z-index: 15; /* Above background effects, below header/images */
+            padding: 0 2rem; /* Consistent padding with content */
+            box-sizing: border-box;
         }
-        
+
         .content-wrapper {
-            grid-column: 2 / span 1;
-            padding: 0 2rem;
-            align-self: start;
+            grid-column: 2 / span 1; /* Always in the middle column */
+            padding: 0 2rem; /* Horizontal padding */
+            /* Let content naturally determine height, but ensure minimum space */
+            min-height: 67vh; /* Roughly two grid rows */
+            padding-bottom: 5vh; /* Space at the bottom */
+            align-self: start; /* Align content to the top */
+            box-sizing: border-box;
         }
-        
+
         p {
             margin-bottom: 1.5rem;
         }
-        
+
         .image-container {
-            width: 120%;
+            width: 120%; /* Make images slightly wider than the column */
             margin: 2rem 0;
             position: relative;
-            left: -10%;
-            z-index: 20;
+            left: -10%; /* Center the overflow */
+            z-index: 20; /* Ensure images are above background effects */
         }
-        
+
         img {
             display: block;
             width: 100%;
             border: 3px solid var(--deep-blue);
-            margin: 0 auto;
-            position: relative;
+            margin: 0 auto; /* Center within container */
+            position: relative; /* Ensure z-index applies */
         }
-        
+
         footer {
-            grid-column: 1 / span 3;
+            grid-column: 1 / span 3; /* Span all columns */
             text-align: center;
             padding: 4rem 2rem;
-            scroll-snap-align: end;
+            scroll-snap-align: end; /* Snap to the end of scrolling */
             min-height: 33vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
         }
-        
+
         .signature {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 4rem 0 2rem;
+            margin: 4rem 0 2rem; /* Spacing around signature */
         }
-        
+
         .signature-line {
             height: 1px;
             width: 5rem;
             background-color: #aaa;
         }
-        
+
         .signature-name {
             color: var(--deep-blue);
             font-size: 0.9rem;
@@ -144,7 +161,7 @@
             letter-spacing: 1px;
         }
 
-        /* Grid lines for visual reference */
+        /* Grid lines for visual reference (Optional but helpful) */
         .grid-lines {
             position: fixed;
             top: 0;
@@ -152,64 +169,214 @@
             right: 0;
             bottom: 0;
             pointer-events: none;
-            z-index: 10;
+            z-index: 5; /* Behind content, above backgrounds */
+            opacity: 0.3; /* Subtle */
         }
-        
+
         .grid-lines::before,
         .grid-lines::after {
             content: '';
             position: absolute;
             background-color: var(--grid-line);
         }
-        
-        .grid-lines.vertical-1::before {
-            width: 1px;
-            height: 100%;
-            left: 33.33%;
+        /* Vertical lines */
+        .grid-lines.vertical-1::before { width: 1px; height: 100%; left: 33.33%; }
+        .grid-lines.vertical-2::before { width: 1px; height: 100%; left: 66.66%; }
+        /* Horizontal lines */
+        .grid-lines.horizontal-1::before { width: 100%; height: 1px; top: 33.33%; }
+        .grid-lines.horizontal-2::before { width: 100%; height: 1px; top: 66.66%; }
+
+
+        /* --- RENAISSANCE Cube wall container --- */
+        .cube-wall {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(auto-fill, minmax(33.33vh, 1fr));
+            pointer-events: none;
+            z-index: 0; /* Bottom layer */
+            transform-style: preserve-3d;
+            /* Base state: Flat, invisible */
+            opacity: 0;
+            transform: perspective(1000px) rotateX(0deg) scale(1); /* Start flat */
+            transition: opacity 1.5s ease, transform 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth transition */
         }
-        
-        .grid-lines.vertical-2::before {
-            width: 1px;
-            height: 100%;
-            left: 66.66%;
-        }
-        
-        .grid-lines.horizontal-1::before {
+
+        .cube {
+            position: relative;
             width: 100%;
-            height: 1px;
-            top: 33.33%;
+            height: 100%;
+            transform-style: preserve-3d;
         }
-        
-        .grid-lines.horizontal-2::before {
+
+        .cube .face {
+            position: absolute;
             width: 100%;
-            height: 1px;
-            top: 66.66%;
+            height: 100%;
+            background: rgba(0, 102, 204, 0.05); /* Lighter */
+            border: 1px solid rgba(0, 102, 204, 0.2); /* Lighter */
+            opacity: 0.5; /* Base face opacity */
+            box-sizing: border-box;
         }
-        /* Left column section header */
+
+        /* Face positioning - using vh/vw */
+        .cube .front  { transform: translateZ(16.66vh); }
+        .cube .back   { transform: rotateY(180deg) translateZ(16.66vh); }
+        .cube .left   { transform: rotateY(-90deg) translateZ(16.66vw); }
+        .cube .right  { transform: rotateY(90deg) translateZ(16.66vw); }
+        .cube .top    { transform: rotateX(90deg) translateZ(16.66vh); }
+        .cube .bottom { transform: rotateX(-90deg) translateZ(16.66vh); }
+
+        /* Active state for cube-wall (makes it visible) */
+        .cube-wall.active {
+            opacity: 1; /* Fade in */
+        }
+
+        /* --- RENAISSANCE Specific Style (Style 5) --- */
+        /* Apply the transform ONLY when both .active and the style class are present */
+        .cube-wall.active.style-5 {
+            transform: perspective(900px) rotateX(0deg) rotateY(0deg) scale(0.85); /* Zoom out slightly */
+             transform-origin: center center;
+        }
+
+        .cube-wall.active.style-5 .cube .face { /* Style face opacity only when this style is active */
+            opacity: 0.7;
+        }
+
+        /* --- MEDIEVAL Stained glass effect container (Reverted) --- */
+        .stained-glass {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            perspective: 1000px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .stained-glass.active {
+            opacity: 1; /* Original opacity */
+        }
+
+        .light-ray { /* Reverted styles */
+            position: absolute;
+            top: -50%;
+            width: 5%;
+            height: 200%;
+            transform-origin: top center;
+            transform: rotateX(60deg) translateZ(-500px);
+            opacity: 0.4;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            animation: shimmer 5s infinite alternate;
+        }
+
+        @keyframes shimmer { /* Reverted animation */
+            0% { transform: rotateX(60deg) translateZ(-500px) translateY(0); }
+            100% { transform: rotateX(60deg) translateZ(-500px) translateY(5px); }
+        }
+
+        /* --- BAROQUE Baroque container styles (Reverted) --- */
+        .baroque-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+            overflow: hidden;
+        }
+
+        .baroque-container.active {
+            opacity: 1; /* Original opacity */
+        }
+
+        .ornate-frame { /* Reverted style */
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            top: -10%;
+            left: -10%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M100,100 C150,50 250,50 300,100 S350,150 400,100 S450,50 500,100 S550,150 600,100 S650,50 700,100 S750,150 800,100 S850,50 900,100 L900,900 C850,950 750,950 700,900 S650,850 600,900 S550,950 500,900 S450,850 400,900 S350,950 300,900 S250,850 200,900 S150,950 100,900 Z" fill="none" stroke="gold" stroke-width="5"/></svg>') no-repeat center/contain;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+            transform: scale(0.9);
+            transition: transform 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .baroque-container.active .ornate-frame {
+            transform: scale(1); /* Original active state */
+        }
+
+        .light-beam { /* Reverted style */
+            position: absolute;
+            width: 30%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(255,215,0,0.2) 0%, rgba(255,255,255,0.1) 40%, transparent 70%);
+            transform-origin: top center;
+            transform: rotate(-30deg) translateY(-50%);
+            mix-blend-mode: overlay;
+            animation: beam-move 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes beam-move { /* Reverted animation */
+            0% { transform: rotate(-30deg) translateY(-50%); opacity: 0.7; }
+            50% { transform: rotate(-20deg) translateY(-40%); opacity: 0.9; }
+            100% { transform: rotate(-35deg) translateY(-45%); opacity: 0.7; }
+        }
+
+        .spiral-element { /* Reverted style */
+            position: absolute;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            transform-origin: center;
+            animation: spiral-rotate 15s infinite linear;
+        }
+
+        @keyframes spiral-rotate { /* Reverted animation */
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.05); }
+        }
+
+
+        /* --- Left column section indicator --- */
         .section-indicator {
             position: fixed;
-            top: calc(100vh / 6);
-            left: calc(33.33% * (1/6));
-            width: calc(33.33% * (4/6));
+            top: calc(100vh / 6); /* Position relative to viewport height */
+            left: calc(33.33% * (1/6)); /* Position within the first column */
+            width: calc(33.33% * (4/6)); /* Width relative to column width */
             padding: 0;
             box-sizing: border-box;
             opacity: 0;
             transition: opacity 0.3s ease;
-            z-index: 10;
+            z-index: 10; /* Above grid lines */
+            pointer-events: none; /* Don't interfere with clicks */
         }
-        
+
         .section-indicator.visible {
             opacity: 1;
         }
-        
+
         .current-section {
             color: #aaa;
             font-size: 0.9rem;
             font-weight: 300;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        
+
         .progress-container {
             width: 100%;
             height: 1px;
@@ -217,29 +384,36 @@
             border-radius: 0.5px;
             overflow: hidden;
         }
-        
+
         .progress-bar {
             height: 100%;
             width: 0;
             background-color: #aaa;
-            transition: width 0.1s ease;
+            transition: width 0.1s linear; /* Linear transition for smooth progress */
         }
+
     </style>
 </head>
 <body>
     <!-- Section indicator in left column -->
     <div class="section-indicator">
-        <div class="current-section">La mathématique subtile du Médiéval</div>
+        <div class="current-section">La mathématisation de l'art</div>
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
     </div>
-    
-    <!-- Grid reference lines -->
+
+    <!-- Grid reference lines (Optional) -->
     <div class="grid-lines vertical-1"></div>
     <div class="grid-lines vertical-2"></div>
     <div class="grid-lines horizontal-1"></div>
     <div class="grid-lines horizontal-2"></div>
+
+    <!-- Background Effect Containers -->
+    <div class="cube-wall"></div>       <!-- For Renaissance -->
+    <div class="stained-glass"></div>   <!-- For Medieval -->
+    <div class="baroque-container"></div> <!-- For Baroque -->
+
 
     <div class="grid-container">
         <header id="top">
@@ -248,48 +422,182 @@
                 <p class="subtitle">les avancées technologiques dans l'art européen</p>
             </div>
         </header>
-        
+
+        <!-- SECTION: Préhistoire -->
         <section>
-            <h2 id="section1">La mathématique subtile du Médiéval</h2>
-            
+            <h2 id="prehistoire">Préhistoire</h2>
+            <div class="content-wrapper">
+                <p>Non mais là franchement y'a pas de maths. C'est des bisons. C'est juste des bisons.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/bisons.webp" alt="Bisons préhistoriques">
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Medieval -->
+        <section>
+            <h2 id="medieval">Mathématique subtile au Médiéval</h2>
             <div class="content-wrapper">
                 <p>En fait, c'est surtout de la géométrie. Dans le cas de l'Abbey St.Denis (c.1140), la mathématique est au service du pragmatisme: on construit une arche plus pointue car elle permet de distribuer le poids de la tour de façon plus efficace, permettant de construire avec plus de hauteur, ce qui est un but majeur dans la constructions d'immeubles à office religieuse.</p>
-                
                 <div class="image-container">
                     <img src="alsoimages/art/arch.webp" alt="Arche de l'Abbey St.Denis">
                 </div>
-                
                 <p>Mais cette mathématique, c'est de la géométrie simple, sans formalisme: c'est plus le résultat d'experimentations multiples que de découverte systématique comme la mathématique d'aujourd'hui. Autrement dit, on ne commence pas avec des <em>a priori</em> pour ensuite, après réflection et étapes logiques, arriver à un résultat composé de ces <em>a priori</em>.</p>
-                
                 <p>Par exemple, dans le journal d'un dénommé Villard de Honnecourt, qui vivait au 13è siècle, on trouve des mécanismes primitifs, sans calculs, le produit d'intuition simple:</p>
-                
                 <div class="image-container">
                     <img src="alsoimages/art/churchlectern.webp" alt="Mécanisme de Villard de Honnecourt">
                 </div>
-                
                 <p>La géométrie sert aussi à refléter la théologie de l'époque, qui voit en la Terre un exemple d'ordre divin. La rosace de la cathédrale de Chartres est censée le refléter:</p>
-                
                 <div class="image-container">
                     <img src="alsoimages/art/rose.webp" alt="Rosace de la cathédrale de Chartres">
                 </div>
-                
                 <p>La musique est considérée comme art mathématique. Avec l'arithmétique, la géométrie et l'astronomie, elle forme le Quadrivium, la compilation des 4 sujets les plus hauts-placés de l'éducation médiévale. La mathématique de la musique, qui s'opère dans les cloches de monastères ou les orgues de cathédrales, c'est celle des intervalles.</p>
-                
                 <p>Comme avec l'architecture ou la géométrie des rosaces, c'est surtout des maths <em>par accident</em>. On sait depuis Pythagore que certains intervalles sont particulièrement harmonieux.</p>
-                
                 <p>Nous n'avons donc pas encore de formalisme mathématique.</p>
             </div>
         </section>
-            
+
+        <!-- SECTION: Renaissance -->
         <section>
-            <h2 id="section2">Lorem ipsum</h2>
-            
+            <h2 id="renaissance">La Renaissance</h2>
             <div class="content-wrapper">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
-                <p>Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim.</p>
+                <p>Là, on commence a avoir de l'intention! Pendant la Renaissance, les mathématiques deviennent l'échafaudages de l'art, mathématiques qui d'ailleurs connaissent une véritable renaissance avec la découverte de nombreux concepts qu'on utilise aujourd'hui.</p>
+                <p>La <strong>perspective linéaire</strong> est la découverte de cette époque.</p>
+                <p>À l'époque médiévale, la taille des figures correspond à leurs importance, pas à leur distance par rapport au voyeur: on ne prend <em>même pas en compte</em> le voyeur. Prendre en compte le voyeur implique réfléchir d'une manière méta, ou en mise en abîme, en quelque sorte. C'est <em>apparemment</em> un saut cognitif que de s'imaginer à quoi va resembler notre tableau de l'extérieur.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/noperspective.jpg" alt="Art sans perspective">
+                </div>
+                <div class="image-container">
+                    <img src="alsoimages/art/noperspective2.jpg" alt="Autre exemple d'art sans perspective">
+                </div>
+                <p>C'est apparemment <em>aussi</em> un saut cognitif que de peindre pour représenter la réalité comme elle en a l'air dans la vraie vie. Ainsi, l'architecte Filippo Brunelleschi serait le premier à conceptualiser les lignes de fuites, en 1420.</p>
+                <p>Il peint une image de la Baptistery et démontre comment, quand on l'admire depuis un trou de serrure et un miroir, la réplique ressemble exactement à son modèle (depuis un angle précis. V'là pas encore le cubisme).</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/baptistery.jpg" alt="Baptistery de Brunelleschi">
+                </div>
+                <p>L'innovation de Brunelleschi, c'est d'utiliser <em>une seule ligne de fuite</em>, donc cette angle précis depuis le trou de serrure, pour calibrer la peinture entière.</p>
+                <p>C'est du mathématique! La ligne de fuite est <em>...</em></p>
+                <p>C'est en 1427 que le peintre Masaccio appliquera la géométrie de Brunelleschi dans sa <em>Sainte Trinité</em>, en Florence. Il utilise une grille gravée dans le plâtre même pour construire l'illusion d'une chapelle profonde derrière sa scène de crucifixion.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/fresco.jpg" alt="Fresque de Masaccio">
+                </div>
+                <p>Toutes les lignes orthogonales de l'image converge vers UNE ligne ici, supposément au niveau d'un voyeur adulte.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/fresco2.jpg" alt="Analyse de la fresque">
+                </div>
+                <p>Ainsi la fresque donne l'impression d'être une continuation de l'architecture de l'église, tel un tunnel de pierre creusé dans le mur. Chaque élément de la peinture est sujet à la transformation mathématique qui rend hyperbolique la taille de toute chose jusqu'à "l'équateur" de la peinture.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/fresco3.png" alt="Détail de la fresque">
+                </div>
+                <p>Dans son livre <em>De Pictura</em>, Leon Battista Alberti <strong>formalise</strong> la perspective, qu'il décrit comme une technique de "fenêtre ouverte". (1435)</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/alberti1.jpg" alt="Illustration d'Alberti">
+                </div>
+                <div class="image-container">
+                    <img src="alsoimages/art/alberti2.jpg" alt="Autre illustration d'Alberti">
+                </div>
+                <div class="image-container">
+                    <img src="alsoimages/art/alberti3.jpg" alt="Troisième illustration d'Alberti">
+                </div>
+                <p>Ce qui nous donne des peintures célèbres telles que:</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/monk.jpg" alt="Peinture d'un moine">
+                </div>
+                <p>Ou:</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/vinci2.jpg" alt="Oeuvre de Da Vinci">
+                </div>
+                <p>La perspective devient aussi un instrument narratif: Leonard de Vinci mettra ainsi le Christ au centre de sa ligne de fuite dans <em>La Scène</em>. La perspective est aussi un problème de géométrie: dans sa <em>Flagellation du Christ</em>, Piero peindra avec une extraordinaire fidélité sa ligne de fuite, qu'on étudie encore pour sa précision.</p>
+                <p>Piero étudiera même le concept de <em>multiples lignes de fuites</em>, ce qui préfigure la géométrie moderne.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/pierro.png" alt="Oeuvre de Piero">
+                </div>
+                <div class="image-container">
+                    <img src="alsoimages/art/piero.png" alt="Autre oeuvre de Piero">
+                </div>
+                <p>Le premier livre de mathématique dédié aux artistes est celui d'Albrecht Dürer, qui vulgarize les techniques italiennes en Allemagne. Il y explique par exemple comment construire et utiliser une <em>machine à perspective</em>, qui est essentiellement un algorithme analogue pour transformer des vrais objets 3D dans le vrai monde en illusions 2D sur papier.</p>
+                <p><strong>Analogue =</strong> mécanisme isomorphe au vrai monde. Un cadran solaire, un globe terrestre, une Pascaline, la presse de Gutenberg, le viseur Norden ou l'ordinateur construit par Charles Babbage (à partir d'une machine à tisser) sont tous des instruments analogues. Antonyme du <strong>digital</strong>, car les mécanismes dans une machine digitale sont cachés en quelque sorte, formalisés et simulés dans une soupe mathématique. En bref, on fabrique une fausse version de la réalité qui apparaît grâce à des calculs qu'on opère sur un mécanisme métamorphe.</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/durer.png" alt="Machine à perspective de Dürer">
+                </div>
+                <p>La <em>perspective sonique!</em> Le motet de Guillaume Dufay "Nuper rosarum flores" (1436) est écrit pour occasion de la consecration du dome de la cathédrale de Florence (par Brunelleschi!) et suit une structure précise avec le ratio 6:4:2:3 qui est le même que le ratio du temple de Salomon tel qu'il est décrit dans la Bible, ou ainsi que les dimensions du dome de Brunelleschi.</p>
+                <p>Eh oui! Car on est absolument obsédé par l'idée de la quête du chiffre parfait qui rassemblera toutes les facettes du monde sous un même chapiteau divin. On écrit à propos du "nombre d'or", qui est tiré de la séquence de Fibonacci; on peint tellement de Scènes et de crucifixions à perspective qu'on commence à croire que Dieu est en fait un géomètre-musicien qui fut construire le monde à partir d'un trouble obsessionnel compulsif autour de jolies formes imbriquées.</p>
+                <p>Et puis c'est l'humanisme de la renaissance, alors on tente de mettre l'homme au centre littéral de la géométrie divine:</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/vinci.jpg" alt="L'homme de Vitruve par Da Vinci">
+                </div>
             </div>
         </section>
-        
+
+        <!-- SECTION: Baroque -->
+        <section>
+            <h2 id="baroque">Le Baroque</h2>
+            <div class="content-wrapper">
+                <p>Le style baroque exagère le mouvement, le drame, et la grandeur. Pensez dorures, contrastes forts (clair-obscur), et formes courbes complexes.</p>
+                 <div class="image-container">
+                    <img src="alsoimages/art/baroque_example1.jpg" alt="Exemple Art Baroque 1">
+                </div>
+                 <p>La mathématique ici est moins évidente que la perspective rigide de la Renaissance, mais elle est présente dans la complexité géométrique des spirales, des ellipses, et des courbes utilisées en architecture et en décoration.</p>
+                 <div class="image-container">
+                    <img src="alsoimages/art/baroque_example2.jpg" alt="Exemple Art Baroque 2">
+                 </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Lumières -->
+        <section>
+            <h2 id="lumieres">Lumières!</h2>
+            <div class="content-wrapper">
+                <p>L'Âge des Lumières valorise la raison, la clarté, et l'ordre, souvent en réaction à l'exubérance baroque. Retour à une certaine simplicité classique, mais informée par les découvertes scientifiques.</p>
+                <p>La géométrie descriptive (Gaspard Monge) permet de représenter des objets 3D sur un plan 2D avec précision, crucial pour l'ingénierie et l'architecture. L'optique et la théorie des couleurs continuent de progresser.</p>
+                 <div class="image-container">
+                    <img src="alsoimages/art/lumieres_example.jpg" alt="Exemple Art Lumières">
+                 </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Aujourd'hui -->
+        <section>
+            <h2 id="aujourdhui">Aujourd'hui</h2>
+            <div class="content-wrapper">
+                 <p>L'art moderne et contemporain explose les conventions. La mathématique devient un outil, un sujet, ou une inspiration directe.</p>
+                 <p>Le <strong>cubisme</strong> (Picasso, Braque) déconstruit la perspective, montrant plusieurs points de vue simultanément, jouant avec la géométrie et la dimensionnalité.</p>
+                 <div class="image-container">
+                     <img src="alsoimages/art/cubism_example.jpg" alt="Exemple Cubisme">
+                 </div>
+                 <p>L'<strong>art fractal</strong> (généré par ordinateur) utilise des équations mathématiques pour créer des motifs infiniment complexes et auto-similaires.</p>
+                  <div class="image-container">
+                     <img src="alsoimages/art/fractal_example.jpg" alt="Exemple Art Fractal">
+                 </div>
+                 <p>La <strong>visualisation de données</strong> brouille la frontière entre l'art et la science, utilisant des principes mathématiques et statistiques pour créer des représentations esthétiques et informatives.</p>
+                 <p>Des artistes comme M.C. Escher jouent explicitement avec la géométrie, les pavages, et les paradoxes visuels basés sur des concepts mathématiques.</p>
+                 <div class="image-container">
+                     <img src="alsoimages/art/escher_example.jpg" alt="Exemple Escher">
+                 </div>
+                 <p>Bref, la relation entre art et mathématique est plus diverse et explicite que jamais.</p>
+            </div>
+        </section>
+
+        <!-- SECTION: Lenteur -->
+        <section>
+            <h2 id="lenteur">Pourquoi une telle lenteur?</h2>
+            <div class="content-wrapper">
+                 <p>C'est vrai, quoi! Entre les bisons et la perspective de Brunelleschi, il y a des dizaines de milliers d'années!</p>
+                <div class="image-container">
+                    <img src="alsoimages/art/bisons.webp" alt="Bisons préhistoriques">
+                </div>
+                <p>Plusieurs facteurs :</p>
+                <ul>
+                    <li><strong>Développement cognitif et culturel :</strong> Représenter le monde tel qu'on le voit (perspective) plutôt que symboliquement (importance = taille) n'est pas inné. Cela demande une certaine abstraction et un changement culturel dans le *but* de l'art (imiter la réalité vs. exprimer le sacré/pouvoir).</li>
+                    <li><strong>Développement mathématique :</strong> La géométrie projective nécessaire à la perspective n'a été formalisée que bien plus tard. Les outils mathématiques évoluent lentement.</li>
+                    <li><strong>Matériaux et techniques :</strong> Les techniques de peinture, les supports, les pigments évoluent, permettant plus de réalisme et de précision.</li>
+                    <li><strong>Contexte social et philosophique :</strong> La Renaissance, avec son humanisme et son intérêt renouvelé pour l'observation du monde réel et les textes classiques (Euclide), a fourni le terreau idéal pour que ces idées émergent et soient valorisées.</li>
+                </ul>
+                <p>Ce n'est pas que les anciens étaient moins intelligents, mais le contexte, les outils (mentaux et physiques), et les objectifs étaient différents.</p>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
         <footer>
             <div class="signature">
                 <div class="signature-line"></div>
@@ -297,132 +605,254 @@
                 <div class="signature-line"></div>
             </div>
         </footer>
-    </div>
+    </div> <!-- End of grid-container -->
 
     <script>
         // Elements for scroll detection and manipulation
         const headings = document.querySelectorAll('h2');
         const header = document.querySelector('header');
-        let currentHeadingText = "";
-        
-        // Track if we're currently in a "snap" animation
+        let currentHeadingText = "La mathématisation de l'art"; // Initial text
+        let currentHeadingId = "top"; // Initial ID
         let isSnapping = false;
-        let lastScrollY = window.scrollY;
         let scrollTimeout = null;
-        
-        // Update progress bar and section title on scroll
+
+        const sectionIndicator = document.querySelector('.section-indicator');
+        const progressBar = document.querySelector('.progress-bar');
+        const currentSectionDisplay = document.querySelector('.current-section');
+
+        // Background effect containers
+        const cubeWall = document.querySelector('.cube-wall');
+        const stainedGlass = document.querySelector('.stained-glass');
+        const baroqueContainer = document.querySelector('.baroque-container');
+
+
+        // --- SETUP Background Effects ---
+
+        // --- RENAISSANCE: Generate cubes for the cube wall ---
+        if (cubeWall) {
+            const columns = 3;
+            const cubeHeightVh = 33.33;
+            const rows = Math.ceil(100 / cubeHeightVh); // Fill viewport height
+
+            for (let i = 0; i < columns * rows; i++) {
+                const cube = document.createElement('div');
+                cube.className = 'cube';
+                cube.innerHTML = `
+                    <div class="face front"></div>
+                    <div class="face back"></div>
+                    <div class="face left"></div>
+                    <div class="face right"></div>
+                    <div class="face top"></div>
+                    <div class="face bottom"></div>
+                `;
+                cubeWall.appendChild(cube);
+            }
+        }
+
+        // --- MEDIEVAL: Generate light rays for stained glass effect (Reverted) ---
+         if (stainedGlass) {
+            const colors = [ // Original colors
+                'hsla(0, 70%, 50%, 0.3)',    // Red
+                'hsla(30, 70%, 50%, 0.3)',   // Orange
+                'hsla(60, 70%, 50%, 0.3)',   // Yellow
+                'hsla(120, 70%, 50%, 0.3)',  // Green
+                'hsla(180, 70%, 50%, 0.3)',  // Cyan
+                'hsla(240, 70%, 50%, 0.3)',  // Blue
+                'hsla(270, 70%, 50%, 0.3)',  // Purple
+                'hsla(300, 70%, 50%, 0.3)',  // Magenta
+            ];
+            for (let i = 0; i < 20; i++) { // Original count
+                const ray = document.createElement('div');
+                ray.className = 'light-ray'; // Uses reverted CSS
+                ray.style.left = `${Math.random() * 100}%`;
+                ray.style.background = `linear-gradient(to bottom, transparent 0%, ${colors[i % colors.length]} 20%, ${colors[i % colors.length]} 100%)`; // Original background
+                ray.style.animationDelay = `${Math.random() * 5}s`; // Original delay
+                stainedGlass.appendChild(ray);
+            }
+        }
+
+        // --- BAROQUE: Create baroque elements (Reverted) ---
+        if (baroqueContainer) {
+            // Create ornate frame
+            const ornateFrame = document.createElement('div');
+            ornateFrame.className = 'ornate-frame'; // Uses reverted CSS
+            baroqueContainer.appendChild(ornateFrame);
+
+            // Create dramatic light beams
+            for (let i = 0; i < 3; i++) { // Original count
+                const beam = document.createElement('div');
+                beam.className = 'light-beam'; // Uses reverted CSS
+                beam.style.left = `${15 + i * 25}%`;
+                beam.style.animationDelay = `${i * 3}s`; // Original delay
+                baroqueContainer.appendChild(beam);
+            }
+
+            // Create spiral elements (volutes)
+            for (let i = 0; i < 5; i++) { // Original count
+                const spiral = document.createElement('div');
+                spiral.className = 'spiral-element'; // Uses reverted CSS
+                spiral.style.width = `${(i+2) * 10}vw`;
+                spiral.style.height = `${(i+2) * 10}vw`;
+                spiral.style.top = `${50 - ((i+2) * 5)}%`;
+                spiral.style.left = `${50 - ((i+2) * 5)}%`;
+                spiral.style.animationDuration = `${15 + i * 5}s`; // Original duration
+                spiral.style.animationDirection = i % 2 ? 'normal' : 'reverse'; // Original direction
+                baroqueContainer.appendChild(spiral);
+            }
+        }
+
+
+        // --- Scroll Event Listener ---
         window.addEventListener('scroll', function() {
             const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight;
             const winHeight = window.innerHeight;
-            const scrollPercent = scrollTop / (docHeight - winHeight);
+            const docHeight = document.documentElement.scrollHeight;
+            const scrollPercent = docHeight > winHeight ? scrollTop / (docHeight - winHeight) : 0;
             const scrollPercentRounded = Math.round(scrollPercent * 100);
-            
+
             // Update progress bar
-            document.querySelector('.progress-bar').style.width = scrollPercentRounded + '%';
-            
-            // Show/hide section indicator based on scroll position
-            const sectionIndicator = document.querySelector('.section-indicator');
-            if (scrollTop > 100) {
-                sectionIndicator.classList.add('visible');
-            } else {
-                sectionIndicator.classList.remove('visible');
+            if (progressBar) progressBar.style.width = scrollPercentRounded + '%';
+
+            // Show/hide section indicator
+            if (sectionIndicator) {
+                if (scrollTop > 50) {
+                    sectionIndicator.classList.add('visible');
+                } else {
+                    sectionIndicator.classList.remove('visible');
+                }
             }
-            
-            // Find the current heading - we define it as the last heading that passed 
-            // the top of the viewport (with some threshold)
-            const threshold = 100; // pixels
-            
-            // Check header first
-            if (scrollTop < 100) {
-                currentHeadingText = "La mathématisation de l'art";
-            } else {
-                // Check all headings
+
+            // Determine current section
+            let newHeadingId = "top";
+            let newHeadingText = "La mathématisation de l'art";
+
+            const headerBottom = header.offsetTop + header.offsetHeight;
+            if (scrollTop < headerBottom - winHeight * 0.5) {
+                 newHeadingId = "top";
+                 newHeadingText = "La mathématisation de l'art";
+             } else {
+                let foundSection = false;
                 headings.forEach(heading => {
-                    // Get the heading's position relative to the top of the document
-                    const headingTop = heading.getBoundingClientRect().top;
-                    const headingBottom = heading.getBoundingClientRect().bottom;
-                    
-                    // If the heading is at or just past the top of the viewport
-                    if (headingTop <= threshold && headingBottom > -threshold) {
-                        currentHeadingText = heading.textContent;
-                    }
-                    // If we've scrolled past this heading but not yet to the next one
-                    else if (headingTop <= threshold) {
-                        currentHeadingText = heading.textContent;
+                    if (foundSection) return;
+                    // Calculate trigger point (when heading is ~30% from the top)
+                    const triggerPoint = heading.offsetTop - winHeight * 0.3;
+                    // Calculate section bottom (rough estimate)
+                    const sectionBottom = heading.offsetTop + (heading.nextElementSibling?.offsetHeight || winHeight);
+
+                    if (scrollTop >= triggerPoint && scrollTop < sectionBottom) {
+                        newHeadingId = heading.id;
+                        newHeadingText = heading.textContent;
+                        foundSection = true;
                     }
                 });
+                 // If past last section
+                 if (!foundSection && headings.length > 0 && scrollTop >= headings[headings.length - 1].offsetTop - winHeight * 0.3) {
+                     newHeadingId = headings[headings.length - 1].id;
+                     newHeadingText = headings[headings.length - 1].textContent;
+                 }
+             }
+
+
+            // Update display only if changed
+            if (currentHeadingId !== newHeadingId && currentSectionDisplay) {
+                 currentSectionDisplay.textContent = newHeadingText;
+                 currentHeadingId = newHeadingId; // Update the global state
+                 console.log("Current Section ID:", currentHeadingId); // For debugging
             }
-            
-            // Update the current section display
-            document.querySelector('.current-section').textContent = currentHeadingText;
-            
-            // Handle scroll snapping logic
+
+
+            // --- Toggle Background Effects ---
+            // Deactivate all first
+            if (stainedGlass) stainedGlass.classList.remove('active');
+            if (cubeWall) {
+                // Remove 'active' AND the specific 'style-5' class
+                cubeWall.classList.remove('active', 'style-5');
+            }
+            if (baroqueContainer) baroqueContainer.classList.remove('active');
+
+            // Activate the correct one based on the determined currentHeadingId
+            if (currentHeadingId === "medieval") {
+                if (stainedGlass) stainedGlass.classList.add('active'); // Original Medieval effect
+            } else if (currentHeadingId === "renaissance") {
+                if (cubeWall) {
+                    // Add 'active' and the specific 'style-5' class
+                    cubeWall.classList.add('active', 'style-5'); // Liked Renaissance effect
+                }
+            } else if (currentHeadingId === "baroque") {
+                if (baroqueContainer) baroqueContainer.classList.add('active'); // Original Baroque effect
+            }
+            // No specific background for other sections
+
+            // --- Snapping Logic ---
             if (!isSnapping) {
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
-                    // Check if we're close to a section heading
+                    let snapTarget = null;
+                    let minDist = winHeight * 0.25; // Snap threshold
+
+                    // Check header
+                    const headerRect = header.getBoundingClientRect();
+                     if (Math.abs(headerRect.top) < minDist) { // Check distance from top edge
+                         snapTarget = header;
+                         minDist = Math.abs(headerRect.top);
+                     }
+
+                    // Check H2 headings
                     headings.forEach(heading => {
                         const headingRect = heading.getBoundingClientRect();
-                        const headingTop = headingRect.top;
-                        
-                        // If heading is within snap threshold of top of viewport
-                        if (Math.abs(headingTop) < 100) {
-                            isSnapping = true;
-                            
-                            // Calculate scroll position to snap to heading
-                            const targetScrollY = scrollTop + headingTop;
-                            
-                            // Smoothly scroll to target
-                            smoothScrollTo(targetScrollY, 300, () => {
-                                isSnapping = false;
-                            });
+                        const idealSnapPos = winHeight * 0.3; // Aim for 30% down
+                        const dist = Math.abs(headingRect.top - idealSnapPos);
+
+                        if (dist < minDist) {
+                             minDist = dist;
+                             snapTarget = heading;
                         }
                     });
-                    
-                    // Also check if header is close
-                    const headerRect = header.getBoundingClientRect();
-                    if (Math.abs(headerRect.top) < 100) {
-                        isSnapping = true;
-                        const targetScrollY = scrollTop + headerRect.top;
-                        smoothScrollTo(targetScrollY, 300, () => {
-                            isSnapping = false;
-                        });
+
+                    if (snapTarget && minDist < (winHeight * 0.25)) {
+                        const targetTop = snapTarget === header ? 0 : winHeight * 0.3; // Target 0 for header, 30% for h2
+                        const targetScrollY = window.scrollY + snapTarget.getBoundingClientRect().top - targetTop;
+
+                        if (Math.abs(window.scrollY - targetScrollY) > 10) {
+                             isSnapping = true;
+                             smoothScrollTo(targetScrollY, 400, () => {
+                                 setTimeout(() => { isSnapping = false; }, 100);
+                             });
+                        }
                     }
-                }, 100);
+                }, 150); // Scroll stop detection delay
             }
         });
-        
-        // Smooth scroll function with callback
+
+        // Smooth scroll function
         function smoothScrollTo(targetY, duration, callback) {
             const startingY = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight;
+            const winHeight = window.innerHeight;
+            targetY = Math.max(0, Math.min(targetY, docHeight - winHeight)); // Clamp target
             const diff = targetY - startingY;
+
+            if (Math.abs(diff) < 5) { if (callback) callback(); return; }
             let start;
-            
-            // Easing function for deceleration
-            function easeOutCubic(t) {
-                return 1 - Math.pow(1 - t, 3);
-            }
-            
+            function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
             function step(timestamp) {
                 if (!start) start = timestamp;
                 const time = timestamp - start;
-                const percent = Math.min(time / duration, 1);
-                const eased = easeOutCubic(percent);
-                
-                window.scrollTo(0, startingY + diff * eased);
-                
+                let percent = Math.min(time / duration, 1);
+                percent = easeOutCubic(percent);
+                window.scrollTo(0, startingY + diff * percent);
                 if (time < duration) {
                     window.requestAnimationFrame(step);
                 } else {
+                    window.scrollTo(0, targetY); // Ensure final position
                     if (callback) callback();
                 }
             }
-            
             window.requestAnimationFrame(step);
         }
-        
-        // Initial call to set things up
+
+        // Initial call to set section/effects based on initial load position
         window.dispatchEvent(new Event('scroll'));
     </script>
 </body>
