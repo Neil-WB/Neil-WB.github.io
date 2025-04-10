@@ -29,9 +29,11 @@
         .timeline {
             position: relative;
             width: 100%;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 2rem 0 4rem;
         }
         
         .flight-path {
@@ -47,8 +49,9 @@
         .flight-path path {
             fill: none;
             stroke: #666;
-            stroke-width: 3px;
+            stroke-width: 2px;
             stroke-linecap: round;
+            stroke-dasharray: 5, 8;
         }
         
         .box-container {
@@ -56,31 +59,45 @@
             flex-direction: column;
             gap: 5rem;
             width: 100%;
-            align-items: center;
             position: relative;
         }
         
         .box {
-            width: 250px;
-            height: 250px;
+            width: 350px;
+            height: 200px;
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             overflow: hidden;
             position: relative;
             z-index: 2;
-            border: 3px solid #FF8A3C;
-            transition: border-color 0.3s ease;
+            border: 3px solid #8A2BE2; /* Purple */
+            transition: border-color 0.3s ease, transform 0.3s ease;
         }
         
         .box:hover {
-            border-color: #FF9F5B;
+            border-color: #B19CD9; /* Lavender */
+        }
+        
+        .box:nth-child(odd) {
+            align-self: flex-start;
+            transform: rotate(-2deg);
+        }
+        
+        .box:nth-child(even) {
+            align-self: flex-end;
+            transform: rotate(2deg);
+        }
+        
+        .box:hover {
+            transform: rotate(0deg) scale(1.03);
         }
         
         .box a {
             display: block;
             width: 100%;
             height: 100%;
+            position: relative;
         }
         
         .box img {
@@ -127,21 +144,21 @@
         <div class="box-container">
             <div class="box">
                 <a href="https://neilwb.com/me">
-                    <img src="alsoimages/Me.png" alt="About me">
+                    <img src="alsoimages/me.png" alt="About me">
                     <div class="image-metadata">About me</div>
                 </a>
             </div>
             
             <div class="box">
                 <a href="https://neilwb.com/promise">
-                    <img src="alsoimages/Promise.png" alt="Promises">
+                    <img src="alsoimages/promise.png" alt="Promises">
                     <div class="image-metadata">Promises</div>
                 </a>
             </div>
             
             <div class="box">
                 <a href="https://neilwb.com/friends">
-                    <img src="alsoimages/Friendroll.png" alt="Friendroll">
+                    <img src="alsoimages/friendroll.png" alt="Friendroll">
                     <div class="image-metadata">Friendroll</div>
                 </a>
             </div>
@@ -184,36 +201,44 @@
                 });
             });
             
-            // Generate control points for smooth path
+            // Generate smoother, more organic path
             let pathData = `M ${boxPositions[0].x} 0`;
             
-            // First random point before first box
-            const firstControlY = boxPositions[0].y * 0.3;
-            const firstXOffset = Math.random() * 60 - 30;
-            pathData += ` C ${boxPositions[0].x + firstXOffset} ${firstControlY}, ${boxPositions[0].x - 20} ${boxPositions[0].y - 20}, ${boxPositions[0].x} ${boxPositions[0].y}`;
+            // Connect to first box
+            const firstXOffset = Math.random() * 30 - 15;
+            const firstYOffset = Math.random() * 20 - 10;
+            pathData += ` C ${boxPositions[0].x + firstXOffset} ${boxPositions[0].y * 0.3}, 
+                           ${boxPositions[0].x - 20} ${boxPositions[0].y - 40}, 
+                           ${boxPositions[0].x + firstYOffset} ${boxPositions[0].y}`;
             
-            // Connect boxes with random control points
+            // Connect boxes with smooth curves
             for (let i = 0; i < boxPositions.length - 1; i++) {
                 const startX = boxPositions[i].x;
                 const startY = boxPositions[i].y;
                 const endX = boxPositions[i+1].x;
                 const endY = boxPositions[i+1].y;
                 
+                // Calculate control points for a smooth S-curve
                 const midY = (startY + endY) / 2;
                 
-                // Random offsets for control points
-                const maxOffset = 70;
-                const c1xOffset = Math.random() * maxOffset - maxOffset/2;
-                const c2xOffset = Math.random() * maxOffset - maxOffset/2;
+                // Make path more organic with random offsets
+                const cp1x = startX + (Math.random() * 100 - 50);
+                const cp1y = startY + (Math.random() * 40 + 20);
+                const cp2x = endX + (Math.random() * 100 - 50);
+                const cp2y = endY - (Math.random() * 40 + 20);
                 
-                // Create smooth curve through control points
-                pathData += ` S ${startX + c1xOffset} ${midY - 20}, ${endX} ${endY}`;
+                pathData += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`;
             }
             
-            // Last segment to bottom
-            const lastY = boxContainer.offsetHeight;
-            const lastXOffset = Math.random() * 60 - 30;
-            pathData += ` S ${boxPositions[boxPositions.length-1].x + lastXOffset} ${lastY * 0.8}, ${boxPositions[boxPositions.length-1].x} ${lastY}`;
+            // Connect to bottom
+            const lastX = boxPositions[boxPositions.length-1].x;
+            const lastY = boxPositions[boxPositions.length-1].y;
+            const bottomY = boxContainer.offsetHeight;
+            const lastXOffset = Math.random() * 50 - 25;
+            
+            pathData += ` C ${lastX + lastXOffset} ${lastY + 50}, 
+                           ${lastX - lastXOffset} ${bottomY - 50}, 
+                           ${lastX} ${bottomY}`;
             
             // Apply path data
             path.setAttribute('d', pathData);
