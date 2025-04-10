@@ -144,8 +144,8 @@
         <div class="box-container">
             <div class="box">
                 <a href="https://neilwb.com/me">
-                    <img src="alsoimages/me.png" alt="About me">
-                    <div class="image-metadata">About me</div>
+                    <img src="alsoimages/me.png" alt="About Me">
+                    <div class="image-metadata">About Me</div>
                 </a>
             </div>
             
@@ -201,44 +201,78 @@
                 });
             });
             
-            // Generate smoother, more organic path
-            let pathData = `M ${boxPositions[0].x} 0`;
+            // More organic bird-like path
+            const containerWidth = boxContainer.offsetWidth;
+            const segmentsPerSection = 4; // Number of curve segments between boxes
             
-            // Connect to first box
-            const firstXOffset = Math.random() * 30 - 15;
-            const firstYOffset = Math.random() * 20 - 10;
-            pathData += ` C ${boxPositions[0].x + firstXOffset} ${boxPositions[0].y * 0.3}, 
-                           ${boxPositions[0].x - 20} ${boxPositions[0].y - 40}, 
-                           ${boxPositions[0].x + firstYOffset} ${boxPositions[0].y}`;
+            let pathData = '';
             
-            // Connect boxes with smooth curves
-            for (let i = 0; i < boxPositions.length - 1; i++) {
-                const startX = boxPositions[i].x;
-                const startY = boxPositions[i].y;
-                const endX = boxPositions[i+1].x;
-                const endY = boxPositions[i+1].y;
+            // Start point at the top
+            const startX = boxPositions[0].x + (Math.random() * 40 - 20);
+            pathData = `M ${startX} 0`;
+            
+            // Helper function to add organic curve segments
+            function addOrganicSegments(startX, startY, endX, endY, segments) {
+                let currentX = startX;
+                let currentY = startY;
                 
-                // Calculate control points for a smooth S-curve
-                const midY = (startY + endY) / 2;
+                const dx = (endX - startX) / segments;
+                const dy = (endY - startY) / segments;
                 
-                // Make path more organic with random offsets
-                const cp1x = startX + (Math.random() * 100 - 50);
-                const cp1y = startY + (Math.random() * 40 + 20);
-                const cp2x = endX + (Math.random() * 100 - 50);
-                const cp2y = endY - (Math.random() * 40 + 20);
+                for (let i = 0; i < segments; i++) {
+                    // Target for this segment
+                    const targetX = startX + dx * (i + 1);
+                    const targetY = startY + dy * (i + 1);
+                    
+                    // Random control points for natural curve
+                    const spread = Math.min(Math.abs(dx), 100) * 0.8; // Adjust spread based on distance
+                    
+                    // More vertical variation for bird-like flight
+                    const verticalVariation = Math.min(Math.abs(dy), 60) + 20;
+                    
+                    // Make the curves more random and swooping
+                    const cp1x = currentX + (Math.random() * spread * 0.8 - spread * 0.4);
+                    const cp1y = currentY + (Math.random() * verticalVariation * 0.7 - verticalVariation * 0.3);
+                    
+                    const cp2x = targetX - (Math.random() * spread * 0.8 - spread * 0.4);
+                    const cp2y = targetY - (Math.random() * verticalVariation * 0.7 - verticalVariation * 0.3);
+                    
+                    // Add the curve segment
+                    pathData += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
+                    
+                    // Update current position
+                    currentX = targetX;
+                    currentY = targetY;
+                }
                 
-                pathData += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`;
+                return { x: currentX, y: currentY };
             }
             
-            // Connect to bottom
-            const lastX = boxPositions[boxPositions.length-1].x;
-            const lastY = boxPositions[boxPositions.length-1].y;
-            const bottomY = boxContainer.offsetHeight;
-            const lastXOffset = Math.random() * 50 - 25;
+            // Connect to first box with natural approach
+            let current = { x: startX, y: 0 };
+            current = addOrganicSegments(
+                current.x, current.y, 
+                boxPositions[0].x, boxPositions[0].y, 
+                2
+            );
             
-            pathData += ` C ${lastX + lastXOffset} ${lastY + 50}, 
-                           ${lastX - lastXOffset} ${bottomY - 50}, 
-                           ${lastX} ${bottomY}`;
+            // Connect between boxes
+            for (let i = 0; i < boxPositions.length - 1; i++) {
+                // Add swooping path between each box
+                current = addOrganicSegments(
+                    boxPositions[i].x, boxPositions[i].y,
+                    boxPositions[i+1].x, boxPositions[i+1].y,
+                    segmentsPerSection
+                );
+            }
+            
+            // Connect to bottom with gentle descent
+            const bottomY = boxContainer.offsetHeight;
+            addOrganicSegments(
+                boxPositions[boxPositions.length-1].x, boxPositions[boxPositions.length-1].y,
+                boxPositions[boxPositions.length-1].x + (Math.random() * 40 - 20), bottomY,
+                2
+            );
             
             // Apply path data
             path.setAttribute('d', pathData);
