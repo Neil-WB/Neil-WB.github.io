@@ -33,14 +33,15 @@
             left: 0;
             right: 0;
             height: 60px;
-            background: rgba(240,240,240,0.95); /* Back to grey */
+            background: rgba(255,255,255,0.95); /* changed to white */
             z-index: 100;
             display: flex;
             align-items: center;
             justify-content: center;
             pointer-events: none; /* Allow interaction with elements underneath */
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.5s ease;
+            transform: translateY(0);
         }
 
         .banner-text {
@@ -86,7 +87,7 @@
             z-index: 20;
         }
 
-                    .title {
+        .title {
             font-size: 3.5rem;
             font-weight: 700;
             color: var(--deep-blue); /* Changed back to blue */
@@ -342,7 +343,7 @@
     <div class="grid-container">
         <header id="top">
             <div class="title-container">
-                <div class="title">neil warren-bancquart</div>
+                <h1 class="title">neil warren-bancquart</h1>
             </div>
         </header>
 
@@ -592,7 +593,12 @@
 
             // Update display only if changed
             if (currentHeadingId !== newHeadingId && currentSectionDisplay) {
-                currentSectionDisplay.textContent = newHeadingText;
+                // If we're at the top (no specific section), display "hello!"
+                if (newHeadingId === "") {
+                    currentSectionDisplay.textContent = "hello!";
+                } else {
+                    currentSectionDisplay.textContent = newHeadingText;
+                }
                 currentHeadingId = newHeadingId; // Update the global state
             }
             
