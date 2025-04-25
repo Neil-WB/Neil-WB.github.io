@@ -291,6 +291,41 @@
       </section>
       
       <section class="slide">
+        <h2>The Hold-up Problem</h2>
+        <div class="definition">
+          When one party makes a relationship-specific investment, they become vulnerable to opportunistic behavior from their counterpart, who can extract better terms.
+        </div>
+        
+        <div class="example">
+          <p><span class="highlight">Auto Parts Supplier:</span> Builds factory next to car manufacturer to save on transportation.</p>
+          <p><span class="highlight">Problem:</span> Once built, car manufacturer can demand lower prices knowing supplier has limited alternatives.</p>
+          <p><span class="highlight">Paradox:</span> Precommitment makes the supplier vulnerable to exploitation.</p>
+        </div>
+        
+        <div class="canvas-container">
+          <canvas id="holdupGraph" width="900" height="250"></canvas>
+        </div>
+      </section>
+      
+      <section class="slide">
+        <h2>Government Policy Example: Terrorism</h2>
+        <div class="definition">
+          Governments want to precommit to a "no negotiations with terrorists" policy to deter future kidnappings, but face pressure to negotiate when citizens are actually taken.
+        </div>
+        
+        <div class="canvas-container">
+          <canvas id="terrorismGraph" width="900" height="300"></canvas>
+        </div>
+        
+        <div class="key-point">
+          Public precommitment creates credibility, but private flexibility may be needed
+        </div>
+        <div class="key-point">
+          Solution often involves delegation to third parties or strict legal constraints
+        </div>
+      </section>
+
+      <section class="slide">
         <h2>Limitations and Risks</h2>
         <div class="key-point">
           Loss of flexibility can be costly if circumstances change
@@ -298,16 +333,9 @@
         <div class="key-point">
           Can lead to costly conflict if both sides precommit
         </div>
-        <div class="key-point">
-          Requires credibility - half-measures may backfire
-        </div>
-        <div class="key-point">
-          May trigger escalation from opponents
-        </div>
       </section>
 
       <div class="footnote">
-        <p>Precommitment theory connects to broader concepts in behavioral economics, mechanism design, and evolutionary game theory. The value of being able to "bind oneself to the mast" (like Odysseus) creates interesting paradoxes where limiting freedom creates power.</p>
         <p>Core insight: sometimes the ability to commit to a future action, even if it seems irrational in isolation, can lead to more favorable outcomes across the entire decision tree.</p>
       </div>
     </div>
@@ -319,6 +347,14 @@
     const ctx = canvas.getContext('2d');
     let showDetailedLabels = false;
     let shipsBurned = false;
+    
+    // Setup for hold-up problem visualization
+    const holdupCanvas = document.getElementById('holdupGraph');
+    const holdupCtx = holdupCanvas.getContext('2d');
+    
+    // Setup for terrorism policy visualization
+    const terrorismCanvas = document.getElementById('terrorismGraph');
+    const terrorismCtx = terrorismCanvas.getContext('2d');
     
     // Event listeners
     document.getElementById('resetGraph').addEventListener('click', function() {
@@ -469,50 +505,248 @@
       }
     }
     
-    function drawNode(x, y, label, color) {
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(x, y, 20, 0, Math.PI * 2);
-      ctx.fill();
+    // Draw the hold-up problem timeline
+    function drawHoldupGraph() {
+      holdupCtx.clearRect(0, 0, holdupCanvas.width, holdupCanvas.height);
       
-      ctx.fillStyle = 'white';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      // Timeline
+      const startX = 100;
+      const endX = 800;
+      const midY = 125;
+      
+      // Draw timeline
+      holdupCtx.strokeStyle = '#333';
+      holdupCtx.lineWidth = 2;
+      holdupCtx.beginPath();
+      holdupCtx.moveTo(startX, midY);
+      holdupCtx.lineTo(endX, midY);
+      holdupCtx.stroke();
+      
+      // Add arrow at end
+      holdupCtx.beginPath();
+      holdupCtx.moveTo(endX, midY);
+      holdupCtx.lineTo(endX - 10, midY - 5);
+      holdupCtx.lineTo(endX - 10, midY + 5);
+      holdupCtx.closePath();
+      holdupCtx.fillStyle = '#333';
+      holdupCtx.fill();
+      
+      // Timeline events
+      const events = [
+        { x: startX + 100, label: 'Initial Agreement', sublabel: 'Build supplier plant' },
+        { x: startX + 250, label: 'Supplier Commits', sublabel: 'Builds factory (sunk cost)' },
+        { x: startX + 400, label: 'Hold-up Occurs', sublabel: 'Car maker demands lower prices' },
+        { x: startX + 550, label: 'Supplier Must Accept', sublabel: 'Limited alternatives' }
+      ];
+      
+      // Draw events
+      events.forEach(event => {
+        // Vertical line
+        holdupCtx.strokeStyle = '#3a6ea5';
+        holdupCtx.beginPath();
+        holdupCtx.moveTo(event.x, midY - 50);
+        holdupCtx.lineTo(event.x, midY + 50);
+        holdupCtx.stroke();
+        
+        // Event label
+        holdupCtx.fillStyle = '#333';
+        holdupCtx.font = 'bold 14px sans-serif';
+        holdupCtx.textAlign = 'center';
+        holdupCtx.fillText(event.label, event.x, midY - 65);
+        
+        // Sublabel
+        holdupCtx.font = '12px sans-serif';
+        holdupCtx.fillText(event.sublabel, event.x, midY + 65);
+      });
+      
+      // Draw box highlighting hold-up phase
+      holdupCtx.strokeStyle = 'rgba(255, 107, 107, 0.5)';
+      holdupCtx.lineWidth = 10;
+      holdupCtx.beginPath();
+      holdupCtx.rect(events[2].x - 50, midY - 40, 100, 80);
+      holdupCtx.stroke();
+      
+      // Explanation
+      holdupCtx.fillStyle = '#333';
+      holdupCtx.font = 'italic 14px sans-serif';
+      holdupCtx.textAlign = 'left';
+      holdupCtx.fillText('The key paradox: By precommitting to the relationship via specific investment,', startX, midY + 100);
+      holdupCtx.fillText('the supplier creates leverage that the car manufacturer can exploit.', startX, midY + 120);
+    }
+    
+    // Draw the terrorism policy graph
+    function drawTerrorismGraph() {
+      terrorismCtx.clearRect(0, 0, terrorismCanvas.width, terrorismCanvas.height);
+      
+      // Style setup
+      terrorismCtx.lineWidth = 2;
+      terrorismCtx.font = '14px sans-serif';
+      
+      // Start point
+      const startX = 100;
+      const startY = 150;
+      
+      // Draw initial decision point (Government Policy)
+      drawNodeOnCanvas(terrorismCtx, startX, startY, 'Government', '#3a6ea5');
+      
+      // Policy choices
+      // Option 1: Public "No Negotiation" Policy
+      drawLineOnCanvas(terrorismCtx, startX, startY, startX + 150, startY - 70, '#3a6ea5');
+      drawNodeOnCanvas(terrorismCtx, startX + 150, startY - 70, 'No Negotiate Policy', '#3a6ea5');
+      
+      // Option 2: No Clear Policy
+      drawLineOnCanvas(terrorismCtx, startX, startY, startX + 150, startY + 70, '#3a6ea5');
+      drawNodeOnCanvas(terrorismCtx, startX + 150, startY + 70, 'No Clear Policy', '#3a6ea5');
+      
+      // Terrorist response to policies
+      // Response to "No Negotiation"
+      drawLineOnCanvas(terrorismCtx, startX + 150, startY - 70, startX + 300, startY - 100, '#ff6b6b');
+      drawNodeOnCanvas(terrorismCtx, startX + 300, startY - 100, 'Fewer Kidnappings', '#ff6b6b');
+      
+      drawLineOnCanvas(terrorismCtx, startX + 150, startY - 70, startX + 300, startY - 40, '#ff6b6b');
+      drawNodeOnCanvas(terrorismCtx, startX + 300, startY - 40, 'Kidnapping Occurs', '#ff6b6b');
+      
+      // Response to "No Clear Policy"
+      drawLineOnCanvas(terrorismCtx, startX + 150, startY + 70, startX + 300, startY + 70, '#ff6b6b');
+      drawNodeOnCanvas(terrorismCtx, startX + 300, startY + 70, 'More Kidnappings', '#ff6b6b');
+      
+      // Government responses when kidnapping occurs
+      // With "No Negotiation" policy
+      drawLineOnCanvas(terrorismCtx, startX + 300, startY - 40, startX + 450, startY - 70, '#3a6ea5');
+      drawNodeOnCanvas(terrorismCtx, startX + 450, startY - 70, 'Stand Firm', '#3a6ea5');
+      
+      drawLineOnCanvas(terrorismCtx, startX + 300, startY - 40, startX + 450, startY - 10, '#3a6ea5');
+      drawNodeOnCanvas(terrorismCtx, startX + 450, startY - 10, 'Secret Negotiate', '#3a6ea5');
+      
+      // Outcomes
+      drawOutcomeOnCanvas(terrorismCtx, startX + 450, startY - 70, 'Hostage Loss, Future Deterrence');
+      drawOutcomeOnCanvas(terrorismCtx, startX + 450, startY - 10, 'Save Hostage, Policy Credibility Loss');
+      drawOutcomeOnCanvas(terrorismCtx, startX + 300, startY - 100, 'Best Outcome');
+      drawOutcomeOnCanvas(terrorismCtx, startX + 300, startY + 70, 'Worst Outcome');
+      
+      // Time inconsistency highlight
+      terrorismCtx.strokeStyle = 'rgba(255, 107, 107, 0.3)';
+      terrorismCtx.lineWidth = 10;
+      terrorismCtx.beginPath();
+      terrorismCtx.moveTo(startX + 150, startY - 70);
+      terrorismCtx.lineTo(startX + 300, startY - 40);
+      terrorismCtx.lineTo(startX + 450, startY - 10);
+      terrorismCtx.stroke();
+      
+      // Add explanation
+      terrorismCtx.fillStyle = '#333';
+      terrorismCtx.font = 'bold 14px sans-serif';
+      terrorismCtx.textAlign = 'left';
+      terrorismCtx.fillText('Time Inconsistency Problem:', startX + 500, startY - 60);
+      terrorismCtx.font = '14px sans-serif';
+      terrorismCtx.fillText('1. Best policy before kidnapping: "Never negotiate"', startX + 520, startY - 40);
+      terrorismCtx.fillText('2. Best policy after kidnapping: "Secretly negotiate"', startX + 520, startY - 20);
+      terrorismCtx.fillText('3. Terrorists anticipate this inconsistency', startX + 520, startY);
+      terrorismCtx.fillText('4. Solution: Delegation to agencies with no flexibility', startX + 520, startY + 20);
+    }
+    
+    function drawNodeOnCanvas(targetCtx, x, y, label, color) {
+      targetCtx.fillStyle = color;
+      targetCtx.beginPath();
+      targetCtx.arc(x, y, 20, 0, Math.PI * 2);
+      targetCtx.fill();
+      
+      targetCtx.fillStyle = 'white';
+      targetCtx.textAlign = 'center';
+      targetCtx.textBaseline = 'middle';
       
       // If text is too long, make it smaller
       const defaultFontSize = 14;
       let fontSize = defaultFontSize;
-      ctx.font = `${fontSize}px sans-serif`;
+      targetCtx.font = `${fontSize}px sans-serif`;
       
-      while (ctx.measureText(label).width > 36 && fontSize > 8) {
+      while (targetCtx.measureText(label).width > 36 && fontSize > 8) {
         fontSize--;
-        ctx.font = `${fontSize}px sans-serif`;
+        targetCtx.font = `${fontSize}px sans-serif`;
       }
       
       if (label.length > 10) {
         const words = label.split(' ');
-        const line1 = words.slice(0, words.length/2).join(' ');
-        const line2 = words.slice(words.length/2).join(' ');
-        ctx.fillText(line1, x, y - 5);
-        ctx.fillText(line2, x, y + 10);
+        const line1 = words.slice(0, Math.ceil(words.length/2)).join(' ');
+        const line2 = words.slice(Math.ceil(words.length/2)).join(' ');
+        targetCtx.fillText(line1, x, y - 5);
+        targetCtx.fillText(line2, x, y + 10);
       } else {
-        ctx.fillText(label, x, y);
+        targetCtx.fillText(label, x, y);
       }
     }
     
+    function drawLineOnCanvas(targetCtx, x1, y1, x2, y2, color) {
+      targetCtx.strokeStyle = color;
+      targetCtx.beginPath();
+      targetCtx.moveTo(x1, y1);
+      targetCtx.lineTo(x2, y2);
+      targetCtx.stroke();
+    }
+    
+    function drawOutcomeOnCanvas(targetCtx, x, y, label) {
+      targetCtx.fillStyle = '#333';
+      targetCtx.textAlign = 'left';
+      targetCtx.textBaseline = 'middle';
+      targetCtx.fillText(label, x + 30, y);
+    }
+    
+    function drawNode(x, y, label, color) {
+      return drawNodeOnCanvas(ctx, x, y, label, color);
+    }
+    
     function drawLine(x1, y1, x2, y2, color) {
-      ctx.strokeStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
+      return drawLineOnCanvas(ctx, x1, y1, x2, y2, color);
     }
     
     function drawOutcome(x, y, label) {
-      ctx.fillStyle = '#333';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(label, x + 30, y);
+      return drawOutcomeOnCanvas(ctx, x, y, label);
+    }
+    
+    function drawNodeOnCanvas(targetCtx, x, y, label, color) {
+      targetCtx.fillStyle = color;
+      targetCtx.beginPath();
+      targetCtx.arc(x, y, 20, 0, Math.PI * 2);
+      targetCtx.fill();
+      
+      targetCtx.fillStyle = 'white';
+      targetCtx.textAlign = 'center';
+      targetCtx.textBaseline = 'middle';
+      
+      // If text is too long, make it smaller
+      const defaultFontSize = 14;
+      let fontSize = defaultFontSize;
+      targetCtx.font = `${fontSize}px sans-serif`;
+      
+      while (targetCtx.measureText(label).width > 36 && fontSize > 8) {
+        fontSize--;
+        targetCtx.font = `${fontSize}px sans-serif`;
+      }
+      
+      if (label.length > 10) {
+        const words = label.split(' ');
+        const line1 = words.slice(0, Math.ceil(words.length/2)).join(' ');
+        const line2 = words.slice(Math.ceil(words.length/2)).join(' ');
+        targetCtx.fillText(line1, x, y - 5);
+        targetCtx.fillText(line2, x, y + 10);
+      } else {
+        targetCtx.fillText(label, x, y);
+      }
+    }
+    
+    function drawLineOnCanvas(targetCtx, x1, y1, x2, y2, color) {
+      targetCtx.strokeStyle = color;
+      targetCtx.beginPath();
+      targetCtx.moveTo(x1, y1);
+      targetCtx.lineTo(x2, y2);
+      targetCtx.stroke();
+    }
+    
+    function drawOutcomeOnCanvas(targetCtx, x, y, label) {
+      targetCtx.fillStyle = '#333';
+      targetCtx.textAlign = 'left';
+      targetCtx.textBaseline = 'middle';
+      targetCtx.fillText(label, x + 30, y);
     }
     
     function drawProbability(x, y, prob) {
@@ -575,6 +809,8 @@
     
     // Draw initial state
     drawDecisionTree();
+    drawHoldupGraph();
+    drawTerrorismGraph();
   </script>
 </body>
 </html>
