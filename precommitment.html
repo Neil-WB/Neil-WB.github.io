@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precommitment: Strategic Self-Binding</title>
+  <style>
+    :root {
+      --bg-color: #fafafa;
+      --text-color: #333;
+      --accent: #3a6ea5;
+      --highlight: #ff6b6b;
+      --slide-bg: #fff;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      padding: 40px 0;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      color: var(--accent);
+    }
+    
+    h2 {
+      font-size: 1.8rem;
+      margin-top: 30px;
+      color: var(--accent);
+    }
+    
+    .slides {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    
+    .slide {
+      background-color: var(--slide-bg);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 25px;
+      transition: transform 0.3s;
+    }
+    
+    .slide:hover {
+      transform: translateY(-5px);
+    }
+    
+    .definition {
+      font-size: 1.2rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 15px;
+      margin: 20px 0;
+    }
+    
+    .example {
+      margin: 20px 0;
+      background-color: rgba(58, 110, 165, 0.1);
+      padding: 15px;
+      border-radius: 6px;
+    }
+    
+    .highlight {
+      color: var(--highlight);
+      font-weight: bold;
+    }
+    
+    .graph-container {
+      width: 100%;
+      height: 400px;
+      margin: 30px 0;
+      position: relative;
+    }
+    
+    .canvas-container {
+      position: relative;
+      height: 400px;
+      margin: 20px 0;
+    }
+    
+    canvas {
+      border: 1px solid #ddd;
+      background: white;
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    button {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #2a5a8a;
+    }
+    
+    .footnote {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 40px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    
+    .key-point {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+    }
+    
+    .key-point:before {
+      content: "→";
+      font-weight: bold;
+      color: var(--accent);
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: rgba(58, 110, 165, 0.1);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .extra-info {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .toggle-extra {
+      display: inline-block;
+      cursor: pointer;
+      color: var(--accent);
+      text-decoration: underline;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Precommitment: Strategic Self-Binding</h1>
+      <p>The art of making credible threats and promises by limiting your own options</p>
+    </header>
+    
+    <div class="slides">
+      <section class="slide">
+        <h2>What is Precommitment?</h2>
+        <div class="definition">
+          Precommitment is a strategy in which an agent deliberately limits their own future options to make a threat or promise more credible, influencing other agents' expectations and decisions.
+        </div>
+        <div class="key-point">
+          Reduces your flexibility to gain strategic advantage
+        </div>
+        <div class="key-point">
+          Makes promises/threats more credible by removing option to back out
+        </div>
+        <div class="key-point">
+          Changes the expected payoff matrix for all players
+        </div>
+        <div class="key-point">
+          Powerful tool in game theory, economics, negotiation, and politics
+        </div>
+      </section>
+      
+      <section class="slide">
+        <h2>The Cortés Example: Burning the Ships</h2>
+        <p>In 1519, Spanish conquistador Hernán Cortés ordered his ships burned after landing in Mexico. This dramatic act of precommitment:</p>
+        
+        <div class="example">
+          <p><span class="highlight">→ Eliminated the option of retreat</span> for his own men</p>
+          <p><span class="highlight">→ Signaled to the Aztecs</span> his absolute commitment to his mission</p>
+          <p><span class="highlight">→ Changed the expected game outcome</span> by removing certain branches of the decision tree</p>
+        </div>
+        
+        <div class="canvas-container">
+          <canvas id="decisionTree" width="900" height="400"></canvas>
+        </div>
+        <div class="buttons">
+          <button id="resetGraph">Reset</button>
+          <button id="burnShips">Burn Ships</button>
+          <button id="toggleLabels">Toggle Details</button>
+        </div>
+      </section>
+      
+      <section class="slide">
+        <h2>Economic Applications</h2>
+        <table>
+          <tr>
+            <th>Application</th>
+            <th>Example</th>
+            <th>Strategic Effect</th>
+          </tr>
+          <tr>
+            <td>Central Banking</td>
+            <td>Commitment to inflation targets</td>
+            <td>Creates market confidence, influences expectations</td>
+          </tr>
+          <tr>
+            <td>Corporate Strategy</td>
+            <td>Sunk cost investments</td>
+            <td>Signals commitment to market, deters competitors</td>
+          </tr>
+          <tr>
+            <td>International Trade</td>
+            <td>Trade agreements with penalties</td>
+            <td>Reduces risk of defection, encourages cooperation</td>
+          </tr>
+          <tr>
+            <td>Labor Markets</td>
+            <td>Union strike funds</td>
+            <td>Makes threat of long strikes credible, improves bargaining</td>
+          </tr>
+        </table>
+        
+        <div class="toggle-extra" id="showMore">Show more examples ↓</div>
+        <div class="extra-info" id="moreExamples">
+          <p><strong>Ulysses Contracts:</strong> Personal precommitments like saving or health goals</p>
+          <p><strong>Nuclear Deterrence:</strong> Dead-hand systems that automatically retaliate</p>
+          <p><strong>Climate Agreements:</strong> Binding targets with financial penalties</p>
+          <p><strong>Crowdfunding:</strong> All-or-nothing funding models</p>
+        </div>
+      </section>
+      
+      <section class="slide">
+        <h2>Formalization in Game Theory</h2>
+        <div class="key-point">
+          Transforms simultaneous games into sequential games
+        </div>
+        <div class="key-point">
+          Can change Nash equilibria by restricting strategy space
+        </div>
+        <div class="key-point">
+          Often converts Prisoner's Dilemma into assurance games
+        </div>
+        <div class="key-point">
+          Effective precommitment requires:
+        </div>
+        <ul>
+          <li>Observable to other players</li>
+          <li>Truly irreversible (or costly to reverse)</li>
+          <li>Changes expected utility calculations</li>
+        </ul>
+      </section>
+      
+      <section class="slide">
+        <h2>Limitations and Risks</h2>
+        <div class="key-point">
+          Loss of flexibility can be costly if circumstances change
+        </div>
+        <div class="key-point">
+          Can lead to costly conflict if both sides precommit
+        </div>
+        <div class="key-point">
+          Requires credibility - half-measures may backfire
+        </div>
+        <div class="key-point">
+          May trigger escalation from opponents
+        </div>
+      </section>
+
+      <div class="footnote">
+        <p>Precommitment theory connects to broader concepts in behavioral economics, mechanism design, and evolutionary game theory. The value of being able to "bind oneself to the mast" (like Odysseus) creates interesting paradoxes where limiting freedom creates power.</p>
+        <p>Core insight: sometimes the ability to commit to a future action, even if it seems irrational in isolation, can lead to more favorable outcomes across the entire decision tree.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Setup for Cortés decision tree visualization
+    const canvas = document.getElementById('decisionTree');
+    const ctx = canvas.getContext('2d');
+    let showDetailedLabels = false;
+    let shipsBurned = false;
+    
+    // Event listeners
+    document.getElementById('resetGraph').addEventListener('click', function() {
+      shipsBurned = false;
+      drawDecisionTree();
+    });
+    
+    document.getElementById('burnShips').addEventListener('click', function() {
+      shipsBurned = true;
+      drawDecisionTree();
+    });
+    
+    document.getElementById('toggleLabels').addEventListener('click', function() {
+      showDetailedLabels = !showDetailedLabels;
+      drawDecisionTree();
+    });
+    
+    document.getElementById('showMore').addEventListener('click', function() {
+      const moreExamples = document.getElementById('moreExamples');
+      const showMore = document.getElementById('showMore');
+      
+      if (moreExamples.style.display === 'block') {
+        moreExamples.style.display = 'none';
+        showMore.textContent = 'Show more examples ↓';
+      } else {
+        moreExamples.style.display = 'block';
+        showMore.textContent = 'Hide examples ↑';
+      }
+    });
+    
+    // Draw the decision tree
+    function drawDecisionTree() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Style setup
+      ctx.lineWidth = 2;
+      ctx.font = '14px sans-serif';
+      
+      // Start point
+      const startX = 100;
+      const startY = 200;
+      
+      // Draw initial decision point (Cortés)
+      drawNode(startX, startY, 'Cortés', '#3a6ea5');
+      
+      // Decision: Burn ships or keep them
+      if (!shipsBurned) {
+        // Option 1: Keep ships (no precommitment)
+        drawLine(startX, startY, startX + 150, startY - 80, '#666');
+        drawNode(startX + 150, startY - 80, 'Keep Ships', '#666');
+        ctx.fillStyle = '#666';
+        ctx.fillText('No Precommitment', startX + 40, startY - 40);
+        
+        // Aztec response to no precommitment
+        drawLine(startX + 150, startY - 80, startX + 300, startY - 120, '#ff6b6b');
+        drawNode(startX + 300, startY - 120, 'Aztecs Fight', '#ff6b6b');
+        
+        drawLine(startX + 150, startY - 80, startX + 300, startY - 40, '#ff6b6b');
+        drawNode(startX + 300, startY - 40, 'Aztecs Surrender', '#ff6b6b');
+        
+        // Spaniard options if they kept ships and Aztecs fight
+        drawLine(startX + 300, startY - 120, startX + 450, startY - 160, '#3a6ea5');
+        drawNode(startX + 450, startY - 160, 'Fight', '#3a6ea5');
+        
+        drawLine(startX + 300, startY - 120, startX + 450, startY - 80, '#3a6ea5');
+        drawNode(startX + 450, startY - 80, 'Retreat', '#3a6ea5');
+        
+        // Outcomes
+        drawOutcome(startX + 450, startY - 160, 'Costly Victory');
+        drawOutcome(startX + 450, startY - 80, 'Avoid Losses');
+        drawOutcome(startX + 300, startY - 40, 'Spanish Victory');
+        
+        // Probabilities and payoffs
+        if (showDetailedLabels) {
+          drawProbability(startX + 225, startY - 120, '70%');
+          drawProbability(startX + 225, startY - 40, '30%');
+          drawProbability(startX + 375, startY - 160, '60%');
+          drawProbability(startX + 375, startY - 80, '40%');
+          
+          drawPayoff(startX + 450, startY - 170, 'Cortés: +20');
+          drawPayoff(startX + 450, startY - 150, 'Aztecs: -40');
+          
+          drawPayoff(startX + 450, startY - 90, 'Cortés: -10');
+          drawPayoff(startX + 450, startY - 70, 'Aztecs: +5');
+          
+          drawPayoff(startX + 300, startY - 50, 'Cortés: +50');
+          drawPayoff(startX + 300, startY - 30, 'Aztecs: -20');
+        }
+      }
+      
+      // Option 2: Burn ships (precommitment)
+      drawLine(startX, startY, startX + 150, startY + 80, shipsBurned ? '#3a6ea5' : '#666');
+      drawNode(startX + 150, startY + 80, 'Burn Ships', shipsBurned ? '#3a6ea5' : '#666');
+      ctx.fillStyle = shipsBurned ? '#3a6ea5' : '#666';
+      ctx.fillText('Precommitment', startX + 40, startY + 40);
+      
+      // Aztec response to precommitment
+      drawLine(startX + 150, startY + 80, startX + 300, startY + 40, '#ff6b6b');
+      drawNode(startX + 300, startY + 40, 'Aztecs Fight', '#ff6b6b');
+      
+      drawLine(startX + 150, startY + 80, startX + 300, startY + 120, '#ff6b6b');
+      drawNode(startX + 300, startY + 120, 'Aztecs Surrender', '#ff6b6b');
+      
+      // Spaniard options with burned ships (no retreat possible)
+      drawLine(startX + 300, startY + 40, startX + 450, startY + 40, '#3a6ea5');
+      drawNode(startX + 450, startY + 40, 'Fight (Only Option)', '#3a6ea5');
+      
+      // Outcomes
+      drawOutcome(startX + 450, startY + 40, 'Victory or Death');
+      drawOutcome(startX + 300, startY + 120, 'Easy Victory');
+      
+      // Probabilities and payoffs for precommitment path
+      if (showDetailedLabels) {
+        drawProbability(startX + 225, startY + 40, '30%');
+        drawProbability(startX + 225, startY + 120, '70%');
+        
+        drawPayoff(startX + 450, startY + 30, 'Cortés: +30');
+        drawPayoff(startX + 450, startY + 50, 'Aztecs: -50');
+        
+        drawPayoff(startX + 300, startY + 110, 'Cortés: +60');
+        drawPayoff(startX + 300, startY + 130, 'Aztecs: -15');
+      }
+      
+      // Legend
+      drawLegend();
+      
+      // Highlight the optimal path if ships are burned
+      if (shipsBurned) {
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+        ctx.lineWidth = 10;
+        
+        // The path from Cortés -> Burn Ships -> Aztecs Surrender
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(startX + 150, startY + 80);
+        ctx.lineTo(startX + 300, startY + 120);
+        ctx.stroke();
+        
+        // Add explanation for precommitment effect
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('Precommitment Effect:', startX + 380, startY + 140);
+        ctx.font = '14px sans-serif';
+        ctx.fillText('1. Retreat option removed', startX + 400, startY + 160);
+        ctx.fillText('2. Aztecs update belief about Spanish resolve', startX + 400, startY + 180);
+        ctx.fillText('3. Surrender becomes more rational for Aztecs', startX + 400, startY + 200);
+        ctx.fillText('4. Expected outcome improves for Spanish', startX + 400, startY + 220);
+      }
+    }
+    
+    function drawNode(x, y, label, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      // If text is too long, make it smaller
+      const defaultFontSize = 14;
+      let fontSize = defaultFontSize;
+      ctx.font = `${fontSize}px sans-serif`;
+      
+      while (ctx.measureText(label).width > 36 && fontSize > 8) {
+        fontSize--;
+        ctx.font = `${fontSize}px sans-serif`;
+      }
+      
+      if (label.length > 10) {
+        const words = label.split(' ');
+        const line1 = words.slice(0, words.length/2).join(' ');
+        const line2 = words.slice(words.length/2).join(' ');
+        ctx.fillText(line1, x, y - 5);
+        ctx.fillText(line2, x, y + 10);
+      } else {
+        ctx.fillText(label, x, y);
+      }
+    }
+    
+    function drawLine(x1, y1, x2, y2, color) {
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+    
+    function drawOutcome(x, y, label) {
+      ctx.fillStyle = '#333';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, x + 30, y);
+    }
+    
+    function drawProbability(x, y, prob) {
+      ctx.fillStyle = 'blue';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(prob, x, y);
+    }
+    
+    function drawPayoff(x, y, payoff) {
+      ctx.fillStyle = 'green';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.font = '12px sans-serif';
+      ctx.fillText(payoff, x + 30, y);
+    }
+    
+    function drawLegend() {
+      const legendX = 700;
+      const legendY = 50;
+      
+      ctx.fillStyle = '#333';
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillText('Legend:', legendX, legendY);
+      
+      ctx.font = '14px sans-serif';
+      
+      // Cortés
+      ctx.fillStyle = '#3a6ea5';
+      ctx.beginPath();
+      ctx.arc(legendX + 20, legendY + 30, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#333';
+      ctx.fillText('Spanish Decision', legendX + 40, legendY + 30);
+      
+      // Aztecs
+      ctx.fillStyle = '#ff6b6b';
+      ctx.beginPath();
+      ctx.arc(legendX + 20, legendY + 60, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#333';
+      ctx.fillText('Aztec Decision', legendX + 40, legendY + 60);
+      
+      // Line styles
+      ctx.strokeStyle = '#3a6ea5';
+      ctx.beginPath();
+      ctx.moveTo(legendX, legendY + 90);
+      ctx.lineTo(legendX + 40, legendY + 90);
+      ctx.stroke();
+      ctx.fillText('Spanish Action', legendX + 50, legendY + 90);
+      
+      ctx.strokeStyle = '#ff6b6b';
+      ctx.beginPath();
+      ctx.moveTo(legendX, legendY + 120);
+      ctx.lineTo(legendX + 40, legendY + 120);
+      ctx.stroke();
+      ctx.fillText('Aztec Action', legendX + 50, legendY + 120);
+    }
+    
+    // Draw initial state
+    drawDecisionTree();
+  </script>
+</body>
+</html>
