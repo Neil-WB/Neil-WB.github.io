@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remember that at the end of the day, only the results matter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            background: url('alsoimages/condition.png') center/cover;
+            position: relative;
+            background-attachment: fixed;
+        }
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.7));
+            pointer-events: none;
+            position: fixed;
+        }
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+            position: fixed;
+        }
+        .crt-lines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.05) 50%);
+            background-size: 100% 4px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.01);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            margin-bottom: 3rem;
+        }
+        .date {
+            opacity: 0.6;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 500;
+        }
+        .text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+        }
+        p {
+            margin: 1.5rem 0;
+        }
+        a {
+            color: #FF8A3C;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #FF9F5B;
+        }
+        .extract-note {
+            opacity: 0.8;
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="vignette"></div>
+        <div class="gradient-overlay"></div>
+        <div class="crt-lines"></div>
+        <div class="crt-flicker"></div>
+        
+        <div class="content">
+            <div class="header">
+                <div class="date">Jun 2, 2025</div>
+                <h1>Remember that at the end of the day, only the results matter</h1>
+            </div>
+            <div class="text">
+                <p class="extract-note">Extract of this <a href="https://www.lesswrong.com/posts/gfbX3h4RueuDzWs7m/some-rules-for-life-v-0-0">LW article</a> about tentative rules for life, below for ease-of-linkability.</p>
+
+                <p>Your map of the world is <em>only</em> useful relative to its application to the territory. There's a surface between your mind and the real world, and the more tangible effects you have on reality—the more you reach through that surface—the better. Otherwise, every effect you've had on the world of atoms will be consigned to slowly decaying neurons.</p>
+
+                <p>The thing is, there are some things out there that <em>are</em> <em>out to get you</em>. You could sit on a mountaintop in Tibet for 5 years meditating but that will <em>not</em> stop humanity from building unaligned superintelligence, or starting a nuclear war, or releasing an airborne super-pathogen. If you don't affect the world of atoms, the world of atoms will affect <em>you</em> before you can even utter the words "but enlightenment!" Tigers are just an arrangement of atoms, but unfortunately your <em>soul</em> is also an arrangement of atoms.</p>
+
+                <p>It really is quite unfortunate: you were plopped <em>in medias res</em> into a cruel universe and now you have to race against the clock, because runaway artificial intelligence, cancer, Alzheimer's, and entropy are <em>all</em> <em>real things</em> and not myths <em>at all.</em> Some atom packets out there that are <em>very scary</em>.</p>
+
+                <p>To apply this locally, think "only the results matter". If writing blog posts is what you want to do, then thinking about it endlessly won't help. Try imagining what being on the other side of the mind/real world membrane is like: how much of your writing is actually out there for a stranger to see? How much of a tangible trace do you have in the real world? What are the results of your life so far? <em>How much of you is outside your mind?</em></p>
+
+                <p>You have to willingly jump into the abyss sword in hand, or else whatever is <em>in</em> that abyss will drag itself out of its pit and <em>hunt you down</em>. "Rationalists should win" isn't exactly the best mantra. The best mantra is just "win".</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
