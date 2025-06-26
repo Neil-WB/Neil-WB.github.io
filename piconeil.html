@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploying human agents in the wild</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            background: url('alsoimages/pico.png') center/cover;
+            position: relative;
+            background-attachment: fixed;
+        }
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.7));
+            pointer-events: none;
+            position: fixed;
+        }
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+            position: fixed;
+        }
+        .crt-lines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.05) 50%);
+            background-size: 100% 4px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .crt-flicker {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.01);
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0; }
+            100% { opacity: 0.1; }
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            margin-bottom: 3rem;
+        }
+        .date {
+            opacity: 0.6;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        .authors {
+            opacity: 0.8;
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        .abstract-header {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #FF8A3C;
+        }
+        .text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+        }
+        p {
+            margin: 1.5rem 0;
+        }
+        a {
+            color: #FF8A3C;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #FF9F5B;
+        }
+        .findings {
+            margin: 2rem 0;
+            padding-left: 1rem;
+        }
+        .finding {
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="vignette"></div>
+        <div class="gradient-overlay"></div>
+        <div class="crt-lines"></div>
+        <div class="crt-flicker"></div>
+        
+        <div class="content">
+            <div class="header">
+                <div class="date">jun 26, 2025</div>
+                <h1>deploying human agents in the wild</h1>
+                <div class="authors">pico-neil et al.</div>
+            </div>
+            <div class="text">
+                <div class="abstract-header">abstract</div>
+                
+                <p>we've discovered that humans have remarkable test-time compute and are able to complete surprisingly long-horizon tasks. in this page, we exploit this emergent ability to execute such diverse plans as the total obliteration of the elseverian academic order, the creation of a "human spirit" playlist that gets physically mailed to people in the form of tapes, and the redaction of an oral history of exp.camp. in all tasks, pico-neil et al direct the SOTA agent "neil" to complete complex tasks with an expected horizon of 24 hours.</p>
+
+                <div class="abstract-header">key findings:</div>
+                <div class="findings">
+                    <div class="finding">(1) humans display superior real-world grounding compared to current robotic systems</div>
+                    <div class="finding">(2) the meat-substrate shows unexpected compliance when properly prompted</div>
+                    <div class="finding">(3) latency remains acceptable despite the biological compute's tendency toward coffee breaks</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
